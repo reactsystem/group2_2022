@@ -54,13 +54,14 @@
                             </div>
                         </div>
 
-                        <!-- パスワードを忘れた方 -->
                         <div class="row mb-0">
                             <div class="col-md-8 offset-md-4">
+                                <!-- ログインボタン -->
                                 <button type="submit" class="btn btn-primary">
                                     {{ __('Login') }}
                                 </button>
 
+                                <!-- パスワードを忘れた方 -->
                                 @if (Route::has('password.request'))
                                     <a class="btn btn-link" href="{{ route('password.request') }}">
                                         {{ __('Forgot Your Password?') }}
