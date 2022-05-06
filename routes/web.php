@@ -21,7 +21,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// ユーザー
+Route::get('input', function () {
+    return view('input');
+});
+
 Auth::routes();
 
 //社員管理フォーム
@@ -33,5 +36,3 @@ Route::group(['prefix' => 'employees', 'as' => 'employees.',], function(){
 
 //各種申請フォーム
 Route::get('/application-form', [ApplicationFormController::class, 'index']);
-
-
