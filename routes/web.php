@@ -34,6 +34,10 @@ Route::group(['prefix' => 'employees', 'as' => 'employees.',], function(){
     Route::get('/edit', [EmployeesFormController::class, 'edit'])->name('edit');
 });
 
+Route::get('/personal_management', function () {
+    return view('personal_management');
+});
+
 //各種申請フォーム
 Route::get('/application-form', [ApplicationFormController::class, 'index']);
 
