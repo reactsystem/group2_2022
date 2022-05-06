@@ -22,7 +22,16 @@
                         <div class="row mb-3">
                             <label for="department" class="col-md-4 col-form-label text-md-end">部署名</label>
                             <div class="col-md-6">
-                                <input id="department" type="text" class="form-control" name="department" value="申請者の部署名" disabled>
+                                <select name="department" id="department" class="form-select" required disabled>
+                                        <option value="">
+                                            申請者の部署名
+                                        </option>
+                                </select>
+                                @error('department')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
                         </div>
 
@@ -41,6 +50,14 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
+                            </div>
+                        </div>
+
+                        <!-- 申請理由 -->
+                        <div class="row mb-3">
+                            <label for="reason" class="col-md-4 col-form-label text-md-end">申請理由</label>
+                            <div class="col-md-6">
+                                <textarea class="form-control" name="reason" id="reason" required autocomplete="reason" autofocus></textarea>
                             </div>
                         </div>
 
