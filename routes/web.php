@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\applicationFormController;
+use App\Http\Controllers\ApplicationFormController;
+use App\Http\Controllers\EmployeesFormController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +24,14 @@ Route::get('/', function () {
 // ユーザー
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//社員管理フォーム
+Route::group(['prefix' => 'employees', 'as' => 'employees.',], function(){
+    Route::get('/', [EmployeesFormController::class, 'show'])->name('show');
+    Route::get('/create', [EmployeesFormController::class, 'create'])->name('create');
+    Route::get('/edit', [EmployeesFormController::class, 'edit'])->name('edit');
+});
 
-Route::get('/application-form', [applicationFormController::class, 'index']);
+//各種申請フォーム
+Route::get('/application-form', [ApplicationFormController::class, 'index']);
+
+
