@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\applicationFormController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,7 +19,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
 Route::get('input', function () {
     return view('input');
 });
@@ -25,3 +26,5 @@ Route::get('input', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/application-form', [applicationFormController::class, 'index']);

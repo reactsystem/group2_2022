@@ -29,9 +29,7 @@
                         <!-- 部署名 -->
                         <div class="row mb-3">
                             <label for="department" class="col-md-4 col-form-label text-md-end">部署名</label>
-
                             <div class="col-md-6">
-                                <!-- <input id="department" type="text" class="form-control" name="department" value="{{ old('department') }}" required autocomplete="department" autofocus> -->
                                 <select name="department" id="department" class="form-select" required autocomplete="department" autofocus>
                                     <option hidden>選択してください</option>
                                         <option value="">
