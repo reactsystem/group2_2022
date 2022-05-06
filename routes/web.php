@@ -25,3 +25,7 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/application-form', [applicationFormController::class, 'index']);
+
+Route::get('/personal_management', function () {
+    return view('personal_management');
+});
