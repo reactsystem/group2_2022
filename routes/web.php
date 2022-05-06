@@ -36,3 +36,6 @@ Route::group(['prefix' => 'employees', 'as' => 'employees.',], function(){
 
 //各種申請フォーム
 Route::get('/application-form', [ApplicationFormController::class, 'index']);
+
+//申請承認フォーム
+Route::get('/approval-form', [ApplicationFormController::class, 'approve']);
