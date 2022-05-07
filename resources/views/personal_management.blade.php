@@ -1,115 +1,124 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
- 
-    </head>
-    <style>
-    .select_month {
-        display: flex;
-    }
-    .select_month form {
-        display: flex;
-    }
-    .select_month form select{
-        margin: 10px 20px;
-    }
-    .input_form {
-        clear: both;
-    }
-    .info_table {
-        table-layout: auto;
-    }
-    .info_table .item {
-        width: 150px;
-    }
-    .info_table th {
-        border: 1px solid green;
-    }
-    .info_table td {
-        border: 1px solid green;
-        text-align: center;
-    }
-    button {
-        margin: 10px 10px;
-    }
+@extends('layouts.app')
 
-    </style>
     <header>
-        <h4>[ロゴ] [勤怠入力] [各種申請]　　[勤怠管理] [申請承認] [社員管理] [マスタ管理]　　□□◎◎さん
-        </h4>
     </header>
-    <body>
+    @section('content')
+
         <div class="container">
             <div class="contents">
-                <div class="select_month">
-                    <p>〇〇△△さん の勤務表</p>
+
+                <div class="select_month col">
+                    <p class="mr-4">◎◎△△さんの勤務表</p>
                     <form action="" method="POST">
-                        <select name="month">
+                        <select name="month" class="form-select col" aria-label="Default select example">
                             <option value="">２０２２年５月</option>
                         </select>
-                        <p>＜前月へ　翌月へ＞</p>
                     </form>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                          <li class="page-item"><a class="page-link" href="#">＜前月へ</a></li>
+                          <li class="page-item"><a class="page-link" href="#">翌月へ＞</a></li>
+                        </ul>
+                      </nav>
                 </div>
 
-                <table class="info_table">
-                    <tr><th colspan="4">勤務時間項目</th></tr>
+                <table class="table col-7 table-sm">
+                    <thead>
+                    <tr class="table-success">
+                        <th colspan="4" scope="col">
+                            <button class="btn" type="button" data-toggle="collapse" data-target=".collapse0" aria-expanded="false" style="width: 100%; text-align: left;">
+                                勤務時間項目
+                            </button>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
                     <tr>
-                        <th class="item">所定時間</th>
-                        <th class="item">休憩時間</th>
-                        <th class="item">労働時間</th>
-                        <th class="item">時間外</th>
+                        <td><div class="collapse collapse0">所定時間</td>
+                        <td><div class="collapse collapse0">休憩時間</td>
+                        <td><div class="collapse collapse0">労働時間</td>
+                        <td><div class="collapse collapse0">時間外</td>
                     </tr>
                     <tr>
-                        <td>18:05</td>
-                        <td>00:45</td>
-                        <td>07:45</td>
-                        <td>00:00</td>
+                        <td><div class="collapse collapse0">18:05</td>
+                        <td><div class="collapse collapse0">00:45</td>
+                        <td><div class="collapse collapse0">07:45</td>
+                        <td><div class="collapse collapse0">00:00</td>
                     </tr>
-                    <tr><th colspan="4">勤務区分項目</th></tr>
+                    </tbody>
+                </table>
+
+                <table class="table col-7 table-sm">
+                    <thead>
+                        <tr class="table-success">
+                            <th colspan="4" scope="col">
+                                <button class="btn" type="button" data-toggle="collapse" data-target=".collapse1" aria-expanded="false" style="width: 100%; text-align: left;">
+                                    勤務区分項目
+                                </button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     <tr>
-                        <th class="item">出勤</th>
-                        <th class="item">欠勤</th>
-                        <th class="item">遅刻</th>
-                        <th class="item">早退</th>
+                        <td><div class="collapse collapse1">出勤</td>
+                        <td><div class="collapse collapse1">欠勤</td>
+                        <td><div class="collapse collapse1">遅刻</td>
+                        <td><div class="collapse collapse1">早退</td>
                     </tr>
                     <tr>
-                        <td>1</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
+                        <td><div class="collapse collapse1">1</td>
+                        <td><div class="collapse collapse1">0</td>
+                        <td><div class="collapse collapse1">0</td>
+                        <td><div class="collapse collapse1">0</td>
                     </tr>
-                    <tr><th colspan="4">休暇項目</th></tr>
+                    </tbody>
+                </table>
+
+                <table class="table col-7 table-sm">
+                    <thead>
+                        <tr class="table-success">
+                            <th colspan="4" scope="col">
+                                <button class="btn" type="button" data-toggle="collapse" data-target=".collapse2" aria-expanded="false" style="width: 100%; text-align: left;">
+                                    休暇項目
+                                </button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     <tr>
-                        <th class="item">有給休暇取得日数</th>
-                        <th class="item">特別休暇取得日数</th>
-                        <th class="item">有給休暇残り日数</th>
-                        <th class="item"></th>
+                        <td><div class="collapse collapse2">有給休暇取得日数</td>
+                        <td><div class="collapse collapse2">特別休暇取得日数</td>
+                        <td><div class="collapse collapse2">有給休暇残り日数</td>
+                        <td><div class="collapse collapse2"></td>
                     </tr>
                     <tr>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>20</td>
-                        <td></td>
+                        <td><div class="collapse collapse2">0</td>
+                        <td><div class="collapse collapse2">0</td>
+                        <td><div class="collapse collapse2">20</td>
+                        <td><div class="collapse collapse2"></td>
                     </tr>
+                    </tbody>
                 </table>
 
                 <div class="input_form">
                 <form action="" method="POST">
                     @csrf
-                    <button>更新する</button>
-                        <table border="1">
-                            <tr>
-                                <th>日付</th>
-                                <th>勤務区分</th>
-                                <th>開始</th>
-                                <th>終了</th>
-                                <th>休憩時間</th>
-                                <th>労働時間</th>
-                                <th>時間外</th>
-                                <th>メモ</th>
+                    <button type="button" class="btn btn-primary btn-lg mb-3">更新する</button>
+
+                        <table class="table table-bordered col-10 table-sm">
+                            <thead>
+                            <tr class="table-info">
+                                <th scope="col">日付</th>
+                                <th scope="col">勤務区分</th>
+                                <th scope="col">開始</th>
+                                <th scope="col">終了</th>
+                                <th scope="col">休憩時間</th>
+                                <th scope="col">労働時間</th>
+                                <th scope="col">時間外</th>
+                                <th scope="col">メモ</th>
                             </tr>
+                            </thead>
+                            <tbody>
                             <tr>
                                 <td>5/1(月)</td>
                                 <td><select name="work_type">
@@ -146,8 +155,10 @@
                                 <td></td>
                             </tr>
                             @endfor
+                            </tbody>
 
-                            <tr>
+                            <tfoot>
+                            <tr class="table-info">
                                 <td colspan="3">合計</td>
                                 <td>所定時間</td>
                                 <td>休憩時間</td>
@@ -163,10 +174,9 @@
                                 <td>00:00</td>
                                 <td></td>
                             </tr>
-
+                            </tfoot>
                         </table>
                 </form>
                 </div>
         </div>
-    </body>
-</html>
+@endsection
