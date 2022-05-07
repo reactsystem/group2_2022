@@ -1,37 +1,13 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
- 
-    </head>
-    <style>
-    .container{
-        display: flex;
-    }
-    .left{
-        width: 300px;
-        text-align: center;
-    }
-    .left table{
-        margin:auto;
-    }
-    .contents{
-        flex: 1;
-    }
-    .select_month {
-        display: flex;
-    }
-    </style>
+@extends('layouts.app')
+
     <header>
-        <h4>[ロゴ] [各種申請] [勤怠管理]　　〇〇△△さん</h4>
     </header>
-    <body>
+    @section('content')
         <div class="container">
-            <div class="left">
+            <div class="left col-3">
             <!-- 左カラム -->
                 <div class="button_form">
-                    <p>@php $date = new DateTime();
+                    <p style="background-color: #99FFFF;">@php $date = new DateTime();
                     echo $date->format('Y年n月j日'); 
 
                     $week = [
@@ -52,47 +28,62 @@
                     </p>
                         <form action="" method="POST">
                             @csrf
-                                <button type="submit" name="start_time" value="">出勤</button>
-                                <button type="submit" name="left_time" value="">退勤</button>
-                                <textarea name="discription" placeholder="打刻メモを入力できます" rows="8" cols="30"></textarea>
+                                <button type="buttom" class="btn btn-info btn-lg mb-3" name="start_time" value="">出勤</button>
+                                <button type="buttom" class="btn btn-warning btn-lg mb-3" name="left_time" value="">退勤</button>
+                                <div class="form-floating">
+                                    <textarea class="form-control" name="description" placeholder="Leave a comment here" id="description" style="height: 100px"></textarea>
+                                    <label for="description">打刻メモを入力できます</label>
+                                </div>
                 </div>
-                <div class="info_form">
-                    <table border="1">
+                <div class="info_form table-sm">
+                    <table class="table table-info table-striped" style="font-size : 10px;">
+                        <thead>
                         <tr>
-                            <th>当月の有給取得日数</th>
-                            <th>有給残り日数</th>
+                            <th scope="col">当月の有給取得日数</th>
+                            <th scope="col">有給残り日数</th>
                         </tr>
+                        </thead>
+                        <tbody>
                         <tr>
                             <td>0日</td>
                             <td>20日</td>
                         </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
             <div class="contents">
             <!-- 右カラム -->
-                <div class="select_month">
+                <div class="select_month col">
                 <form action="" method="POST">
-                    <select name="month">
+                    <select name="month" class="form-select col-md-3 mb-4" aria-label="Default select example">
                         <option value="">２０２２年５月</option>
                     </select>
-                    <p>＜前月へ　翌月へ＞</p>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                          <li class="page-item"><a class="page-link" href="#">＜前月へ</a></li>
+                          <li class="page-item"><a class="page-link" href="#">翌月へ＞</a></li>
+                        </ul>
+                      </nav>
                 </form>
                 </div>
                 <div class="input_form">
                 <form action="" method="POST">
                     @csrf
-                        <table border="1">
-                            <tr>
-                                <th>日付</th>
-                                <th>勤務区分</th>
-                                <th>開始</th>
-                                <th>終了</th>
-                                <th>休憩時間</th>
-                                <th>労働時間</th>
-                                <th>時間外</th>
-                                <th>メモ</th>
+                        <table class="table table-bordered table-sm">
+                            <thead>
+                            <tr class="table-info">
+                                <th scope="col">日付</th>
+                                <th scope="col">勤務区分</th>
+                                <th scope="col">開始</th>
+                                <th scope="col">終了</th>
+                                <th scope="col">休憩時間</th>
+                                <th scope="col">労働時間</th>
+                                <th scope="col">時間外</th>
+                                <th scope="col">メモ</th>
                             </tr>
+                            </thead>
+                            <tbody>
                             <tr>
                                 <td>5/1(月)</td>
                                 <td>出勤</td>
@@ -115,8 +106,10 @@
                                 <td></td>
                             </tr>
                             @endfor
+                            </tbody>
 
-                            <tr>
+                            <tfoot>
+                            <tr class="table-info">
                                 <td colspan="3">合計</td>
                                 <td>所定時間</td>
                                 <td>休憩時間</td>
@@ -132,10 +125,10 @@
                                 <td>00:00</td>
                                 <td></td>
                             </tr>
+                            </tfoot>
 
                         </table>
                 </form>
                 </div>
         </div>
-    </body>
-</html>
+    @endsection
