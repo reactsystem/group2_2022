@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('css')
+<link href="{{ asset('css/input.css') }}" rel="stylesheet">
+@endsection
+
     <header>
     </header>
     @section('content')
