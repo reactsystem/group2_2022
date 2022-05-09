@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ApplicationFormController;
 use App\Http\Controllers\EmployeesFormController;
+use App\Http\Controllers\ManagerController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -46,3 +47,8 @@ Route::get('/approval-form', [ApplicationFormController::class, 'approve']);
 
 //申請一覧フォーム
 Route::get('/show-form', [ApplicationFormController::class, 'show']);
+// 部署勤怠管理フォーム
+Route::get('/management', [ManagerController::class, 'index'])->name('mgmt.dept');
+
+// マスタ管理フォーム
+Route::get('/management/master', [ManagerController::class, 'getMaster'])->name('mgmt.master');
