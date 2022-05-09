@@ -100,11 +100,8 @@
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0/js/tempusdominus-bootstrap-4.min.js"></script>
   <!-- datetimepicker実装 -->
   <script type="text/javascript">
-    $(function () {
-        $('#datePicker').datetimepicker({locale: 'ja', dayViewHeaderFormat: 'YYYY年M月' ,format: 'YYYY/MM/DD'});
-        $('#startTimePicker').datetimepicker({locale: 'ja', format: 'HH:mm'});
-        $('#endTimePicker').datetimepicker({locale: 'ja', format: 'HH:mm'});
-    });
-</script>
+    
+  </script>
+  @yield('js')
 </body>
 </html>
