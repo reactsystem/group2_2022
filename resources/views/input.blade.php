@@ -38,6 +38,8 @@
                                     <textarea class="form-control" name="description" placeholder="Leave a comment here" id="description" style="height: 100px"></textarea>
                                     <label for="description">打刻メモを入力できます</label>
                                 </div>
+                                <button type="buttom" class="btn btn-secondary btn-sm mt-3" name="left_time" value="">打刻メモを送信</button>
+                        </form>
                 </div>
                 <div class="info_form table-sm">
                     <table class="table table-info table-striped" style="font-size : 10px;">
@@ -60,16 +62,16 @@
             <!-- 右カラム -->
                 <div class="select_month col">
                 <form action="" method="POST">
-                    <select name="month" class="form-select col-md-3 mb-4" aria-label="Default select example">
-                        <option value="">２０２２年５月</option>
+                    <select name="month" class="form-select col mr-2" aria-label="Default select example">
+                        <option value="" selected>２０２２年５月</option>
                     </select>
+                </form>
                     <nav aria-label="Page navigation example">
                         <ul class="pagination">
                           <li class="page-item"><a class="page-link" href="#">＜前月へ</a></li>
                           <li class="page-item"><a class="page-link" href="#">翌月へ＞</a></li>
                         </ul>
                       </nav>
-                </form>
                 </div>
                 <div class="input_form">
                 <form action="" method="POST">

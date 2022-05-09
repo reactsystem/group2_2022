@@ -13,4 +13,9 @@ class applicationFormController extends Controller
     public function approve(){
         return view('application.approval_form');
     }
+
+    public function show(){
+        return view('application.show');
+    }
+
 }
