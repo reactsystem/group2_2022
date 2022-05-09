@@ -18,15 +18,16 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
+Auth::routes();
+
 Route::get('/', function () {
     return view('welcome');
 });
 
+// 勤怠入力フォーム
 Route::get('input', function () {
     return view('input');
-});
-
-Auth::routes();
+})->name('input');
 
 //社員管理フォーム
 Route::group(['prefix' => 'employees', 'as' => 'employees.',], function(){
@@ -35,18 +36,20 @@ Route::group(['prefix' => 'employees', 'as' => 'employees.',], function(){
     Route::get('/edit', [EmployeesFormController::class, 'edit'])->name('edit');
 });
 
+// 個人勤怠管理フォーム
 Route::get('/personal_management', function () {
     return view('personal_management');
-});
+})->name('mgmt.personal');
 
 //各種申請フォーム
-Route::get('/application-form', [ApplicationFormController::class, 'index']);
+Route::get('/application-form', [ApplicationFormController::class, 'index'])->name('app.index');
 
 //申請承認フォーム
-Route::get('/approval-form', [ApplicationFormController::class, 'approve']);
+Route::get('/approval-form', [ApplicationFormController::class, 'approve'])->name('app.approval');
 
 //申請一覧フォーム
-Route::get('/show-form', [ApplicationFormController::class, 'show']);
+Route::get('/show-form', [ApplicationFormController::class, 'show'])->name('app.show');
+
 // 部署勤怠管理フォーム
 Route::get('/management', [ManagerController::class, 'index'])->name('mgmt.dept');
 
