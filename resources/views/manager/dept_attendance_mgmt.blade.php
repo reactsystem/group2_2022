@@ -1,6 +1,7 @@
-@extends('layouts.managerapp')
+@extends('layouts.app')
 
-@section('bar')
+@section('css')
+	<link href="{{ asset('css/manager.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -44,7 +45,7 @@
 
 					<tr>
 						<td>1</td>
-						<td><a href="">山田太郎</a></td>
+						<td><a href="{{ route('mgmt.personal') }}">山田太郎</a></td>
 						<td>出勤</td>
 						<td>9:25</td>
 						<td>18:05</td>
@@ -60,7 +61,4 @@
 			</div>
 		</div>
 	</div>
-@endsection
-
-@section('footer')
 @endsection

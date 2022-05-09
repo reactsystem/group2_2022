@@ -1,6 +1,7 @@
-@extends('layouts.managerapp')
+@extends('layouts.app')
 
-@section('bar')
+@section('css')
+	<link href="{{ asset('css/manager.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -62,7 +63,7 @@
 				<table class="table table-striped">
 					<tr class="align-middle">
 						<th>ID</th><th>部署名</th><th></th>
-						<th><button type="button" class="btn btn-outline-primary right" data-toggle="modal" data-target="#add_dept_modal">登録</button></th>
+						<th><button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#add_dept_modal">登録</button></th>
 					</tr>
 					<tr>
 						<td>1</td>
@@ -96,7 +97,7 @@
 				<table class="table table-striped">
 					<tr class="align-middle">
 						<th>ID</th><th>部署名</th><th></th>
-						<th><button type="button" class="btn btn-outline-primary right" data-toggle="modal" data-target="#add_worktype_modal">登録</button></th>
+						<th><button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#add_worktype_modal">登録</button></th>
 					</tr>
 					<tr>
 						<td>1</td>
@@ -148,7 +149,7 @@
 				<table class="table table-striped">
 					<tr class="align-middle">
 						<th>ID</th><th>申請項目</th><th></th>
-						<th><button type="button" class="btn btn-outline-primary right" data-toggle="modal" data-target="#add_worktype_modal">登録</button></th>
+						<th><button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#add_worktype_modal">登録</button></th>
 					</tr>
 					<tr>
 						<td>1</td>
@@ -184,7 +185,4 @@
 			</div>
 		</div>
 	</div>
-@endsection
-
-@section('footer')
 @endsection
