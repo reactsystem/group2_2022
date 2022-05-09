@@ -124,19 +124,4 @@
     </div>
 </div>
 @endsection
-@section('js')
-<script>
-$(document).ready(function(){
-    $('#datePicker').datetimepicker({locale: 'ja', dayViewHeaderFormat: 'YYYY年M月' ,format: 'YYYY/MM/DD'});
-    $('#startTimePicker').datetimepicker({locale: 'ja', format: 'HH:mm'});
-    $('#endTimePicker').datetimepicker({locale: 'ja', format: 'HH:mm'});
-    $('#applied-content').change((e)=>{  
-        if(e.target.value === '1'){   
-            console.log('aaa')
-            $('#startTimePicker').datetimepicker('disable');
-            $('#endTimePicker').datetimepicker('disable');
-        }
-    })
-})
-</script>
-@endsection
+
