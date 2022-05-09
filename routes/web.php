@@ -43,6 +43,3 @@ Route::get('/application-form', [ApplicationFormController::class, 'index']);
 
 //申請承認フォーム
 Route::get('/approval-form', [ApplicationFormController::class, 'approve']);
-
-//申請一覧フォーム
-Route::get('/show-form', [ApplicationFormController::class, 'show']);
