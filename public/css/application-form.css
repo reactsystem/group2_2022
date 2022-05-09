@@ -1,0 +1,6 @@
+/* 申請フォーム */
+
+.date-group{
+    display: flex;
+    flex-wrap: nowrap!important;
+}

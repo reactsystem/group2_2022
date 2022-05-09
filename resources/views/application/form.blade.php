@@ -1,9 +1,13 @@
 @extends('layouts.app')
 
+@section('css')
+<link href="{{ asset('css/application-form.css') }}" rel="stylesheet">
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <h1 class="text-center mt-3 mb-3">申請書フォーム</h1>
+        <h1 class="text-center mt-3 mb-3">申請フォーム</h1>
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
