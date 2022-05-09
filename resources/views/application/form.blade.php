@@ -27,9 +27,7 @@
                             <label for="application-department" class="col-md-4 col-form-label text-md-end">部署名</label>
                             <div class="col-md-6">
                                 <select name="department" id="application-department" class="form-select" required disabled>
-                                        <option value="1">有給</option>
-                                        <option value="2">残業</option>
-                                        <option value="3">休暇</option>
+                                        <option value="">申請者の名前</option>
                                 </select>
                                 @error('department')
                                     <span class="invalid-feedback" role="alert">
