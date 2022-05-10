@@ -33,8 +33,6 @@ class WorkTimesTableSeeder extends Seeder
                 'start_time' => '09:30',
                 'left_time' => '18:00',
                 'rest_time' => '00:45',
-                'over_time' => '01:45',
-                'description' => '画面設計書作成のため時間外業務',
             ],
             [
                 'user_id' => '202204010001',
@@ -51,7 +49,6 @@ class WorkTimesTableSeeder extends Seeder
                 'start_time' => '09:30',
                 'left_time' => '18:00',
                 'rest_time' => '00:45',
-                'description' => '要件定義書修正',
             ],
             [
                 'user_id' => '202204010001',
