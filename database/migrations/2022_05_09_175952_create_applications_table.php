@@ -19,10 +19,10 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('application_type_id')->constrained()->onDelete('cascade');
             $table->date('date');
-            $table->time('start_time');
-            $table->time('end_time');
+            $table->time('start_time')->nullable();
+            $table->time('end_time')->nullable();
             $table->integer('status');
-            $table->text('reason');
+            $table->text('reason')->nullable();
         });
     }
 
