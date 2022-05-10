@@ -19,11 +19,11 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('work_type_id')->constrained()->onDelete('cascade');
             $table->date('date');
-            $table->time('start_time');
-            $table->time('left_time');
-            $table->time('rest_time');
-            $table->time('over_time');
-            $table->text('description');
+            $table->time('start_time')->nullable();
+            $table->time('left_time')->nullable();
+            $table->time('rest_time')->nullable();
+            $table->time('over_time')->nullable();
+            $table->text('description')->nullable();
         });
     }
 

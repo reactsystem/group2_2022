@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->date('left_days');
+            $table->integer('left_days');
             $table->timestamps();
             $table->softDeletes();
         });
