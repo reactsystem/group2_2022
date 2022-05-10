@@ -18,7 +18,7 @@
                         <div class="row mb-3">
                             <label for="name" class="col-md-4 col-form-label text-md-end">申請者</label>
                             <div class="col-md-6">
-                                <input id="name" type="text" class="form-control" name="name" value="申請者の名前" disabled>
+                                <input id="name" type="text" class="form-control" name="name" value="{{$user->name}}" disabled>
                             </div>
                         </div>
 
@@ -26,16 +26,7 @@
                         <div class="row mb-3">
                             <label for="department" class="col-md-4 col-form-label text-md-end">部署名</label>
                             <div class="col-md-6">
-                                <select name="department" id="department" class="form-select" required disabled>
-                                        <option value="">
-                                            申請者の部署名
-                                        </option>
-                                </select>
-                                @error('department')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                                <input type="text" id="department" class="form-control" name="department" value="{{$user->department->name}}" disabled>
                             </div>
                         </div>
 
@@ -45,9 +36,11 @@
                             <div class="col-md-6">
                                 <select name="applied-content" id="applied-content" class="form-select" required autocomplete="applied-content" autofocus>
                                     <option hidden>選択してください</option>
-                                        <option value="">
-                                            申請内容
+                                    @foreach($types as $type)
+                                        <option value="{{$type->id}}">
+                                            {{$type->name}}
                                         </option>
+                                    @endforeach
                                 </select>
                                 @error('applied-content')
                                     <span class="invalid-feedback" role="alert">
@@ -70,7 +63,7 @@
                             <div class="input-group date" id="datePicker" data-target-input="nearest">
                                 <label for="datePicker" class="col-md-4 col-form-label text-md-end">申請日</label>
                                 <div class="col-md-6">
-                                    <input type="text" value="" class="form-control datetimepicker-input" data-target="#datePicker" data-toggle="datetimepicker"/>
+                                    <input type="text" id="datePicker" name="date" value="{{old('date')}}" class="form-control datetimepicker-input" data-target="#datePicker" data-toggle="datetimepicker"/>
                                 </div>
                                 <div class="input-group-append" data-target="#datePicker" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
@@ -86,7 +79,7 @@
                                 <div class="date-group">
                                     <label for="startTimePicker" class="col-md-4 col-form-label text-md-end">開始時間</label>
                                     <div class="col-md-6">
-                                        <input type="text" name="start_time" class="form-control datetimepicker-input" data-target="#startTimePicker" data-toggle="datetimepicker"/>
+                                        <input type="text" id="startTimePicker" name="start_time" value="{{old('start_time')}}" class="form-control datetimepicker-input" data-target="#startTimePicker" data-toggle="datetimepicker"/>
                                     </div>
                                     <div class="input-group-text date-text" data-target="#startTimePicker" data-toggle="datetimepicker">
                                         <span><i class="fa fa-clock"></i></span>
@@ -99,7 +92,7 @@
                                 <div class="date-group">
                                     <label for="endTimePicker" class="col-md-4 col-form-label text-md-end">終了時間</label>
                                     <div class="col-md-6">
-                                        <input type="text" name="end_time" class="form-control datetimepicker-input" data-target="#endTimePicker" data-toggle="datetimepicker"/>
+                                        <input type="text" id="endTimePicker" name="end_time" value="{{old('end_time')}}" class="form-control datetimepicker-input" data-target="#endTimePicker" data-toggle="datetimepicker"/>
                                     </div>
                                     <div class="input-group-text date-text" data-target="#endTimePicker" data-toggle="datetimepicker">
                                         <span><i class="fa fa-clock"></i></span>
@@ -123,4 +116,34 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('js')
+<script>
+
+    $(document).ready(function() 
+    {
+        $('#datePicker').datetimepicker({
+            locale: 'ja',
+            dayViewHeaderFormat: 'YYYY年M月',
+            format: 'YYYY/MM/DD',
+			minDate: new Date
+		});
+        console.log("'{{substr($time->left_time, 0, 5)}}'")
+        let start_time = function(currentDateTime) {
+            this.setOptions({
+                minTime: "'{{substr($time->left_time, 0, 5)}}'",
+            });
+        };
+        $('#startTimePicker').datetimepicker({
+            locale: 'ja',
+            format: 'HH:mm',
+            minTime: "'{{substr($time->left_time, 0, 5)}}'",
+            onShow: start_time
+        });
+        
+		$('#endTimePicker').datetimepicker({locale: 'ja', format: 'HH:mm'});
+    })
+
+</script>
 @endsection
