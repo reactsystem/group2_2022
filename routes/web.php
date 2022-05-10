@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApplicationFormController;
 use App\Http\Controllers\EmployeesFormController;
 use App\Http\Controllers\ManagerController;
+use App\Http\Controllers\InputFormController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -25,9 +26,7 @@ Route::get('/', function () {
 });
 
 // 勤怠入力フォーム
-Route::get('input', function () {
-    return view('input');
-})->name('input');
+Route::get('input', [InputFormController::class, 'show'])->name('input');
 
 //社員管理フォーム
 Route::group(['prefix' => 'employees', 'as' => 'employees.',], function(){

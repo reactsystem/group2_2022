@@ -9,26 +9,13 @@
     @section('content')
         <div class="container">
             <div class="left col-3">
+                
             <!-- 左カラム -->
                 <div class="button_form">
-                    <p style="background-color: #99FFFF;">@php $date = new DateTime();
-                    echo $date->format('Y年n月j日'); 
-
-                    $week = [
-                    '日', //0
-                    '月', //1
-                    '火', //2
-                    '水', //3
-                    '木', //4
-                    '金', //5
-                    '土', //6
-                    ];
-                    
-                    $date = date('w');
-                    
-                    echo '(' . $week[$date] . ')';
+                    <p style="background-color: #99FFFF;">
+                    @php 
+                    echo $today->isoFormat('YYYY/MM/DD(ddd)');
                     @endphp
-                    
                     </p>
                         <form action="" method="POST">
                             @csrf
@@ -58,8 +45,9 @@
                     </table>
                 </div>
             </div>
-            <div class="contents">
+
             <!-- 右カラム -->
+            <div class="contents">
                 <div class="select_month col">
                 <form action="" method="POST">
                     <select name="month" class="form-select col mr-2" aria-label="Default select example">
@@ -90,19 +78,11 @@
                             </tr>
                             </thead>
                             <tbody>
+                            @for($i = 1; $i <= $daysInMonth; $i++)
                             <tr>
-                                <td>5/1(月)</td>
-                                <td>出勤</td>
-                                <td>09:25</td>
-                                <td>18:05</td>
-                                <td>00:45</td>
-                                <td>07:45</td>
-                                <td>00:00</td>
-                                <td>・勤怠管理システムの画面設計書を作成</td>
-                            </tr>
-                            @for($n = 2; $n <= 31; $n++)
-                            <tr>
-                                <td>5/{{$n}}(月)</td>
+                                <td>
+                                    @php echo $dt->isoFormat('MM/DD(ddd)'); @endphp
+                                </td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -111,6 +91,7 @@
                                 <td></td>
                                 <td></td>
                             </tr>
+                            @php $dt->addDay(); @endphp
                             @endfor
                             </tbody>
 
