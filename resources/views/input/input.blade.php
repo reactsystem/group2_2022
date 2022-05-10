@@ -5,6 +5,8 @@
 @endsection
 
     <header>
+        {{-- テスト用 --}}
+        {{-- @php var_dump($work_times); @endphp --}}
     </header>
     @section('content')
         <div class="container">
@@ -13,9 +15,9 @@
             <!-- 左カラム -->
                 <div class="button_form">
                     <p style="background-color: #99FFFF;">
-                    @php 
-                    echo $today->isoFormat('YYYY/MM/DD(ddd)');
-                    @endphp
+                        @php 
+                            echo $today->isoFormat('YYYY/MM/DD(ddd)');
+                        @endphp
                     </p>
                         <form action="" method="POST">
                             @csrf
@@ -38,8 +40,8 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td>0日</td>
-                            <td>20日</td>
+                            <td></td>
+                            <td>{{$paid_leaves->left_days}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -83,13 +85,31 @@
                                 <td>
                                     @php echo $dt->isoFormat('MM/DD(ddd)'); @endphp
                                 </td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                @foreach ($work_times as $work_time)
+                                @if ($work_time->date == $dt->isoFormat('YYYY-MM-DD'))
+                                    <td>
+                                            {{$work_time->workType->name}}
+                                    </td>
+                                    <td>
+                                            {{$work_time->start_time}}
+                                    </td>
+                                    <td>
+                                            {{$work_time->left_time}}
+                                    </td>
+                                    <td>
+                                            {{$fixed_time->rest_time}}
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                            {{$work_time->over_time}}
+                                    </td>
+                                    <td>
+                                            {{$work_time->description}}
+                                    </td>
+                                @endif
+                                @endforeach
+
                             </tr>
                             @php $dt->addDay(); @endphp
                             @endfor
