@@ -40,6 +40,7 @@ class ResetPasswordController extends Controller
         ];
     }
 
+    // パスワード再設定処理
     protected function resetPassword($user, $password)
     {
         $this->setUserPassword($user, $password);
