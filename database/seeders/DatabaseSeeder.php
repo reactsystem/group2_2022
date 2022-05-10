@@ -14,6 +14,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        $this->call(
+            [
+                AddPaidLeavesTableSeeder::class,
+                ApplicationsTableSeeder::class,
+                ApplicationTypesTableSeeder::class,
+                DepartmentsTableSeeder::class,
+                FixedTimesTableSeeder::class,
+                PaidLeavesTableSeeder::class,
+                UsersTableSeeder::class,
+                WorkTimesTableSeeder::class,
+                WorkTypesTableSeeder::class,
+            ]
+        );
     }
 }
