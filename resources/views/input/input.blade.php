@@ -17,16 +17,22 @@
                     <p style="background-color: #99FFFF;">
                         {{$today->isoFormat('YYYY/MM/DD(ddd)')}}
                     </p>
+                    @if (session('message'))
+                        <div class="alert alert-danger">
+                            {{ session('message') }}
+                        </div>
+                    @endif
                         <form action="" method="POST">
                             @csrf
                                 <input type="hidden" name="user_id" value={{$user->id}}>
                                 <button type="submit" class="btn btn-info btn-lg mb-3" name="start_time" value="#">出勤</button>
                                 <button type="submit" class="btn btn-warning btn-lg mb-3" name="left_time" value="#">退勤</button>
                                 <div class="form-floating">
-                                    <textarea class="form-control" name="description" placeholder="Leave a comment here" id="description" style="height: 100px"></textarea>
+                                    <textarea class="form-control" name="description" placeholder="Leave a comment here" id="description" style="height: 100px"
+                                    >@isset($description){{$description->description}}@endisset</textarea>
                                     <label for="description">打刻メモを入力できます</label>
                                 </div>
-                                <button type="buttom" class="btn btn-secondary btn-sm mt-3">打刻メモを送信</button>
+                                <button type="submit" name="description_submit" value="#" class="btn btn-secondary btn-sm mt-3">打刻メモを送信</button>
                         </form>
                 </div>
                 <div class="info_form table-sm">
@@ -39,7 +45,7 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td></td>
+                            <td>{{$count_paid_leaves}}</td>
                             <td>{{$paid_leaves->left_days}}</td>
                         </tr>
                         </tbody>
@@ -88,37 +94,23 @@
                             </thead>
                             <tbody>
                             @for($i = 1; $i <= $daysInMonth; $i++)
-                            <tr>
-                                <td>
-                                    @php echo $dt->isoFormat('MM/DD(ddd)'); @endphp
-                                </td>
-                                @foreach ($work_times as $work_time)
-                                @if ($work_time->date == $dt->isoFormat('YYYY-MM-DD'))
+                                <tr>
                                     <td>
-                                            {{$work_time->workType->name}}
+                                        @php echo $dt->isoFormat('MM/DD(ddd)'); @endphp
                                     </td>
-                                    <td>
-                                            {{$work_time->start_time}}
-                                    </td>
-                                    <td>
-                                            {{$work_time->left_time}}
-                                    </td>
-                                    <td>
-                                            {{$fixed_time->rest_time}}
-                                    </td>
-                                    <td>
-                                    </td>
-                                    <td>
-                                            {{$work_time->over_time}}
-                                    </td>
-                                    <td>
-                                            {{$work_time->description}}
-                                    </td>
-                                @endif
-                                @endforeach
-
-                            </tr>
-                            @php $dt->addDay(); @endphp
+                                    @foreach ($work_times as $work_time)
+                                        @if ($work_time->date == $dt->isoFormat('YYYY-MM-DD'))
+                                            <td>{{$work_time->workType->name}}</td>
+                                            <td>{{$work_time->start_time}}</td>
+                                            <td>{{$work_time->left_time}}</td>
+                                            <td>{{$fixed_time->rest_time}}</td>
+                                            <td></td>
+                                            <td>{{$work_time->over_time}}</td>
+                                            <td>{{$work_time->description}}</td>
+                                        @endif
+                                    @endforeach
+                                </tr>
+                                @php $dt->addDay(); @endphp
                             @endfor
                             </tbody>
 
