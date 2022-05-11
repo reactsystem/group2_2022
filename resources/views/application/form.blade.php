@@ -11,7 +11,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
-                    <form method="POST" action="">
+                    <form method="POST" action="{{route('application.create', ['user' => $user->id])}}">
                         @csrf
 
                         <!-- 申請者の名前 -->
@@ -34,7 +34,7 @@
                         <div class="row mb-3">
                             <label for="applied-content" class="col-md-4 col-form-label text-md-end">申請内容</label>
                             <div class="col-md-6">
-                                <select name="applied-content" id="applied-content" class="form-select" required autocomplete="applied-content" autofocus>
+                                <select name="appliedContent" id="applied-content" class="form-select" required autocomplete="applied-content" autofocus>
                                     <option hidden>選択してください</option>
                                     @foreach($types as $type)
                                         <option value="{{$type->id}}">
@@ -42,7 +42,7 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                @error('applied-content')
+                                @error('appliedContent')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -123,26 +123,40 @@
 
     $(document).ready(function() 
     {
+        // 申請したい日
         $('#datePicker').datetimepicker({
             locale: 'ja',
             dayViewHeaderFormat: 'YYYY年M月',
             format: 'YYYY/MM/DD',
 			minDate: new Date
 		});
-        console.log("'{{substr($time->left_time, 0, 5)}}'")
-        let start_time = function(currentDateTime) {
-            this.setOptions({
-                minTime: "'{{substr($time->left_time, 0, 5)}}'",
-            });
-        };
-        $('#startTimePicker').datetimepicker({
-            locale: 'ja',
-            format: 'HH:mm',
-            minTime: "'{{substr($time->left_time, 0, 5)}}'",
-            onShow: start_time
-        });
+
+        //開始時間、終了時間
+        $('[name=appliedContent]').change(function() {
+            const text = $('[name=appliedContent] option:selected').text().trim();
+            $('[name=start_time]').val('');
+            $('[name=end_time]').val('');
+            if(text === '時間外勤務' || text === '打刻時間修正'){
+                $('[name=start_time]').prop('disabled', false);
+                $('[name=end_time]').prop('disabled', false);
+                $('#startTimePicker').datetimepicker({
+                    locale: 'ja',
+                    format: 'HH:mm',
+                    minDate: moment({h:'{{substr($left_time, 0, 2)}}', m:'{{substr($left_time, 3, 5)}}'}),
+                    maxDate: moment({h:24})
+                });
         
-		$('#endTimePicker').datetimepicker({locale: 'ja', format: 'HH:mm'});
+		        $('#endTimePicker').datetimepicker({
+                    locale: 'ja',
+                    format: 'HH:mm',
+                    minDate: moment({h:'{{substr($left_time, 0, 2)}}', m:'{{substr($left_time, 3, 5)}}'}),
+                    maxDate: moment({h:24})
+                });
+            }else{
+                $('[name=start_time]').prop('disabled', true);
+                $('[name=end_time]').prop('disabled', true);
+            }
+        });
     })
 
 </script>

@@ -41,7 +41,7 @@ Route::get('/personal_management', function () {
 Route::group(['prefix' => 'application', 'as' => 'application.', 'middleware' => 'auth'], function(){
     Route::get('/', [ApplicationFormController::class, 'index'])->name('index');
     Route::get('/form', [ApplicationFormController::class, 'show'])->name('show');
-    Route::post('/create', [ApplicationFormController::class, 'create'])->name('create');
+    Route::post('/form/{user}', [ApplicationFormController::class, 'create'])->name('create');
 });
 
 
