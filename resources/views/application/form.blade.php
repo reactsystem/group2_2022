@@ -134,8 +134,6 @@
         //開始時間、終了時間
         $('[name=appliedContent]').change(function() {
             const text = $('[name=appliedContent] option:selected').text().trim();
-            $('[name=start_time]').val('');
-            $('[name=end_time]').val('');
             if(text === '時間外勤務' || text === '打刻時間修正'){
                 $('[name=start_time]').prop('disabled', false);
                 $('[name=end_time]').prop('disabled', false);
@@ -156,6 +154,8 @@
                 $('[name=start_time]').prop('disabled', true);
                 $('[name=end_time]').prop('disabled', true);
             }
+            $('[name=start_time]').val('');
+            $('[name=end_time]').val('');
         });
     })
 
