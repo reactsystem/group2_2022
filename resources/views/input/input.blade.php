@@ -15,15 +15,13 @@
             <!-- 左カラム -->
                 <div class="button_form">
                     <p style="background-color: #99FFFF;">
-                        @php 
-                            echo $today->isoFormat('YYYY/MM/DD(ddd)');
-                        @endphp
+                        {{$today->isoFormat('YYYY/MM/DD(ddd)')}}
                     </p>
                         <form action="" method="POST">
                             @csrf
-                                <input type="hidden" name="user_id" value={{Auth::user()->name}}>
-                                <button type="buttom" class="btn btn-info btn-lg mb-3" name="start_time" value="">出勤</button>
-                                <button type="buttom" class="btn btn-warning btn-lg mb-3" name="left_time" value="">退勤</button>
+                                <input type="hidden" name="user_id" value={{$user->id}}>
+                                <button type="submit" class="btn btn-info btn-lg mb-3" name="start_time" value="#">出勤</button>
+                                <button type="submit" class="btn btn-warning btn-lg mb-3" name="left_time" value="#">退勤</button>
                                 <div class="form-floating">
                                     <textarea class="form-control" name="description" placeholder="Leave a comment here" id="description" style="height: 100px"></textarea>
                                     <label for="description">打刻メモを入力できます</label>
@@ -52,9 +50,17 @@
             <!-- 右カラム -->
             <div class="contents">
                 <div class="select_month col">
-                <form action="" method="POST">
+                <form method="POST" id="select" action="">
                     <select name="month" class="form-select col mr-2" aria-label="Default select example">
-                        <option value="" selected>２０２２年５月</option>
+                        @php $month->subMonthNoOverflow(7); @endphp
+                        @for ($i =1; $i <= 13; $i++)
+                            @php $month->addMonthNoOverflow(); @endphp
+                            <option  onclick="submit_form()" value="{{$month}}"
+                            @if ($i == 7)
+                                selected
+                            @endif
+                           >{{$month->isoFormat('YYYY年M月')}}</option>
+                        @endfor
                     </select>
                 </form>
                     <nav aria-label="Page navigation example">

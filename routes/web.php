@@ -21,12 +21,9 @@ use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 // 勤怠入力フォーム
-Route::get('input', [InputFormController::class, 'show'])->name('input');
+Route::get('/', [InputFormController::class, 'show'])->name('input')->middleware('auth');
+Route::post('/', [InputFormController::class, 'add'])->name('input')->middleware('auth');
 
 //社員管理フォーム
 Route::group(['prefix' => 'employees', 'as' => 'employees.',], function(){

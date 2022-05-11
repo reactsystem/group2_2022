@@ -8,6 +8,11 @@
             <div class="card">
                 <div class="card-body">
                 <h2 class="h3 card-title text-center mt-2 mb-4">ログイン</h2>
+                    @if (session('status'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('status') }}
+                        </div>
+                    @endif
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
 
