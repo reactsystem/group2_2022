@@ -26,7 +26,7 @@ Route::get('/', function () {
 })->name('input')->middleware('auth');
 
 //社員管理フォーム
-Route::group(['prefix' => 'employees', 'as' => 'employees.',], function(){
+Route::group(['prefix' => 'employees', 'as' => 'employees.', 'middleware' => 'auth'], function(){
     Route::get('/', [EmployeesFormController::class, 'show'])->name('show');
     Route::get('/create', [EmployeesFormController::class, 'create'])->name('create');
     Route::get('/edit', [EmployeesFormController::class, 'edit'])->name('edit');
@@ -37,8 +37,13 @@ Route::get('/personal_management', function () {
     return view('personal_management');
 })->name('mgmt.personal');
 
-//各種申請フォーム
-Route::get('/application-form', [ApplicationFormController::class, 'index'])->name('app.index');
+//申請フォーム
+Route::group(['prefix' => 'application', 'as' => 'application.', 'middleware' => 'auth'], function(){
+    Route::get('/', [ApplicationFormController::class, 'index'])->name('index');
+    Route::get('/form', [ApplicationFormController::class, 'show'])->name('show');
+    Route::post('/form/{user}', [ApplicationFormController::class, 'create'])->name('create');
+});
+
 
 //申請承認フォーム
 Route::get('/approval-form', [ApplicationFormController::class, 'approve'])->name('app.approval');
