@@ -21,13 +21,14 @@
                     </p>
                         <form action="" method="POST">
                             @csrf
+                                <input type="hidden" name="user_id" value={{Auth::user()->name}}>
                                 <button type="buttom" class="btn btn-info btn-lg mb-3" name="start_time" value="">出勤</button>
                                 <button type="buttom" class="btn btn-warning btn-lg mb-3" name="left_time" value="">退勤</button>
                                 <div class="form-floating">
                                     <textarea class="form-control" name="description" placeholder="Leave a comment here" id="description" style="height: 100px"></textarea>
                                     <label for="description">打刻メモを入力できます</label>
                                 </div>
-                                <button type="buttom" class="btn btn-secondary btn-sm mt-3" name="left_time" value="">打刻メモを送信</button>
+                                <button type="buttom" class="btn btn-secondary btn-sm mt-3">打刻メモを送信</button>
                         </form>
                 </div>
                 <div class="info_form table-sm">

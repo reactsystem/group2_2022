@@ -34,4 +34,27 @@ class InputFormController extends Controller
             'paid_leaves' => $paid_leaves,
         ]);
     }
+
+    public function add(Request $request){
+        if (isset($request->start_time)){
+            $work_time = new WorkTime;
+            $work_time->user_id = $request->user_id;
+            $work_time->work_type_id = 1;
+            $work_time->date = date("Y-m-d");
+            $work_time->start_time = date("H:i:s");
+            $work_time->over_time = '00:00:00';
+            $work_time->description = $request->description;
+            $work_time->save();
+        }
+
+        if (isset($request->left_time)){
+            $work_time = WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"));
+            $work_time->left_time = date("H:i:s");
+            $work_time->rest_time = '00:45:00';
+            $work_time->description = $request->description;
+            $work_time->save();
+        }
+
+        return redirect('/input/input');
+    }
 }
