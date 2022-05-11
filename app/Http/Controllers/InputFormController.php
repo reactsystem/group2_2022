@@ -76,4 +76,34 @@ class InputFormController extends Controller
         return redirect('/');
     }
 
+    public function showMonth(Request $request){
+
+        // 当日の日付表示と月表示を取得する
+        Carbon::setLocale('ja');
+        $today = Carbon::createFromDate();
+        $month = $request->month;
+        
+        // 今月の最初の日付を取得する
+        $dt = $request->month;
+        $dt->startOfMonth(); //今月の最初の日
+        $dt->timezone = 'Asia/Tokyo'; //日本時刻で表示
+        $daysInMonth = $dt->daysInMonth; //今月は何日まであるか
+
+        $user = Auth::user();
+        $work_times = WorkTime::where('user_id', $user->id)->get();
+        $fixed_time = FixedTime::first();
+        $paid_leaves = PaidLeave::where('user_id', $user->id)->first();
+
+        return view('input.input', [
+            'today' => $today,
+            'month' => $month,
+            'dt' => $dt,
+            'daysInMonth' => $daysInMonth,
+            'work_times' => $work_times,
+            'fixed_time' => $fixed_time,
+            'paid_leaves' => $paid_leaves,
+            'user' => $user,
+        ]);
+    }
+
 }

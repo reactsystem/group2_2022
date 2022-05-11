@@ -51,11 +51,11 @@
             <div class="contents">
                 <div class="select_month col">
                 <form method="POST" id="select" action="">
-                    <select name="month" class="form-select col mr-2" aria-label="Default select example">
+                    <select name="month" class="form-select col mr-2" aria-label="Default select example" onchange="submit_form()">
                         @php $month->subMonthNoOverflow(7); @endphp
                         @for ($i =1; $i <= 13; $i++)
                             @php $month->addMonthNoOverflow(); @endphp
-                            <option  onclick="submit_form()" value="{{$month}}"
+                            <option value="{{$month}}"
                             @if ($i == 7)
                                 selected
                             @endif
