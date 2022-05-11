@@ -7,6 +7,11 @@
     <header>
     </header>
     @section('content')
+        @if (session('sended_form'))
+            <div class="alert alert-success text-center" role="alert">
+                {{ session('sended_form') }}
+            </div>
+        @endif
         <div class="container">
             <div class="left col-3">
             <!-- 左カラム -->
