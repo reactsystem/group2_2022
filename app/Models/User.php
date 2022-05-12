@@ -51,7 +51,7 @@ class User extends Authenticatable
     }
 
     public function application(){
-        return $this->hasOne(Application::class);
+        return $this->hasMany(Application::class);
     }
 
     public function paidLeave(){

@@ -11,6 +11,6 @@ class ApplicationType extends Model
     use HasFactory;
 
     public function application(){
-        return $this->hasOne(Application::class);
+        return $this->hasMany(Application::class);
     }
 }
