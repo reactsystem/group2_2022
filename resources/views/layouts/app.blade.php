@@ -42,7 +42,7 @@
 					<!-- Left Side Of Navbar -->
 					<ul class="navbar-nav">
 						<li><a href="{{ route('input') }}" class="nav-link">勤怠入力</a></li>
-						<li><a href="{{ route('app.index') }}" class="nav-link">各種申請</a></li>
+						<li><a href="{{ route('application.show') }}" class="nav-link">各種申請</a></li>
 						<li><a href="{{ route('mgmt.dept') }}" class="nav-link">勤怠管理</a></li>
 						<li><a href="{{ route('app.show') }}" class="nav-link">申請一覧</a></li>
 						<li><a href="{{ route('employees.show') }}" class="nav-link">社員管理</a></li>
@@ -97,6 +97,7 @@
 				$('#endTimePicker').datetimepicker({locale: 'ja', format: 'HH:mm'});
 			});
 		</script>
+		
 		<script type="text/javascript">
 			function submit_form() {
 				var target = document.getElementById("select");
@@ -104,5 +105,7 @@
 				target.submit();
 			}
 		</script>
+		<!-- jQueryを追加する用 -->
+		@yield('js')
 	</body>
 </html>

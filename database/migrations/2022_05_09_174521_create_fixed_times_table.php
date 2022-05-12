@@ -19,7 +19,6 @@ return new class extends Migration
             $table->time('left_time');
             $table->time('rest_time');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

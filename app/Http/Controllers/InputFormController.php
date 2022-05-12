@@ -19,12 +19,7 @@ class InputFormController extends Controller
         // 当日の日付表示と月表示を取得する
         Carbon::setLocale('ja');
         $today = Carbon::createFromDate();
-
-        if (isset($request->month)) {
-            $month = $request->month;
-        } else {
-            $month = Carbon::createFromDate();
-        }
+        $month = Carbon::createFromDate();
 
         // 当日の打刻メモが存在すれば取得する
         $date = date("Y-m-d");
@@ -88,7 +83,6 @@ class InputFormController extends Controller
             // ログインユーザーの当日のレコードが存在しないかチェック
             if (DB::table('work_times')->where('date', $date)->doesntExist()) {
                 return redirect('/')->with('message', '出勤の打刻が完了していません');
-                    // 要修正：退勤時間のNULL判定がうまくできない
             } elseif ($left_time->left_time !== NULL) {
                 return redirect('/')->with('message', '既に退勤の打刻が完了しています');
             } else {
@@ -100,31 +94,48 @@ class InputFormController extends Controller
             }
         }
 
+        // 打刻メモ編集処理
         if (isset($request->description_submit)) {
-            WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([
+
+            if (DB::table('work_times')->where('date', $date)->doesntExist()) {
+                return redirect('/')->with('message', '出勤の打刻が完了していません');
+            } else {
+                WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([
                 'description' => $request->description,
-            ]);
+                ]);
+            }
         }
         return redirect('/');
     }
 
-    public function showMonth(Request $request){
+    public function test(){
+        return redirect('/');
+    }
+
+    public function selectMonth(Request $request){
 
         // 当日の日付表示と月表示を取得する
         Carbon::setLocale('ja');
         $today = Carbon::createFromDate();
-        $month = $request->month;
+        $month = new Carbon($request->month);
+
+        // 当日の打刻メモが存在すれば取得する
+        $date = date("Y-m-d");
+        $description = DB::table('work_times')->select('description')->where('date', $date)->first();
         
         // 今月の最初の日付を取得する
-        $dt = $request->month;
+        $dt = new Carbon($request->month);
         $dt->startOfMonth(); //今月の最初の日
         $dt->timezone = 'Asia/Tokyo'; //日本時刻で表示
         $daysInMonth = $dt->daysInMonth; //今月は何日まであるか
 
         $user = Auth::user();
-        $work_times = WorkTime::where('user_id', $user->id)->get();
+        $current_month = date("Y-m");
+        $work_times = WorkTime::where('user_id', $user->id)->where('date', 'like', $current_month . '%')->get();
         $fixed_time = FixedTime::first();
         $paid_leaves = PaidLeave::where('user_id', $user->id)->first();
+
+        $count_paid_leaves = $work_times->where('work_type_id', 5)->count();
 
         return view('input.input', [
             'today' => $today,
@@ -135,6 +146,8 @@ class InputFormController extends Controller
             'fixed_time' => $fixed_time,
             'paid_leaves' => $paid_leaves,
             'user' => $user,
+            'description' => $description,
+            'count_paid_leaves' => $count_paid_leaves,
         ]);
     }
 
