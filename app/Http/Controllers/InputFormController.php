@@ -108,10 +108,6 @@ class InputFormController extends Controller
         return redirect('/');
     }
 
-    public function test(){
-        return redirect('/');
-    }
-
     public function selectMonth(Request $request){
 
         // 当日の日付表示と月表示を取得する

@@ -4,10 +4,6 @@
 <link href="{{ asset('css/input.css') }}" rel="stylesheet">
 @endsection
 
-    <header>
-        {{-- テスト用 --}}
-        {{-- @php var_dump($work_times); @endphp --}}
-    </header>
     @section('content')
         @if (session('sended_form'))
             <div class="alert alert-success text-center" role="alert">
@@ -117,13 +113,12 @@
                                     >
                                         @php echo $dt->isoFormat('MM/DD(ddd)'); @endphp
                                     </td>
-                                    @foreach ($work_times as $work_time)
-                                        @if ($work_time->date == $dt->isoFormat('YYYY-MM-DD'))
-
-                                        {{-- 時刻計算処理用 --}}
-                                        @php $start_time = strtotime($work_time->start_time);
-                                             $left_time = strtotime($work_time->left_time);
-                                        @endphp
+                                    @php $work_time = $work_times->where('date', $dt->isoFormat('YYYY-MM-DD'))->first(); @endphp
+                                        @if ($work_time !== NULL)
+                                            {{-- 時刻計算処理用 --}}
+                                            @php $start_time = strtotime($work_time->start_time);
+                                                $left_time = strtotime($work_time->left_time);
+                                            @endphp
 
                                             <td>{{$work_time->workType->name}}</td>
                                             <td>{{date('H:i', $start_time)}}</td>
@@ -151,8 +146,15 @@
                                                 @endif
                                             </td>
                                             <td>{{$work_time->description}}</td>
+                                        @else
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
                                         @endif
-                                    @endforeach
                                 </tr>
                                 @php $dt->addDay(); @endphp
                             @endfor
@@ -170,9 +172,9 @@
                             <tr>
                                 <td colspan="3"></td>
                                 <td></td>
-                                <td id="goukei"></td>
-                                <td>07:45</td>
-                                <td>00:00</td>
+                                <td id="rest"></td>
+                                <td id="worked"></td>
+                                <td id="over"></td>
                                 <td></td>
                             </tr>
                             </tfoot>
