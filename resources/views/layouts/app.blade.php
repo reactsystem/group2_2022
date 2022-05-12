@@ -104,6 +104,34 @@
 				target.method = "post";
 				target.submit();
 			}
+
+			window.onload = function () {
+				var tableElem = document.getElementById('input_table');
+				var rowElems = tableElem.rows;
+				var prodhrd = "00:00";
+				for (i = 2, len = rowElems.length - 1; i < 6; i++) {
+					// if (parseInt(rowElems[i].cells[4].innerText) == NULL){
+					// 	continue;
+					// } else {
+						var conprodArr = parseInt(rowElems[i].cells[4].innerText);
+
+						prodhrdArr = prodhrd.split(":"); 
+						conprodArr = conprod.split(":"); 
+						var hh1 = parseInt(prodhrdArr[0]) + parseInt(conprodArr[0]); 
+						var mm1 = parseInt(prodhrdArr[1]) + parseInt(conprodArr[1]); 
+
+						if (mm1 > 59) { 
+							var mm2 = mm1 % 60; 
+							var mmx = mm1/60; 
+							var mm3 = parseInt(mmx);//add into hour 
+							var hh1 = parseInt(hh1) + parseInt(mm3); 
+							var mm1 = mm2; 
+						} 
+						prodhrd += hh1 + ':' + mm1;
+					}
+				// }
+				document.getElementById('goukei').innerText = prodhrd;
+			}
 		</script>
 		<!-- jQueryを追加する用 -->
 		@yield('js')

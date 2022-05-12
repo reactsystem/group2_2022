@@ -90,7 +90,7 @@
                 <div class="input_form">
                 <form action="/" method="POST">
                     @csrf
-                        <table class="table table-bordered table-sm">
+                        <table class="table table-bordered table-sm" id="input_table">
                             <thead>
                             <tr class="table-info">
                                 <th scope="col" style="width: 10%">日付</th>
@@ -170,7 +170,7 @@
                             <tr>
                                 <td colspan="3"></td>
                                 <td></td>
-                                <td>00:45</td>
+                                <td id="goukei"></td>
                                 <td>07:45</td>
                                 <td>00:00</td>
                                 <td></td>
