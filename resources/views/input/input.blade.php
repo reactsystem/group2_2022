@@ -86,42 +86,70 @@
                     <button type="submit" name="month" value="@php echo $next_month @endphp" class="btn btn-outline-dark btn-sm">翌月へ＞</button>
                     </div>
                 </form>
-                    {{-- <nav aria-label="Page navigation example">
-                        <ul class="pagination">
-                          <li class="page-item"><a class="page-link" href="#">＜前月へ</a></li>
-                          <li class="page-item"><a class="page-link" href="#">翌月へ＞</a></li>
-                        </ul>
-                      </nav> --}}
+
                 <div class="input_form">
                 <form action="/" method="POST">
                     @csrf
                         <table class="table table-bordered table-sm">
                             <thead>
                             <tr class="table-info">
-                                <th scope="col">日付</th>
-                                <th scope="col">勤務区分</th>
-                                <th scope="col">開始</th>
-                                <th scope="col">終了</th>
-                                <th scope="col">休憩時間</th>
-                                <th scope="col">労働時間</th>
-                                <th scope="col">時間外</th>
+                                <th scope="col" style="width: 10%">日付</th>
+                                <th scope="col" style="width: 8%">勤務区分</th>
+                                <th scope="col" style="width: 8%">開始</th>
+                                <th scope="col" style="width: 8%">終了</th>
+                                <th scope="col" style="width: 8%">休憩時間</th>
+                                <th scope="col" style="width: 8%">労働時間</th>
+                                <th scope="col" style="width: 8%">時間外</th>
                                 <th scope="col">メモ</th>
                             </tr>
                             </thead>
+
+                            {{-- TODO: 遅刻、早退の処理を追加する --}}
                             <tbody>
                             @for($i = 1; $i <= $daysInMonth; $i++)
                                 <tr>
-                                    <td>
+                                    <td
+                                    @if ($dt->isoFormat('ddd') === '土')
+                                        style="color: blue;"
+                                    @elseif ($dt->isoFormat('ddd') === '日')
+                                        style="color: red;"
+                                    @endif
+                                    >
                                         @php echo $dt->isoFormat('MM/DD(ddd)'); @endphp
                                     </td>
                                     @foreach ($work_times as $work_time)
                                         @if ($work_time->date == $dt->isoFormat('YYYY-MM-DD'))
+
+                                        {{-- 時刻計算処理用 --}}
+                                        @php $start_time = strtotime($work_time->start_time);
+                                             $left_time = strtotime($work_time->left_time);
+                                        @endphp
+
                                             <td>{{$work_time->workType->name}}</td>
-                                            <td>{{$work_time->start_time}}</td>
-                                            <td>{{$work_time->left_time}}</td>
-                                            <td>{{$fixed_time->rest_time}}</td>
-                                            <td></td>
-                                            <td>{{$work_time->over_time}}</td>
+                                            <td>{{date('H:i', $start_time)}}</td>
+                                            <td>{{date('H:i', $left_time)}}</td>
+                                            <td>
+                                                @if (date('H:i', $left_time) < '18:15')
+                                                    00:45
+                                                @elseif (date('H:i', $left_time) >= '18:15')
+                                                    01:00
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if (date('H:i', $left_time) < '18:15')
+                                                    07:45
+                                                @elseif (date('H:i', $left_time) >= '18:15')
+                                                    @php $worked_time = strtotime("-1 hours", $left_time) - $start_time; @endphp
+                                                    {{gmdate("H:i", $worked_time)}}
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if (date('H:i', $left_time) < '18:15')
+                                                    00:00
+                                                @elseif (date('H:i', $left_time) >= '18:15')
+                                                    {{gmdate("H:i", strtotime("-45 min -7 hours", $worked_time))}}
+                                                @endif
+                                            </td>
                                             <td>{{$work_time->description}}</td>
                                         @endif
                                     @endforeach
@@ -141,7 +169,7 @@
                             </tr>
                             <tr>
                                 <td colspan="3"></td>
-                                <td>18:05</td>
+                                <td></td>
                                 <td>00:45</td>
                                 <td>07:45</td>
                                 <td>00:00</td>
