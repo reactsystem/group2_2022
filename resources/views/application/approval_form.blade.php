@@ -18,7 +18,7 @@
                         <div class="row mb-3">
                             <label for="name" class="col-md-4 col-form-label text-md-end">申請者</label>
                             <div class="col-md-6">
-                                <input id="name" type="text" class="form-control" name="name" value="申請者の名前" disabled>
+                                <input id="name" type="text" class="form-control" name="name" value="{{$application->user->name}}" disabled>
                             </div>
                         </div>
 
@@ -28,7 +28,7 @@
                             <div class="col-md-6">
                                 <select name="department" id="department" class="form-select" required disabled>
                                         <option value="">
-                                            申請者の部署名
+                                            {{$application->user->department->name}}
                                         </option>
                                 </select>
                                 @error('department')
@@ -45,7 +45,7 @@
                             <div class="col-md-6">
                                 <select name="applied-content" id="applied-content" class="form-select" required autocomplete="applied-content" autofocus disabled>
                                         <option value="">
-                                            申請内容
+                                            {{$application->applicationType->name}}
                                         </option>
                                 </select>
                                 @error('applied-content')
@@ -60,7 +60,7 @@
                         <div class="row mb-3">
                             <label for="reason" class="col-md-4 col-form-label text-md-end">申請理由</label>
                             <div class="col-md-6">
-                                <textarea class="form-control" name="reason" id="reason" required autocomplete="reason" autofocus disabled>～のため</textarea>
+                                <textarea class="form-control" name="reason" id="reason" required autocomplete="reason" autofocus disabled>{{$application->reason}}</textarea>
                             </div>
                         </div>
 
@@ -69,11 +69,8 @@
                             <div class="input-group date" id="datePicker" data-target-input="nearest">
                                 <label for="datePicker" class="col-md-4 col-form-label text-md-end">申請日</label>
                                 <div class="col-md-6">
-                                    <input type="text" value="2022/05/06" class="form-control datetimepicker-input" data-target="#datePicker" data-toggle="datetimepicker" disabled/>
+                                    <input type="text" value="{{$application->date}}" name="date" class="form-control datetimepicker-input" data-target="#datePicker" data-toggle="datetimepicker" disabled/>
                                 </div>
-                                <div class="input-group-append" data-target="#datePicker" data-toggle="datetimepicker">
-                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                </div> 
                             </div>
                         </div>
 
@@ -85,11 +82,8 @@
                                 <div class="date-group">
                                     <label for="startTimePicker" class="col-md-4 col-form-label text-md-end">開始時間</label>
                                     <div class="col-md-6">
-                                        <input type="text" name="start_time" class="form-control datetimepicker-input" data-target="#startTimePicker" data-toggle="datetimepicker" disabled/>
+                                        <input type="text" value="{{$application->start_time}}" name="start_time" class="form-control datetimepicker-input" data-target="#startTimePicker" data-toggle="datetimepicker" disabled/>
                                     </div>
-                                    <div class="input-group-text date-text" data-target="#startTimePicker" data-toggle="datetimepicker">
-                                        <span><i class="fa fa-clock"></i></span>
-                                    </div>       
                                 </div>
                             </div>
 
@@ -98,11 +92,8 @@
                                 <div class="date-group">
                                     <label for="endTimePicker" class="col-md-4 col-form-label text-md-end">終了時間</label>
                                     <div class="col-md-6">
-                                        <input type="text" name="end_time" class="form-control datetimepicker-input" data-target="#endTimePicker" data-toggle="datetimepicker" disabled/>
+                                        <input type="text" value="{{$application->end_time}}" name="end_time" class="form-control datetimepicker-input" data-target="#endTimePicker" data-toggle="datetimepicker" disabled/>
                                     </div>
-                                    <div class="input-group-text date-text" data-target="#endTimePicker" data-toggle="datetimepicker">
-                                        <span><i class="fa fa-clock"></i></span>
-                                    </div>           
                                 </div>
                             </div>
                         </div>

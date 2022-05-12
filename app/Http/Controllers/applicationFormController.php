@@ -102,8 +102,11 @@ class ApplicationFormController extends Controller
         return redirect('/')->with('sended_form', '申請書が送信されました');
     }
 
-    public function approve(){
-        return view('application.approval_form');
+    public function approve(Request $request){
+        $user = Auth::user();
+        $application = Application::find($request->application);
+
+        return view('application.approval_form', compact('user', 'application'));
     }
 
 

@@ -45,10 +45,6 @@ Route::group(['prefix' => 'application', 'as' => 'application.', 'middleware' =>
     Route::get('/approval/{user}/{application}', [ApplicationFormController::class, 'approve'])->name('approve');
 });
 
-
-//申請承認フォーム
-// Route::get('/approval-form', [ApplicationFormController::class, 'approve'])->name('app.approval');
-
 // 部署勤怠管理フォーム
 Route::get('/management', [ManagerController::class, 'index'])->name('mgmt.dept');
 
