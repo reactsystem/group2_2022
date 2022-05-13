@@ -103,6 +103,7 @@
 					<!-- 部署別勤務表 --------------------------------------------->
 					<?php
 						// 労働時間計算関数
+						// js sectionに分けて書いたら見つからないと怒られたのでとりあえずここに書いてます。
 						function calcWorkTime($start_time, $left_time, $rest_time)
 						{
 							$start = new DateTime($start_time);
