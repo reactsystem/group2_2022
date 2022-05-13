@@ -115,6 +115,15 @@ class ApplicationFormController extends Controller
     public function send(Request $request) {
         $user = Auth::user();
 
+        // 承認結果によってApplicationテーブルのstatusカラムを更新
+        $application = Application::find($request->id);
+        if ($request->result === '承認') {
+            $application->status = 1;
+        } else if ($request->result === '差し戻し') {
+            $application->status = 2;
+        }
+        $application->save();
+
         $rules = [
             'comment' => 'max:60',
         ];

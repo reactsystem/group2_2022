@@ -14,6 +14,8 @@
                     <form method="POST" action="/application/mail">
                         @csrf
 
+                        <input type="hidden" name="id" value="{{$application->id}}">
+
                         <!-- 申請者の名前 -->
                         <div class="row mb-3">
                             <label for="name" class="col-md-4 col-form-label text-md-end">申請者</label>
