@@ -12,10 +12,10 @@ class Application extends Model
     use HasFactory;
 
     public function applicationType(){
-        return $this->hasOne(ApplicationType::class);
+        return $this->belongsTo(ApplicationType::class);
     }
 
     public function user(){
-        return $this->hasOne(User::class);
+        return $this->belongsTo(User::class);
     }
 }
