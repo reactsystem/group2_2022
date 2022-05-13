@@ -5,6 +5,11 @@
 @endsection
 
 @section('content')
+@if (session('message'))
+    <div class="alert alert-success text-center" role="alert">
+        {{ session('message') }}
+    </div>
+@endif
 <div class="container">
 
     <!-- 検索フォーム -->
