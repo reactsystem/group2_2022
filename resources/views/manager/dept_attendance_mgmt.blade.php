@@ -160,6 +160,8 @@
 								</tr>
 							@endforeach
 						</table>
+
+						<!-- ページネーション -->
 						{{$work_times->appends([
 								'date' => $date->toDateString(),
 								'department' => $dept->id,
