@@ -89,6 +89,15 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/locale/ja.min.js" integrity="sha512-rElveAU5iG1CzHqi7KbG1T4DQIUCqhitISZ9nqJ2Z4TP0z4Aba64xYhwcBhHQMddRq27/OKbzEFZLOJarNStLg==" crossorigin="anonymous"></script>
 		<!-- Moment.js -->
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0/js/tempusdominus-bootstrap-4.min.js"></script>
+		<!-- datetimepicker実装 -->
+		<script type="text/javascript">
+			$(function () {
+				$('#datePicker').datetimepicker({locale: 'ja', dayViewHeaderFormat: 'YYYY年M月' ,format: 'YYYY/MM/DD'});
+				$('#startTimePicker').datetimepicker({locale: 'ja', format: 'HH:mm'});
+				$('#endTimePicker').datetimepicker({locale: 'ja', format: 'HH:mm'});
+			});
+		</script>
+
 		<!-- jQueryを追加する用 -->
 		@yield('js')
 	</body>

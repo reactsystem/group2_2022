@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApplicationFormController;
 use App\Http\Controllers\EmployeesFormController;
 use App\Http\Controllers\ManagerController;
+use App\Http\Controllers\InputFormController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -21,9 +22,9 @@ use Illuminate\Support\Facades\Auth;
 Auth::routes();
 
 // 勤怠入力フォーム
-Route::get('/', function () {
-    return view('input');
-})->name('input')->middleware('auth');
+Route::get('/', [InputFormController::class, 'show'])->name('input')->middleware('auth');
+Route::post('/', [InputFormController::class, 'add'])->name('input')->middleware('auth');
+Route::post('/select_month', [InputFormController::class, 'selectMonth'])->middleware('auth');
 
 //社員管理フォーム
 Route::group(['prefix' => 'employees', 'as' => 'employees.', 'middleware' => 'auth'], function(){

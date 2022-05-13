@@ -16,6 +16,6 @@ class WorkTime extends Model
     }
 
     public function workType(){
-        return $this->hasOne(WorkType::class);
+        return $this->belongsTo(WorkType::class);
     }
 }
