@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use App\Http\Requests\ApplicationFormRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\SendMail;
+use App\Models\WorkTime;
 use Illuminate\Support\Facades\Mail;
 
 class ApplicationFormController extends Controller
@@ -119,11 +120,36 @@ class ApplicationFormController extends Controller
         $application = Application::find($request->id);
         if ($request->result === '承認') {
             $application->status = 1;
+
+            // 申請種別が有給休暇、特別休暇の場合、work_timeテーブルの申請対象日の勤務区分を更新
+            if ($application->application_type_id == 1 or $application->application_type_id == 2) {
+                if (WorkTime::where('user_id', $application->user_id)->where('date', $application->date)->exists()) {
+                    $work_time = WorkTime::where('user_id', $application->user_id)->where('date', $application->date)->first();
+                    $work_time->work_type_id = $application->applicationType->work_type_id;
+                    $work_time->save();
+                } else {
+                    $work_time = new WorkTime;
+                    $work_time->user_id = $application->user_id;
+                    $work_time->work_type_id = $application->applicationType->work_type_id;
+                    $work_time->date = $application->date;
+                    $work_time->save();
+                }
+            }
+
+            // 申請種別が打刻時間修正の場合、work_timeテーブルの申請対象日の開始時間、終了時間を更新
+            if ($application->application_type_id == 5) {
+                $work_time = WorkTime::where('user_id', $application->user_id)->where('date', $application->date)->first();
+                $work_time->start_time = $application->start_time;
+                $work_time->left_time = $application->end_time;
+                $work_time->save();
+            }
+
         } else if ($request->result === '差し戻し') {
             $application->status = 2;
         }
         $application->save();
 
+        // 申請承認フォームのコメントに対するバリデーション
         $rules = [
             'comment' => 'max:60',
         ];

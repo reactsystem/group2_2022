@@ -121,7 +121,11 @@
                                             @endphp
 
                                             <td>{{$work_time->workType->name}}</td>
-                                            <td>{{date('H:i', $start_time)}}</td>
+                                            <td>
+                                                @if ($work_time->start_time !== NULL)
+                                                {{date('H:i', $start_time)}}
+                                                @endif
+                                            </td>
                                             <td>
                                                 @if ($work_time->left_time !== NULL)
                                                 {{date('H:i', $left_time)}}
