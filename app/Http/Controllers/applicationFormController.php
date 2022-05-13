@@ -22,7 +22,7 @@ class ApplicationFormController extends Controller
         $departments = Department::get();
         $applications = '';
         
-        // 部署ごとに表示
+        // 部署ごとに表示、statusが0のデータのみ表示
         if($request->query('department')){
             $applications = Application::whereIn('user_id', function ($query) use ($request) {
                 $query->from('users')
@@ -39,7 +39,7 @@ class ApplicationFormController extends Controller
         // 表示件数
         $limit_disp = ['全て', '5件', '10件', '20件'];
 
-        //部署ごとに表示＋表示件数
+        //部署ごとに表示＋表示件数、statusが0のデータのみ表示
         if($request->query('disp_limit') && $request->query('department')){
             if($request->query('disp_limit')==='0'){
                 $applications = Application::whereIn('user_id', function ($query) use ($request){

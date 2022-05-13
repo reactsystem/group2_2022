@@ -53,6 +53,7 @@ class employeesFormController extends Controller
         // 表示件数
         $limit_disp = ['全て', '5件', '10件', '20件', '50件', '100件'];
 
+        //退職していない人のみ表示
         $users = $query->whereNull('leaving')->orderBy('joining', 'DESC')->paginate(100);
     
         //表示件数
