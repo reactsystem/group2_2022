@@ -13,4 +13,8 @@ class ApplicationType extends Model
     public function application(){
         return $this->hasMany(Application::class);
     }
+
+    public function workType(){
+        return $this->belongsTo(WorkType::class);
+    }
 }

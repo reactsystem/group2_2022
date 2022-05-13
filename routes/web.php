@@ -44,11 +44,8 @@ Route::group(['prefix' => 'application', 'as' => 'application.', 'middleware' =>
     Route::get('/form', [ApplicationFormController::class, 'show'])->name('show');
     Route::post('/form/{user}', [ApplicationFormController::class, 'create'])->name('create');
     Route::get('/approval/{user}/{application}', [ApplicationFormController::class, 'approve'])->name('approve');
+    Route::post('/mail', [ApplicationFormController::class,'send']);
 });
-
-
-//申請承認フォーム
-// Route::get('/approval-form', [ApplicationFormController::class, 'approve'])->name('app.approval');
 
 // 部署勤怠管理フォーム
 Route::get('/management', [ManagerController::class, 'index'])->name('mgmt.dept');

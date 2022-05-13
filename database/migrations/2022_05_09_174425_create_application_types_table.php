@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('application_types', function (Blueprint $table) {
             $table->id();
+            $table->integer('work_type_id');
             $table->string('name');
             $table->timestamps();
             $table->softDeletes();
