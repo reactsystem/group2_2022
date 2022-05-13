@@ -42,12 +42,36 @@
 					<!-- Left Side Of Navbar -->
 					<ul class="navbar-nav">
 						<li><a href="{{ route('input') }}" class="nav-link">勤怠入力</a></li>
-						<li><a href="{{ route('app.index') }}" class="nav-link">各種申請</a></li>
+						<li><a href="{{ route('application.show') }}" class="nav-link">各種申請</a></li>
 						<li><a href="{{ route('mgmt.dept') }}" class="nav-link">勤怠管理</a></li>
-						<li><a href="{{ route('app.show') }}" class="nav-link">申請一覧</a></li>
-						<li><a href="{{ route('employees.show') }}" class="nav-link">社員管理</a></li>
+						<li><a href="{{ route('application.index', array_merge(Request::query(), ['department' => auth()->user()->department_id])) }}" class="nav-link">申請一覧</a></li>
+						<li><a href="{{ route('employees.show', array_merge(Request::query(), ['department' => auth()->user()->department_id])) }}" class="nav-link">社員管理</a></li>
 						<li><a href="{{ route('mgmt.master') }}" class="nav-link">基本情報</a></li>
 					</ul>
+
+					<!-- Right Side Of Navbar(ユーザー名、ログアウト処理) -->
+					@if(Auth::check())
+                    	<ul class="navbar-nav ms-auto">
+                            <li class="nav-item dropdown">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    {{ Auth::user()->name }}
+                                </a>
+
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                        {{ __('Logout') }}
+                                    </a>
+
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
+                                </div>
+                            </li>
+						</ul>
+                    @endif
+
 				</div>
 			</div>
 		</nav>
@@ -65,13 +89,7 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/locale/ja.min.js" integrity="sha512-rElveAU5iG1CzHqi7KbG1T4DQIUCqhitISZ9nqJ2Z4TP0z4Aba64xYhwcBhHQMddRq27/OKbzEFZLOJarNStLg==" crossorigin="anonymous"></script>
 		<!-- Moment.js -->
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0/js/tempusdominus-bootstrap-4.min.js"></script>
-		<!-- datetimepicker実装 -->
-		<script type="text/javascript">
-			$(function () {
-				$('#datePicker').datetimepicker({locale: 'ja', dayViewHeaderFormat: 'YYYY年M月' ,format: 'YYYY/MM/DD'});
-				$('#startTimePicker').datetimepicker({locale: 'ja', format: 'HH:mm'});
-				$('#endTimePicker').datetimepicker({locale: 'ja', format: 'HH:mm'});
-			});
-		</script>
+		<!-- jQueryを追加する用 -->
+		@yield('js')
 	</body>
 </html>
