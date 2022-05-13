@@ -32,7 +32,7 @@ class ApplicationFormRequest extends FormRequest
         $left_time = $left_time->toTimeString('minute');
 
         return [
-            'date' => 'required|date|date_format:Y/m/d|after:yesterday',
+            'date' => 'required|date|date_format:Y/m/d',
             'start_time' => ['date_format:H:i','after:'.$left_time],
             'end_time' => 'date_format:H:i|after:start_time',
             'reason' => 'nullable|string|max:60'
@@ -53,12 +53,11 @@ class ApplicationFormRequest extends FormRequest
     {
         // 終業時間の14分後を取得
         $left_time = new Carbon(FixedTime::first()->left_time);
-        $left_time->addMinutes(14);
+        $left_time->addMinutes(15);
         $left_time = $left_time->toTimeString('minute');
 
         return[
             'date.date_format' => '申請日は ○○○○/○○/○○ という形で指定してください。',
-            'date.after' => '申請日は今日以降の日付を指定してください。',
             'start_time.date_format' => '開始時間は ○○:○○ という形で指定してください',
             'start_time.after' => '開始時間は'.$left_time.'以降の時間を指定してください。',
             'end_time.date_format' => '終了時間は ○○:○○ という形で指定してください',

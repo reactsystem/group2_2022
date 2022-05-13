@@ -74,15 +74,5 @@
 @endsection
 
 @section('js')
-    <script>
-        const searchForm = document.getElementById('search')
-        const department = document.getElementById('department');
-        const limit = document.getElementById('limit');
-        department.addEventListener('change', (e)=>{
-            searchForm.submit();
-        })
-        limit.addEventListener('change', (e)=>{
-            searchForm.submit();
-        })
-    </script>
+<script src="{{asset('js/list.js')}}"></script>
 @endsection
