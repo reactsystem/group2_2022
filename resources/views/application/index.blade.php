@@ -48,7 +48,7 @@
             @endif
         </div>
     
-    <table class="table table-bordered text-center align-middle">
+    <table id="application" class="table table-bordered text-center align-middle">
     <thead>
         <tr>
             <th scope="col">#</th>

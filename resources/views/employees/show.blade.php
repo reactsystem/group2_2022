@@ -62,7 +62,7 @@
             <a class="btn btn-success mb-3 employees-add ml-auto" href="{{route('employees.add')}}">新規追加</a>
         </div>
 
-    <table class="table table-bordered text-center align-middle">
+    <table id="employees" class="table table-bordered text-center align-middle">
     <thead>
         <tr>
             <th scope="col">#</th>
@@ -85,7 +85,9 @@
             <td>{{$user->joining}}</td>
             <td>
                 @if($user->manager === 1)
-                    <i class="fa-solid fa-check text-success"></i>
+                    <i class="fa-solid fa-check text-success"><p class="d-none">{{$user->manager}}</p></i>
+                @else
+                    <p class="d-none">{{$user->manager}}</p>
                 @endif
             </td>
         </tr>
