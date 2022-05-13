@@ -13,7 +13,7 @@ use Carbon\Carbon;
 use App\Http\Requests\ApplicationFormRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\SendMail;
-use Mail;
+use Illuminate\Support\Facades\Mail;
 
 class ApplicationFormController extends Controller
 {
@@ -113,14 +113,39 @@ class ApplicationFormController extends Controller
     }
 
     public function send(Request $request) {
-        $rules = [
-            'name' => 'required',
-            'department' => 'required',
-            'applied-content' => 'required',
-            'date' => 'required',
-            'comment' => '',
-        ];
-    }
+        $user = Auth::user();
 
+        $rules = [
+            'comment' => 'max:60',
+        ];
+
+        $messages = [
+            'comment.max' => 'コメントは６０文字以下で入力してください。',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $data = [
+            'user' => $user->name,
+            'name' => $request->name,
+            'result' => $request->result,
+            'applied_content' => $request->applied_content,
+            'reason' => $request->reason,
+            'date' => $request->date,
+            'start_time' => $request->start_time,
+            'end_time' => $request->end_time,
+            'comment' => $request->comment,
+        ];
+        
+        Mail::to('admin@hoge.co.jp')->send(new SendMail($data));
+
+        return redirect('application/')->with('message', '申請結果を通知しました');
+    }
 
 }
