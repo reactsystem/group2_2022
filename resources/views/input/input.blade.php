@@ -122,20 +122,28 @@
 
                                             <td>{{$work_time->workType->name}}</td>
                                             <td>{{date('H:i', $start_time)}}</td>
-                                            <td>{{date('H:i', $left_time)}}</td>
                                             <td>
-                                                @if (date('H:i', $left_time) < '18:15')
-                                                    00:45
-                                                @elseif (date('H:i', $left_time) >= '18:15')
-                                                    01:00
+                                                @if ($work_time->left_time !== NULL)
+                                                {{date('H:i', $left_time)}}
                                                 @endif
                                             </td>
                                             <td>
-                                                @if (date('H:i', $left_time) < '18:15')
-                                                    07:45
-                                                @elseif (date('H:i', $left_time) >= '18:15')
-                                                    @php $worked_time = strtotime("-1 hours", $left_time) - $start_time; @endphp
-                                                    {{gmdate("H:i", $worked_time)}}
+                                                @if ($work_time->left_time !== NULL)
+                                                    @if (date('H:i', $left_time) < '18:15')
+                                                        00:45
+                                                    @elseif (date('H:i', $left_time) >= '18:15')
+                                                        01:00
+                                                    @endif
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($work_time->left_time !== NULL)
+                                                    @if (date('H:i', $left_time) < '18:15')
+                                                        07:45
+                                                    @elseif (date('H:i', $left_time) >= '18:15')
+                                                        @php $worked_time = strtotime("-1 hours", $left_time) - $start_time; @endphp
+                                                        {{gmdate("H:i", $worked_time)}}
+                                                    @endif
                                                 @endif
                                             </td>
                                             <td>
@@ -183,4 +191,5 @@
                 </form>
                 </div>
         </div>
+        <script src="{{ asset('js/input.js') }}"></script>
     @endsection
