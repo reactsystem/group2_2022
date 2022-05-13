@@ -49,11 +49,11 @@ Route::group(['prefix' => 'application', 'as' => 'application.', 'middleware' =>
 Route::get('/approval-form', [ApplicationFormController::class, 'approve'])->name('app.approval');
 
 //申請一覧フォーム
-Route::get('/show-form', [ApplicationFormController::class, 'show'])->name('app.show');
+Route::get('/show-form', [ApplicationFormController::class, 'index'])->name('app.show');
 
 // 部署勤怠管理フォーム
 Route::get('/management', [ManagerController::class, 'index'])->name('mgmt.dept');
-Route::post('/management', [ManagerController::class, 'index'])->name('mgmt.dept.p');
+Route::post('/management', [ManagerController::class, 'index'])->name('mgmt.dept.post');
 
 // マスタ管理フォーム
 Route::get('/management/master', [ManagerController::class, 'getMaster'])->name('mgmt.master');

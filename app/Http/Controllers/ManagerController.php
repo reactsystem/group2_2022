@@ -24,8 +24,8 @@ class ManagerController extends Controller
 		}
 
 		// 表示する部署の取得
-//		$user = User::where('email', Auth::user()->email)->first();
-		$dept = Department::where('id', 1/*$user->department_id*/)->first();
+		$user = User::where('email', Auth::user()->email)->first();
+		$dept = Department::where('id', $user->department_id)->first();
 		if(isset($request->department))
 		{
 			$dept = Department::where('id', $request->department)->first();
@@ -33,17 +33,33 @@ class ManagerController extends Controller
 
 		// 各種テーブルの取得
 		$departments = Department::all();
+		$fixed_time = FixedTime::first();
+		
+		// 表示件数
 		$work_times = WorkTime::where('date', $date->toDateString())
 			->whereHas('user', function($query) use($dept)
+				{ $query->where('department_id', $dept->id); })
+			->paginate($request->disp_limit);
+		$page_count = WorkTime::where('date', $date->toDateString())
+			->whereHas('user', function($query) use($dept)
+				{ $query->where('department_id', $dept->id); })
+			->count();
+		if($page_count > 0)
+		{
+			if(isset($request->disp_limit))
 			{
-				$query->where('department_id', $dept->id);
-			})->get();
+				$page_count = $page_count / $request->disp_limit + 1;
+			}
+			else { $page_count = 1 + 1; }
+		}
 
 		$param = [
 			'date' => $date,
 			'dept' => $dept,
 			'departments' => $departments,
+			'fixed_time' => $fixed_time,
 			'work_times' => $work_times,
+			'disp_limit' => $request->disp_limit,
 		];
 		return view('manager.dept_attendance_mgmt', $param);
 	}
