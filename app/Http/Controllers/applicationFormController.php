@@ -7,15 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ApplicationType;
 use App\Models\FixedTime;
-<<<<<<< HEAD
-use Carbon\Carbon;
-
-class ApplicationFormController extends Controller
-{
-    public function index(){
-
-        return view('application.index');
-=======
 use App\Models\Department;
 use App\Models\User;
 use Carbon\Carbon;
@@ -79,7 +70,6 @@ class ApplicationFormController extends Controller
         }
 
         return view('application.index', compact('loginUser', 'loginUserDepartment', 'departments', 'applications', 'limit_disp'));
->>>>>>> b818255b127561bb3185c9060a56de41fc2a0e0d
     }
 
     // 申請フォーム
@@ -97,11 +87,7 @@ class ApplicationFormController extends Controller
     }
 
     // 申請フォームの内容をApplicationテーブルに格納
-<<<<<<< HEAD
-    public function create(Request $request, $user){
-=======
     public function create(ApplicationFormRequest $request, $user){
->>>>>>> b818255b127561bb3185c9060a56de41fc2a0e0d
 
         Application::insert([
             'user_id' => $user,

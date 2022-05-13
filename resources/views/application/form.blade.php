@@ -102,16 +102,12 @@
                                 <div class="date-group">
                                     <label for="startTimePicker" class="col-md-4 col-form-label text-md-end">開始時間<span class="startTimePicker"></span></label>
                                     <div class="col-md-6">
-<<<<<<< HEAD
-                                        <input type="text" id="startTimePicker" name="start_time" value="{{old('start_time')}}" class="form-control datetimepicker-input" data-target="#startTimePicker" data-toggle="datetimepicker"/>
-=======
                                         <input type="text" id="startTimePicker" name="start_time" value="{{old('start_time')}}" class="form-control datetimepicker-input @error('start_time') is-invalid @enderror" data-target="#startTimePicker" data-toggle="datetimepicker"/>
                                         @error('start_time')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
                                         @enderror
->>>>>>> b818255b127561bb3185c9060a56de41fc2a0e0d
                                     </div>
                                     <div class="input-group-text date-text" data-target="#startTimePicker" data-toggle="datetimepicker">
                                         <span><i class="fa fa-clock"></i></span>
@@ -124,16 +120,12 @@
                                 <div class="date-group">
                                     <label for="endTimePicker" class="col-md-4 col-form-label text-md-end">終了時間<span class="endTimePicker"></span></label>
                                     <div class="col-md-6">
-<<<<<<< HEAD
-                                        <input type="text" id="endTimePicker" name="end_time" value="{{old('end_time')}}" class="form-control datetimepicker-input" data-target="#endTimePicker" data-toggle="datetimepicker"/>
-=======
                                         <input type="text" id="endTimePicker" name="end_time" value="{{old('end_time')}}" class="form-control datetimepicker-input @error('end_time') is-invalid @enderror" data-target="#endTimePicker" data-toggle="datetimepicker"/>
                                         @error('end_time')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
                                         @enderror
->>>>>>> b818255b127561bb3185c9060a56de41fc2a0e0d
                                     </div>
                                     <div class="input-group-text date-text" data-target="#endTimePicker" data-toggle="datetimepicker">
                                         <span><i class="fa fa-clock"></i></span>
