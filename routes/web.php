@@ -52,6 +52,7 @@ Route::group(['prefix' => 'application', 'as' => 'application.', 'middleware' =>
 
 // 部署勤怠管理フォーム
 Route::get('/management', [ManagerController::class, 'index'])->name('mgmt.dept');
+Route::post('/management', [ManagerController::class, 'index'])->name('mgmt.dept.post');
 
 // マスタ管理フォーム
-Route::get('/management/master', [ManagerController::class, 'getMaster'])->name('mgmt.master');
+Route::get('/management/master', [ManagerController::class, 'getMaster'])->name('master');
