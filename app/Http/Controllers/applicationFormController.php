@@ -11,6 +11,9 @@ use App\Models\Department;
 use App\Models\User;
 use Carbon\Carbon;
 use App\Http\Requests\ApplicationFormRequest;
+use Illuminate\Support\Facades\Validator;
+use App\Mail\SendMail;
+use Mail;
 
 class ApplicationFormController extends Controller
 {
@@ -107,6 +110,16 @@ class ApplicationFormController extends Controller
         $application = Application::find($request->application);
 
         return view('application.approval_form', compact('user', 'application'));
+    }
+
+    public function send(Request $request) {
+        $rules = [
+            'name' => 'required',
+            'department' => 'required',
+            'applied-content' => 'required',
+            'date' => 'required',
+            'comment' => '',
+        ];
     }
 
 
