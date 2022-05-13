@@ -46,7 +46,7 @@
 						<li><a href="{{ route('mgmt.dept') }}" class="nav-link">勤怠管理</a></li>
 						<li><a href="{{ route('application.index', array_merge(Request::query(), ['department' => auth()->user()->department_id])) }}" class="nav-link">申請一覧</a></li>
 						<li><a href="{{ route('employees.show', array_merge(Request::query(), ['department' => auth()->user()->department_id])) }}" class="nav-link">社員管理</a></li>
-						<li><a href="{{ route('mgmt.master') }}" class="nav-link">基本情報</a></li>
+						<li><a href="{{ route('master') }}" class="nav-link">基本情報</a></li>
 					</ul>
 
 					<!-- Right Side Of Navbar(ユーザー名、ログアウト処理) -->
@@ -89,6 +89,15 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/locale/ja.min.js" integrity="sha512-rElveAU5iG1CzHqi7KbG1T4DQIUCqhitISZ9nqJ2Z4TP0z4Aba64xYhwcBhHQMddRq27/OKbzEFZLOJarNStLg==" crossorigin="anonymous"></script>
 		<!-- Moment.js -->
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0/js/tempusdominus-bootstrap-4.min.js"></script>
+		<!-- datetimepicker実装 -->
+		<script type="text/javascript">
+			$(function () {
+				$('#datePicker').datetimepicker({locale: 'ja', dayViewHeaderFormat: 'YYYY年M月' ,format: 'YYYY/MM/DD'});
+				$('#startTimePicker').datetimepicker({locale: 'ja', format: 'HH:mm'});
+				$('#endTimePicker').datetimepicker({locale: 'ja', format: 'HH:mm'});
+			});
+		</script>
+
 		<!-- jQueryを追加する用 -->
 		@yield('js')
 	</body>
