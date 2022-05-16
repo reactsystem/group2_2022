@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('css')
+<link rel="stylesheet" href="{{asset('css/employees.css')}}">
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -71,20 +75,18 @@
                         </div>
 
                         <!-- 入社日 -->
-                        <div class="row mb-3">
-                            <div class="input-group date" id="datePicker" data-target-input="nearest">
-                                <label for="datePicker" class="col-md-4 col-form-label text-md-end">入社日</label>
-                                <div class="col-md-6">
-                                    <input type="text" name="joining" value="{{old('joining')}}" data-name="{{old('joining')}}" class="form-control datetimepicker-input @error('joining') is-invalid @enderror" data-target="#datePicker" data-toggle="datetimepicker"/>
-                                    @error('joining')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
+                        <div class="row mb-3 datetime">
+                            <label for="datePicker" class="col-md-4 col-form-label text-md-end">入社日</label>
+                            <div class="col-md-6 input-group date date-width" data-target-input="nearest">
+                                <input type="text" id="datePicker" name="joining" value="{{old('joining')}}" data-name="{{old('joining')}}" class="form-control datetimepicker-input @error('joining') is-invalid @enderror" data-target="#datePicker" data-toggle="datetimepicker"/>
                                 <div class="input-group-append" data-target="#datePicker" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                </div> 
+                                </div>
+                                @error('joining')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
                         </div>
 

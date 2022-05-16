@@ -8,3 +8,11 @@
 .badge{
     background-color: red;
 }
+
+.datetime{
+    flex-wrap: nowrap;
+}
+
+.date-width{
+    width: 51%;
+}

@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('css')
+<link rel="stylesheet" href="{{asset('css/employees.css')}}">
+@endsection
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -66,20 +70,18 @@
                         </div>
 
                         <!-- 退社日 -->
-                        <div class="row mb-3">
-                            <div class="input-group date" id="datePicker" data-target-input="nearest">
-                                <label for="datePicker" class="col-md-4 col-form-label text-md-end">退社日</label>
-                                <div class="col-md-6">
-                                    <input type="text" name="leaving" value="{{old('leaving')}}" data-name="{{old('leaving')}}" class="form-control datetimepicker-input @error('leaving') is-invalid @enderror" data-target="#datePicker" data-toggle="datetimepicker"/>
-                                    @error('leaving')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
+                        <div class="row mb-3 leaving-day">         
+                            <label for="datePicker" class="col-md-4 col-form-label text-md-end">退社日</label>
+                            <div class="col-md-6 input-group date leaving-width"  data-target-input="nearest">
+                                <input type="text" name="leaving" id="datePicker" value="{{old('leaving')}}" data-name="{{old('leaving')}}" class="form-control datetimepicker-input @error('leaving') is-invalid @enderror" data-target="#datePicker" data-toggle="datetimepicker"/>    
                                 <div class="input-group-append" data-target="#datePicker" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                </div> 
+                                </div>
+                                @error('leaving')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror 
                             </div>
                         </div>
 
