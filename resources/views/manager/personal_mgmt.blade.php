@@ -12,18 +12,33 @@
             <div class="contents">
 
                 <div class="select_month col">
-                    <p class="mr-4">◎◎△△さんの勤務表</p>
-                    <form action="" method="POST">
-                        <select name="month" class="form-select col" aria-label="Default select example">
-                            <option value="">２０２２年５月</option>
-                        </select>
+                    <p class="mr-4">{{$user->name}}さんの勤務表</p>
+                    <form method="POST" id="select" action="/select_month" class="form-inline">
+                        @csrf
+                        <div class="form-group">
+                            <select name="month" class="form-select col mr-2" aria-label="Default select example" onchange="submit_form()">
+                                @php
+                                    $last_month = $month->copy()->subMonthNoOverflow();
+                                    $next_month = $month->copy()->addMonthNoOverflow();
+                                    $month->subMonthNoOverflow(7);
+                                @endphp
+                                @for ($i =1; $i <= 13; $i++)
+                                    @php $month->addMonthNoOverflow(); @endphp
+                                    <option value="@php echo $month; @endphp"
+                                    @if ($i == 7)
+                                        selected
+                                    @endif
+                                >{{$month->isoFormat('YYYY年M月')}}</option>
+                                @endfor
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" name="month" value="@php echo $last_month @endphp" class="btn btn-outline-dark btn-sm mr-2">＜前月へ</button>
+                        </div>
+                        <div class="form-group">
+                        <button type="submit" name="month" value="@php echo $next_month @endphp" class="btn btn-outline-dark btn-sm">翌月へ＞</button>
+                        </div>
                     </form>
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination">
-                          <li class="page-item"><a class="page-link" href="#">＜前月へ</a></li>
-                          <li class="page-item"><a class="page-link" href="#">翌月へ＞</a></li>
-                        </ul>
-                      </nav>
                 </div>
 
                 <table class="table col-7 table-sm">
@@ -55,7 +70,7 @@
                 <table class="table col-7 table-sm">
                     <thead>
                         <tr class="table-success">
-                            <th colspan="4" scope="col">
+                            <th colspan="5" scope="col">
                                 <button class="btn" type="button" data-toggle="collapse" data-target=".collapse1" aria-expanded="false" style="width: 100%; text-align: left;">
                                     勤務区分項目
                                 </button>
@@ -68,12 +83,14 @@
                         <td><div class="collapse collapse1">欠勤</td>
                         <td><div class="collapse collapse1">遅刻</td>
                         <td><div class="collapse collapse1">早退</td>
+                        <td><div class="collapse collapse1">遅刻/早退</td>
                     </tr>
                     <tr>
-                        <td><div class="collapse collapse1">1</td>
-                        <td><div class="collapse collapse1">0</td>
-                        <td><div class="collapse collapse1">0</td>
-                        <td><div class="collapse collapse1">0</td>
+                        <td><div class="collapse collapse1">{{$work_times->where('work_type_id', 1)->count()}}</td>
+                        <td><div class="collapse collapse1">{{$work_times->where('work_type_id', 2)->count()}}</td>
+                        <td><div class="collapse collapse1">{{$work_times->where('work_type_id', 3)->count()}}</td>
+                        <td><div class="collapse collapse1">{{$work_times->where('work_type_id', 4)->count()}}</td>
+                        <td><div class="collapse collapse1">{{$work_times->where('work_type_id', 7)->count()}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -96,9 +113,9 @@
                         <td><div class="collapse collapse2"></td>
                     </tr>
                     <tr>
-                        <td><div class="collapse collapse2">0</td>
-                        <td><div class="collapse collapse2">0</td>
-                        <td><div class="collapse collapse2">20</td>
+                        <td><div class="collapse collapse2">{{$work_times->where('work_type_id', 5)->count()}}</td>
+                        <td><div class="collapse collapse2">{{$work_times->where('work_type_id', 6)->count()}}</td>
+                        <td><div class="collapse collapse2">{{$paid_leaves->left_days}}</td>
                         <td><div class="collapse collapse2"></td>
                     </tr>
                     </tbody>

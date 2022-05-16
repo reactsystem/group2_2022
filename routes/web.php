@@ -6,6 +6,7 @@ use App\Http\Controllers\ApplicationFormController;
 use App\Http\Controllers\EmployeesFormController;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\InputFormController;
+use App\Http\Controllers\PersonalMgmtController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -36,9 +37,8 @@ Route::group(['prefix' => 'employees', 'as' => 'employees.', 'middleware' => 'au
 });
 
 // 個人勤怠管理フォーム
-Route::get('/personal_management', function () {
-    return view('personal_management');
-})->name('mgmt.personal');
+Route::get('/personal_management', [PersonalMgmtController::class, 'index'])->name('mgmt.personal');
+Route::post('/personal_management', [PersonalMgmtController::class, 'update'])->name('update');
 
 //申請フォーム
 Route::group(['prefix' => 'application', 'as' => 'application.', 'middleware' => 'auth'], function(){
