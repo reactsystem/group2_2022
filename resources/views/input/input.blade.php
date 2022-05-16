@@ -108,6 +108,8 @@
                                         style="color: blue;"
                                     @elseif ($dt->isoFormat('ddd') === '日' || $holidays->isHoliday($dt))
                                         style="color: red;"
+                                    @else
+                                        id="weekday"
                                     @endif
                                     >
                                         @php echo $dt->isoFormat('MM/DD(ddd)'); @endphp
@@ -186,7 +188,7 @@
                             </tr>
                             <tr>
                                 <td colspan="3"></td>
-                                <td></td>
+                                <td id="weekday_sum"></td>
                                 <td id="rest"></td>
                                 <td id="worked"></td>
                                 <td id="over"></td>

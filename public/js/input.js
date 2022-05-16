@@ -42,3 +42,24 @@ function calculate(cell_num, column_id) {
 window.onload = calculate(4, 'rest');
 window.onload = calculate(5, 'worked');
 window.onload = calculate(6, 'over');
+
+// 所定時間(既定の労働時間×平日の日数)を計算
+window.onload = function () {
+	var num = document.querySelectorAll('#weekday').length;
+	var result = "07:45";
+	Arr = result.split(":");
+	var hh1 = parseInt(Arr[0])*num;
+	var mm1 = parseInt(Arr[1])*num;
+
+	var mm2 = mm1 % 60;
+	var mmx = mm1/60;
+	var mm3 = parseInt(mmx);
+	var hh1 = parseInt(hh1) + parseInt(mm3); 
+	var mm1 = mm2;
+
+	mm1 = mm1.toString().padStart(2, '0');
+
+	var result = hh1 + ':' + mm1;
+
+	document.getElementById('weekday_sum').innerText = result;
+};
