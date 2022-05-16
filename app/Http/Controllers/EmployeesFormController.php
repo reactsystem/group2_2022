@@ -98,7 +98,7 @@ class employeesFormController extends Controller
             'created_at' => Carbon::now()
         ]);
 
-        return redirect()->route('employees.show',['department' => $request->department])->with(['message' => '新規追加しました。']);
+        return redirect()->route('employees.show',['department' => $request->department])->with(['message' => '社員番号：'.$request->id.'、社員名：'.$request->name.'さんを新規追加しました。']);
     }
 
     //社員編集ページ
@@ -124,6 +124,6 @@ class employeesFormController extends Controller
         $editUser->updated_at = Carbon::now();
         $editUser->save();
 
-        return redirect()->route('employees.show',['department' => $editUser->department_id])->with(['message' => '更新しました。']);
+        return redirect()->route('employees.show',['department' => $editUser->department_id])->with(['message' => '社員番号：'.$editUser->id.'、社員名：'.$request->name.'さんを更新しました。']);
     }
 }

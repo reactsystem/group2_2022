@@ -19,7 +19,7 @@ checkbox.addEventListener('change', (e)=>{
 $('#datePicker').datetimepicker({
     locale: 'ja',
     dayViewHeaderFormat: 'YYYY年M月',
-    format: 'YYYY/MM/DD'
+    format: 'YYYY/MM/DD',
 });
 
 //入社日の記入を維持

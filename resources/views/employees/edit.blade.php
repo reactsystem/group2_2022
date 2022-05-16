@@ -33,9 +33,13 @@
                                 <select name="department" id="department" class="form-select" required autocomplete="department" autofocus>
                                 <option value="{{$editUser->department->id}}" selected>{{$editUser->department->name}}</option>
                                     @foreach($departments as $department)
-                                        <option value="{{$department->id}}" @if(old('department') == $department->id) selected @endif>
-                                            {{$department->name}}
-                                        </option>
+                                        @if($editUser->department->id === $department->id)
+                                            @continue
+                                        @else
+                                            <option value="{{$department->id}}" @if(old('department') == $department->id) selected @endif>
+                                                {{$department->name}}
+                                            </option>
+                                        @endif
                                     @endforeach
                                 </select>
                                 @error('department')
