@@ -26,50 +26,49 @@ class ApplicationFormController extends Controller
         $departments = Department::get();
         $applications = '';
         
-        // dd($application);
-        // 部署ごとに表示
+        // 部署ごとに表示、statusが0のデータのみ表示
         if($request->query('department')){
             $applications = Application::whereIn('user_id', function ($query) use ($request) {
                 $query->from('users')
                 ->select('id')
                 ->where('department_id', $request->department);
-            })->paginate();
+            })->where('status', 0)->paginate();
         }else{
             $applications = Application::whereIn('user_id', function ($query){
                 $query->from('users')
                 ->select('id');
-            })->paginate();
+            })->where('status', 0)->paginate();
         }
 
         // 表示件数
         $limit_disp = ['全て', '5件', '10件', '20件'];
 
-        //部署ごとに表示＋表示件数
+        //部署ごとに表示＋表示件数、statusが0のデータのみ表示
         if($request->query('disp_limit') && $request->query('department')){
             if($request->query('disp_limit')==='0'){
                 $applications = Application::whereIn('user_id', function ($query) use ($request){
                     $query->from('users')
                     ->select('id')
                     ->where('department_id', $request->department);
-                })->paginate();
+                })->where('status', 0)->paginate();
             }elseif($request->query('disp_limit')==='1'){
                 $applications = Application::whereIn('user_id', function ($query) use ($request){
                     $query->from('users')
                     ->select('id')
                     ->where('department_id', $request->department);
-                })->paginate(5);
+                })->where('status', 0)->paginate(5);
             }elseif($request->query('disp_limit')==='2'){
                 $applications = Application::whereIn('user_id', function ($query) use ($request){
                     $query->from('users')
                     ->select('id')
                     ->where('department_id', $request->department);
-                })->paginate(10);
+                })->where('status', 0)->paginate(10);
             }elseif($request->query('disp_limit')==='3'){
                 $applications = Application::whereIn('user_id', function ($query) use ($request){
                     $query->from('users')
                     ->select('id')
                     ->where('department_id', $request->department);
-                })->paginate(20);
+                })->where('status', 0)->paginate(20);
             }
         }
 

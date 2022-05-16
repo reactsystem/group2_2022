@@ -11,6 +11,7 @@ use App\Models\Department;
 use App\Models\Application;
 use App\Models\PaidLeave;
 use App\Models\WorkTime;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class User extends Authenticatable
 {

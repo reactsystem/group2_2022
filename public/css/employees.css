@@ -7,6 +7,10 @@
 .employees-add{
     background-color: rgb(1, 180, 1);
 }
+.fa-check{
+    color: rgb(1, 180, 1);
+    font-size: 1.5em;
+}
 
 /* .pagination{
     justify-content: flex-end;
@@ -14,4 +18,14 @@
 
 #limit{
     height: 23px;
+}
+
+.leaving-day,
+.datetime{
+    flex-wrap: nowrap;
+}
+
+.leaving-width,
+.date-width{
+    width: 51%;
 }

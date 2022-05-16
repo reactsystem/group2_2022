@@ -29,8 +29,10 @@ Route::post('/select_month', [InputFormController::class, 'selectMonth'])->middl
 //社員管理フォーム
 Route::group(['prefix' => 'employees', 'as' => 'employees.', 'middleware' => 'auth'], function(){
     Route::get('/', [EmployeesFormController::class, 'show'])->name('show');
-    Route::get('/create', [EmployeesFormController::class, 'create'])->name('create');
-    Route::get('/edit', [EmployeesFormController::class, 'edit'])->name('edit');
+    Route::get('/add', [EmployeesFormController::class, 'add'])->name('add');
+    Route::post('/add', [EmployeesFormController::class, 'create'])->name('create');
+    Route::get('/edit/{user}', [EmployeesFormController::class, 'edit'])->name('edit');
+    Route::post('/edit{user}', [EmployeesFormController::class, 'update'])->name('update');
 });
 
 // 個人勤怠管理フォーム

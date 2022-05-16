@@ -65,21 +65,18 @@
                         </div>
 
                         <!-- 申請したい日 -->
-                        <div class="row mb-3">
-                            <div class="input-group date" id="datePicker" data-target-input="nearest">
-                                <label for="datePicker" class="col-md-4 col-form-label text-md-end required">申請日<span class="badge badge-danger ml-1">必須</span></label>
-                                <div class="col-md-6">
-                                    <input type="text" id="datePicker" name="date" value="{{old('date')}}" class="form-control datetimepicker-input @error('date') is-invalid @enderror" data-target="#datePicker" data-toggle="datetimepicker"/>
-                                    @error('date')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
+                        <div class="row mb-3 datetime">                      
+                            <label for="datePicker" class="col-md-4 col-form-label text-md-end required">申請日<span class="badge badge-danger ml-1">必須</span></label>
+                            <div class="col-md-6 input-group date date-width" id="datePicker" data-target-input="nearest">
+                                <input type="text" id="datePicker" name="date" value="{{old('date')}}" data-name="{{old('date')}}" class="form-control datetimepicker-input @error('date') is-invalid @enderror" data-target="#datePicker" data-toggle="datetimepicker"/>
                                 <div class="input-group-append" data-target="#datePicker" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
-                                
+                                @error('date')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror        
                             </div>
                         </div>
 
@@ -87,38 +84,34 @@
                         <div class="row mb-3">
 
                             <!-- 開始時間 -->
-                            <div class="date mb-3" id="startTimePicker" data-target-input="nearest">
-                                <div class="date-group">
-                                    <label for="startTimePicker" class="col-md-4 col-form-label text-md-end">開始時間<span class="startTimePicker"></span></label>
-                                    <div class="col-md-6">
-                                        <input type="text" id="startTimePicker" name="start_time" value="{{old('start_time')}}" class="form-control datetimepicker-input @error('start_time') is-invalid @enderror" data-target="#startTimePicker" data-toggle="datetimepicker"/>
-                                        @error('start_time')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
+                            <div class="row mb-3 datetime">
+                                <label for="startTimePicker" class="col-md-4 col-form-label text-md-end">開始時間<span class="startTimePicker"></span></label>
+                                <div id="startTimePicker" class="col-md-6 input-group date date-width" data-target-input="nearest">
+                                    <input type="text" id="startTimePicker" name="start_time" value="{{old('start_time')}}" data-name="{{old('start_time')}}" class="form-control datetimepicker-input @error('start_time') is-invalid @enderror" data-target="#startTimePicker" data-toggle="datetimepicker"/>
+                                    <div class="input-group-append date-text" data-target="#startTimePicker" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-clock"></i></div>
                                     </div>
-                                    <div class="input-group-text date-text" data-target="#startTimePicker" data-toggle="datetimepicker">
-                                        <span><i class="fa fa-clock"></i></span>
-                                    </div>
+                                    @error('start_time')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
                             </div>
 
                             <!-- 終了時間 -->
-                            <div class="date" id="endTimePicker" data-target-input="nearest">
-                                <div class="date-group">
-                                    <label for="endTimePicker" class="col-md-4 col-form-label text-md-end">終了時間<span class="endTimePicker"></span></label>
-                                    <div class="col-md-6">
-                                        <input type="text" id="endTimePicker" name="end_time" value="{{old('end_time')}}" class="form-control datetimepicker-input @error('end_time') is-invalid @enderror" data-target="#endTimePicker" data-toggle="datetimepicker"/>
-                                        @error('end_time')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
+                            <div class="row mb-3 datetime">
+                                <label for="endTimePicker" class="col-md-4 col-form-label text-md-end">終了時間<span class="endTimePicker"></span></label>
+                                <div id="endTimePicker" class="col-md-6 input-group date date-width" data-target-input="nearest">
+                                    <input type="text" name="end_time" value="{{old('end_time')}}" data-name="{{old('end_time')}}" class="form-control datetimepicker-input @error('end_time') is-invalid @enderror" data-target="#endTimePicker" data-toggle="datetimepicker"/>
+                                    <div class="input-group-append date-text" data-target="#endTimePicker" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-clock"></i></div>
                                     </div>
-                                    <div class="input-group-text date-text" data-target="#endTimePicker" data-toggle="datetimepicker">
-                                        <span><i class="fa fa-clock"></i></span>
-                                    </div>
+                                    @error('end_time')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
                                 </div>
                             </div>
 
@@ -138,79 +131,9 @@
         </div>
     </div>
 </div>
+<span id="left_time" class="d-none" data-name="{{$left_time}}"></span>
 @endsection
 
 @section('js')
-<script>
-
-    $(document).ready(function() 
-    {
-        // 申請したい日
-        $('#datePicker').datetimepicker({
-            locale: 'ja',
-            dayViewHeaderFormat: 'YYYY年M月',
-            format: 'YYYY/MM/DD',
-			minDate: new Date
-		});
-
-        //開始時間、終了時間
-        $('#startTimePicker').datetimepicker({
-            locale: 'ja',
-            format: 'HH:mm',
-            minDate: {h:'{{substr($left_time, 0, 2)}}', m:'{{substr($left_time, 3, 5)}}'},
-            maxDate: moment({h:24}),
-        });
-        
-        $('#endTimePicker').datetimepicker({
-            locale: 'ja',
-            format: 'HH:mm',
-            minDate: {h:'{{substr($left_time, 0, 2)}}', m:'{{substr($left_time, 3, 5)}}'},
-            maxDate: moment({h:24}),
-        });        
-        
-        // 初期値なし
-        if(!$('[name=appliedContent]').val()){
-            $('[name=start_time]').val('');
-            $('[name=end_time]').val('');
-        }
-
-        //時間外勤務と打刻時間修正を選ばれている時のみ開始時間、終了時間を記入可
-        function ableSelectTime(){
-            let text = $('[name=appliedContent] option:selected').text().trim();
-            if(text === '時間外勤務' || text === '打刻時間修正'){
-                $('[name=start_time]').prop({'disabled': false, 'required': true});
-                $('[name=end_time]').prop({'disabled': false, 'required': true});
-                $('.startTimePicker').addClass('badge badge-danger ml-1');
-                $('.startTimePicker').text('必須');
-                $('.endTimePicker').addClass('badge badge-danger ml-1');
-                $('.endTimePicker').text('必須');
-            }else{
-                $('[name=start_time]').prop({'disabled': true, 'required': false});
-                $('[name=end_time]').prop({'disabled': true, 'required': false});
-                $('.startTimePicker').removeClass('badge badge-danger ml-1');
-                $('.startTimePicker').text('');
-                $('.endTimePicker').removeClass('badge badge-danger ml-1');
-                $('.endTimePicker').text('');
-            }
-        }
-    
-        ableSelectTime()
-
-        //開始時間、終了時間、申請日の記入を維持
-        if($('[name=start_time]').val() ||$('[name=end_time]').val() || $('[name=date]').val()){
-            $('[name=date]').val('{{old("date")}}');
-            $('[name=start_time]').val('{{old("start_time")}}');
-            $('[name=end_time]').val('{{old("end_time")}}');
-        }
-
-        
-        //開始時間、終了時間を記入できるかどうか
-        $('[name=appliedContent]').change(function() {
-            ableSelectTime()
-            $('[name=start_time]').val('');
-            $('[name=end_time]').val('');
-        });
-    })
-
-</script>
+<script src="{{asset('js/appDateTime.js')}}"></script>
 @endsection
