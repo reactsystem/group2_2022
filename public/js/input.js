@@ -43,6 +43,11 @@ window.onload = calculate(4, 'rest');
 window.onload = calculate(5, 'worked');
 window.onload = calculate(6, 'over');
 
+// 個人勤怠管理フォームの場合、上部のインフォメーションテーブルにも表示する
+window.onload = calculate(4, 'rest_info');
+window.onload = calculate(5, 'worked_info');
+window.onload = calculate(6, 'over_info');
+
 // 所定時間(既定の労働時間×平日の日数)を計算
 window.onload = function () {
 	var num = document.querySelectorAll('#weekday').length;
@@ -62,4 +67,5 @@ window.onload = function () {
 	var result = hh1 + ':' + mm1;
 
 	document.getElementById('weekday_sum').innerText = result;
+	document.getElementById('weekday_sum_info').innerText = result;
 };

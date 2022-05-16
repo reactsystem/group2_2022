@@ -7,7 +7,10 @@
     <header>
     </header>
     @section('content')
-
+{{-- テスト用 --}}
+@isset($items)
+@php var_dump($items) @endphp
+@endisset
         <div class="container">
             <div class="contents">
 
@@ -59,10 +62,10 @@
                         <td><div class="collapse collapse0">時間外</td>
                     </tr>
                     <tr>
-                        <td><div class="collapse collapse0">18:05</td>
-                        <td><div class="collapse collapse0">00:45</td>
-                        <td><div class="collapse collapse0">07:45</td>
-                        <td><div class="collapse collapse0">00:00</td>
+                        <td><div class="collapse collapse0" id="weekday_sum_info"></td>
+                        <td><div class="collapse collapse0" id="rest_info"></td>
+                        <td><div class="collapse collapse0" id="worked_info"></td>
+                        <td><div class="collapse collapse0" id="over_info"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -124,80 +127,161 @@
                 <div class="input_form">
                 <form action="" method="POST">
                     @csrf
-                    <button type="button" class="btn btn-primary btn-lg mb-3">更新する</button>
+                    <button type="submit" class="btn btn-primary btn-lg mb-3" name="user_id" value={{$user->id}}>更新する</button>
 
-                        <table class="table table-bordered col-10 table-sm">
-                            <thead>
-                            <tr class="table-info">
-                                <th scope="col">日付</th>
-                                <th scope="col">勤務区分</th>
-                                <th scope="col">開始</th>
-                                <th scope="col">終了</th>
-                                <th scope="col">休憩時間</th>
-                                <th scope="col">労働時間</th>
-                                <th scope="col">時間外</th>
-                                <th scope="col">メモ</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>5/1(月)</td>
-                                <td><select name="work_type">
-                                    <option value=""></option>
-                                    <option value="1" selected>出勤</option>
-                                    <option value="2">欠勤</option>
-                                    <option value="3">遅刻</option>
-                                    <option value="4">早退</option>
-                                    </select>
-                                </td>
-                                <td><input type="text" name="start_time" size="5" value="09:27"></td>
-                                <td><input type="text" name="left_time" size="5" value="18:05"></td>
-                                <td>00:45</td>
-                                <td>07:45</td>
-                                <td>00:00</td>
-                                <td>・勤怠管理システムの画面設計書を作成</td>
-                            </tr>
-                            @for($n = 2; $n <= 31; $n++)
-                            <tr>
-                                <td>5/{{$n}}(月)</td>
-                                <td><select name="work_type">
-                                    <option value=""></option>
-                                    <option value="1">出勤</option>
-                                    <option value="2">欠勤</option>
-                                    <option value="3">遅刻</option>
-                                    <option value="4">早退</option>
-                                    </select>
-                                </td>
-                                <td><input type="text" name="start_time" size="5"></td>
-                                <td><input type="text" name="left_time" size="5"></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            @endfor
-                            </tbody>
+                    <table class="table table-bordered table-sm" id="input_table">
+                        <thead>
+                        <tr class="table-info">
+                            <th scope="col" style="width: 10%">日付</th>
+                            <th scope="col" style="width: 10%">勤務区分</th>
+                            <th scope="col" style="width: 8%">開始</th>
+                            <th scope="col" style="width: 8%">終了</th>
+                            <th scope="col" style="width: 8%">休憩時間</th>
+                            <th scope="col" style="width: 8%">労働時間</th>
+                            <th scope="col" style="width: 8%">時間外</th>
+                            <th scope="col">メモ</th>
+                        </tr>
+                        </thead>
 
-                            <tfoot>
-                            <tr class="table-info">
-                                <td colspan="3">合計</td>
-                                <td>所定時間</td>
-                                <td>休憩時間</td>
-                                <td>労働時間</td>
-                                <td>時間外</td>
-                                <td></td>
-                            </tr>
+                        <tbody>
+                        @for($i = 1; $i <= $daysInMonth; $i++)
                             <tr>
-                                <td colspan="3"></td>
-                                <td>18:05</td>
-                                <td>00:45</td>
-                                <td>07:45</td>
-                                <td>00:00</td>
-                                <td></td>
+                                <td
+                                @if ($dt->isoFormat('ddd') === '土')
+                                    style="color: blue;"
+                                @elseif ($dt->isoFormat('ddd') === '日' || $holidays->isHoliday($dt))
+                                    style="color: red;"
+                                @else
+                                    id="weekday"
+                                @endif
+                                >
+                                {{$dt->isoFormat('MM/DD(ddd)')}}
+                                <input type="hidden" name="date[]" value={{$dt->isoFormat('YYYY-MM-DD')}}>
+                                </td>
+                                @php $work_time = $work_times->where('date', $dt->isoFormat('YYYY-MM-DD'))->first(); @endphp
+                                    @if ($work_time !== NULL)
+                                        {{-- 時刻計算処理用 --}}
+                                        @php $start_time = strtotime($work_time->start_time);
+                                            $left_time = strtotime($work_time->left_time);
+                                        @endphp
+
+                                        <td>
+                                            <select name="work_type[]">
+                                                <option value="1"
+                                                @if($work_time->work_type_id == 1)
+                                                selected
+                                                @endif>出勤</option>
+                                                <option value="2"
+                                                @if($work_time->work_type_id == 2)
+                                                selected
+                                                @endif>欠勤</option>
+                                                <option value="3"
+                                                @if($work_time->work_type_id == 3)
+                                                selected
+                                                @endif>遅刻</option>
+                                                <option value="4"
+                                                @if($work_time->work_type_id == 4)
+                                                selected
+                                                @endif>早退</option>
+                                                <option value="5"
+                                                @if($work_time->work_type_id == 5)
+                                                selected
+                                                @endif>有給休暇</option>
+                                                <option value="6"
+                                                @if($work_time->work_type_id == 6)
+                                                selected
+                                                @endif>特別休暇</option>
+                                                <option value="7"
+                                                @if($work_time->work_type_id == 7)
+                                                selected
+                                                @endif>遅刻/早退</option>
+                                            </select>
+                                        </td>
+                                        <td><input type="text" name="start_time[]" size="5"
+                                            @if ($work_time->start_time !== NULL)
+                                            value={{date('H:i', $start_time)}}
+                                            @endif>
+                                        </td>
+                                        <td><input type="text" name="left_time[]" size="5"
+                                            @if ($work_time->left_time !== NULL)
+                                            value={{date('H:i', $left_time)}}
+                                            @endif>
+                                        </td>
+                                        <td>
+                                            @if ($work_time->left_time !== NULL)
+                                                @if (date('H:i', $left_time) < '18:15')
+                                                    00:45
+                                                @elseif (date('H:i', $left_time) >= '18:15')
+                                                    01:00
+                                                @endif
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($work_time->left_time !== NULL)
+                                                @if (date('H:i', $left_time) < '18:00')
+                                                    @php $worked_time = strtotime("-45 min", $left_time) - $start_time; @endphp
+                                                    {{gmdate("H:i", $worked_time)}}
+                                                @elseif (date('H:i', $left_time) >= '18:00' && date('H:i', $left_time) < '18:15')
+                                                    07:45
+                                                @elseif (date('H:i', $left_time) >= '18:15')
+                                                    @php $worked_time = strtotime("-1 hours", $left_time) - $start_time; @endphp
+                                                    {{gmdate("H:i", $worked_time)}}
+                                                @endif
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if (date('H:i', $left_time) < '18:15')
+                                                00:00
+                                            @elseif (date('H:i', $left_time) >= '18:15')
+                                                @php $worked_time = strtotime("-1 hours", $left_time) - $start_time; @endphp
+                                                {{gmdate("H:i", strtotime("-45 min -7 hours", $worked_time))}}
+                                            @endif
+                                        </td>
+                                        <td>{{$work_time->description}}</td>
+                                    @else
+                                        <td>
+                                            <select name="work_type[]">
+                                                <option></option>
+                                                <option value="1">出勤</option>
+                                                <option value="2">欠勤</option>
+                                                <option value="3">遅刻</option>
+                                                <option value="4">早退</option>
+                                                <option value="7">遅刻/早退</option>
+                                            </select>
+                                        </td>
+                                        <td><input type="text" name="start_time[]" size="5"></td>
+                                        <td><input type="text" name="left_time[]" size="5"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    @endif
                             </tr>
-                            </tfoot>
-                        </table>
-                </form>
-                </div>
+                            @php $dt->addDay(); @endphp
+                        @endfor
+                        </tbody>
+
+                        <tfoot>
+                        <tr class="table-info">
+                            <td colspan="3">合計</td>
+                            <td>所定時間</td>
+                            <td>休憩時間</td>
+                            <td>労働時間</td>
+                            <td>時間外</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"></td>
+                            <td id="weekday_sum"></td>
+                            <td id="rest"></td>
+                            <td id="worked"></td>
+                            <td id="over"></td>
+                            <td></td>
+                        </tr>
+                        </tfoot>
+                    </table>
+            </form>
         </div>
+    </div>
+    <script src="{{ asset('js/input.js') }}"></script>
 @endsection
