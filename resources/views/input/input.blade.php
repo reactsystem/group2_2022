@@ -90,7 +90,7 @@
                             <thead>
                             <tr class="table-info">
                                 <th scope="col" style="width: 10%">日付</th>
-                                <th scope="col" style="width: 8%">勤務区分</th>
+                                <th scope="col" style="width: 10%">勤務区分</th>
                                 <th scope="col" style="width: 8%">開始</th>
                                 <th scope="col" style="width: 8%">終了</th>
                                 <th scope="col" style="width: 8%">休憩時間</th>
@@ -100,15 +100,16 @@
                             </tr>
                             </thead>
 
-                            {{-- TODO: 遅刻、早退の処理を追加する --}}
                             <tbody>
                             @for($i = 1; $i <= $daysInMonth; $i++)
                                 <tr>
                                     <td
                                     @if ($dt->isoFormat('ddd') === '土')
                                         style="color: blue;"
-                                    @elseif ($dt->isoFormat('ddd') === '日')
+                                    @elseif ($dt->isoFormat('ddd') === '日' || $holidays->isHoliday($dt))
                                         style="color: red;"
+                                    @else
+                                        id="weekday"
                                     @endif
                                     >
                                         @php echo $dt->isoFormat('MM/DD(ddd)'); @endphp
@@ -142,7 +143,10 @@
                                             </td>
                                             <td>
                                                 @if ($work_time->left_time !== NULL)
-                                                    @if (date('H:i', $left_time) < '18:15')
+                                                    @if (date('H:i', $left_time) < '18:00')
+                                                        @php $worked_time = strtotime("-45 min", $left_time) - $start_time; @endphp
+                                                        {{gmdate("H:i", $worked_time)}}
+                                                    @elseif (date('H:i', $left_time) >= '18:00' && date('H:i', $left_time) < '18:15')
                                                         07:45
                                                     @elseif (date('H:i', $left_time) >= '18:15')
                                                         @php $worked_time = strtotime("-1 hours", $left_time) - $start_time; @endphp
@@ -154,6 +158,7 @@
                                                 @if (date('H:i', $left_time) < '18:15')
                                                     00:00
                                                 @elseif (date('H:i', $left_time) >= '18:15')
+                                                    @php $worked_time = strtotime("-1 hours", $left_time) - $start_time; @endphp
                                                     {{gmdate("H:i", strtotime("-45 min -7 hours", $worked_time))}}
                                                 @endif
                                             </td>
@@ -183,7 +188,7 @@
                             </tr>
                             <tr>
                                 <td colspan="3"></td>
-                                <td></td>
+                                <td id="weekday_sum"></td>
                                 <td id="rest"></td>
                                 <td id="worked"></td>
                                 <td id="over"></td>
