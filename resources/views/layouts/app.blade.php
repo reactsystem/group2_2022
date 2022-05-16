@@ -47,7 +47,7 @@
 						<li><a href="{{ route('mgmt.dept') }}" class="nav-link">勤怠管理</a></li>
 						<li><a href="{{ route('application.index', array_merge(Request::query(), ['department' => auth()->user()->department_id])) }}" class="nav-link">申請一覧</a></li>
 						<li><a href="{{ route('employees.show', array_merge(Request::query(), ['department' => auth()->user()->department_id])) }}" class="nav-link">社員管理</a></li>
-						<li><a href="{{ route('mgmt.master') }}" class="nav-link">基本情報</a></li>
+						<li><a href="{{ route('master') }}" class="nav-link">基本情報</a></li>
 					</ul>
 
 					<!-- Right Side Of Navbar(ユーザー名、ログアウト処理) -->
@@ -94,6 +94,7 @@
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.0/js/jquery.tablesorter.min.js"></script>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.0/css/theme.default.min.css">
 		<!-- js、jQueryをそれぞれで追加 -->
+
 		@yield('js')
 	</body>
 </html>

@@ -24,6 +24,7 @@ return new class extends Migration
             $table->time('rest_time')->nullable();
             $table->time('over_time')->nullable();
             $table->text('description')->nullable();
+            $table->timestamps();
         });
     }
 

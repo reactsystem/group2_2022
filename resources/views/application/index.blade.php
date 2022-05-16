@@ -6,6 +6,11 @@
 
 @section('content')
 <div class="container">
+    @if (session()->has('message'))
+    <div class="alert alert-primary" role="alert">
+        {{session('message')}}
+    </div>
+    @endif
 
     <!-- 検索フォーム -->
     <form id="search" action="" method="get">
