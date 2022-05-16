@@ -63,9 +63,13 @@ class InputFormController extends Controller
             if (DB::table('work_times')->where('date', $date)->exists()) {
                 return redirect('/')->with('message', '既に出勤の打刻が完了しています');
             } else {
+                $fixed_time = FixedTime::find(1);
                 $work_time = new WorkTime;
                 $work_time->user_id = $request->user_id;
                 $work_time->work_type_id = 1;
+
+                // 打刻開始時刻が始業時刻を超えていた場合、「遅刻」を打刻する
+                if (strtotime($time) >= strtotime($fixed_time->start_time))
                 $work_time->date = $date;
                 $work_time->start_time = $time;
                 $work_time->over_time = '00:00:00';
