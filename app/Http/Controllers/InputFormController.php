@@ -10,6 +10,7 @@ use App\Models\WorkType;
 use App\Models\FixedTime;
 use App\Models\PaidLeave;
 use Carbon\Carbon;
+use Yasumi\Yasumi;
 
 class InputFormController extends Controller
 {
@@ -19,6 +20,10 @@ class InputFormController extends Controller
         Carbon::setLocale('ja');
         $today = Carbon::createFromDate();
         $month = Carbon::createFromDate();
+
+        // 年間の祝日を取得する
+        $now = now();
+        $holidays = Yasumi::create('Japan', $now->year, 'ja_JP');
 
         // 当日の打刻メモが存在すれば取得する
         $date = date("Y-m-d");
@@ -49,6 +54,7 @@ class InputFormController extends Controller
             'user' => $user,
             'description' => $description,
             'count_paid_leaves' => $count_paid_leaves,
+            'holidays' => $holidays,
         ]);
     }
 
@@ -134,6 +140,10 @@ class InputFormController extends Controller
         $today = Carbon::createFromDate();
         $month = new Carbon($request->month);
 
+        // 年間の祝日を取得する
+        $year = $month->format('Y');
+        $holidays = Yasumi::create('Japan', $year, 'ja_JP');
+
         // 当日の打刻メモが存在すれば取得する
         $date = date("Y-m-d");
         $description = DB::table('work_times')->select('description')->where('date', $date)->first();
@@ -163,6 +173,7 @@ class InputFormController extends Controller
             'user' => $user,
             'description' => $description,
             'count_paid_leaves' => $count_paid_leaves,
+            'holidays' => $holidays,
         ]);
     }
 

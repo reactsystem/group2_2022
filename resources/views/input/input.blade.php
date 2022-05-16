@@ -100,14 +100,13 @@
                             </tr>
                             </thead>
 
-                            {{-- TODO: 遅刻、早退の処理を追加する --}}
                             <tbody>
                             @for($i = 1; $i <= $daysInMonth; $i++)
                                 <tr>
                                     <td
                                     @if ($dt->isoFormat('ddd') === '土')
                                         style="color: blue;"
-                                    @elseif ($dt->isoFormat('ddd') === '日')
+                                    @elseif ($dt->isoFormat('ddd') === '日' || $holidays->isHoliday($dt))
                                         style="color: red;"
                                     @endif
                                     >
