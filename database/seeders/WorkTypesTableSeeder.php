@@ -36,6 +36,9 @@ class WorkTypesTableSeeder extends Seeder
             [
                 'name' => '特別休暇',
             ],
+            [
+                'name' => '遅刻/早退'
+            ],
         ];
 
         $now = Carbon::now();

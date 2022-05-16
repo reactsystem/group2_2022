@@ -90,7 +90,7 @@
                             <thead>
                             <tr class="table-info">
                                 <th scope="col" style="width: 10%">日付</th>
-                                <th scope="col" style="width: 8%">勤務区分</th>
+                                <th scope="col" style="width: 10%">勤務区分</th>
                                 <th scope="col" style="width: 8%">開始</th>
                                 <th scope="col" style="width: 8%">終了</th>
                                 <th scope="col" style="width: 8%">休憩時間</th>
@@ -142,7 +142,10 @@
                                             </td>
                                             <td>
                                                 @if ($work_time->left_time !== NULL)
-                                                    @if (date('H:i', $left_time) < '18:15')
+                                                    @if (date('H:i', $left_time) < '18:00')
+                                                        @php $worked_time = strtotime("-45 min", $left_time) - $start_time; @endphp
+                                                        {{gmdate("H:i", $worked_time)}}
+                                                    @elseif (date('H:i', $left_time) >= '18:00' && date('H:i', $left_time) < '18:15')
                                                         07:45
                                                     @elseif (date('H:i', $left_time) >= '18:15')
                                                         @php $worked_time = strtotime("-1 hours", $left_time) - $start_time; @endphp
@@ -154,6 +157,7 @@
                                                 @if (date('H:i', $left_time) < '18:15')
                                                     00:00
                                                 @elseif (date('H:i', $left_time) >= '18:15')
+                                                    @php $worked_time = strtotime("-1 hours", $left_time) - $start_time; @endphp
                                                     {{gmdate("H:i", strtotime("-45 min -7 hours", $worked_time))}}
                                                 @endif
                                             </td>
