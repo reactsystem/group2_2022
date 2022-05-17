@@ -15,9 +15,9 @@ class MasterController extends Controller
 	public function show(Request $request)
 	{
 		$fixed_time = FixedTime::first();
-		$departments = Department::all();
-		$work_types = WorkType::all();
-		$app_types = ApplicationType::all();
+		$departments = Department::whereNull('deleted_at')->get();
+		$work_types = WorkType::whereNull('deleted_at')->get();
+		$app_types = ApplicationType::whereNull('deleted_at')->get();
 
 		$param = [
 			'fixed_time' => $fixed_time,
@@ -97,13 +97,19 @@ class MasterController extends Controller
 		switch($request->table)
 		{
 			case 'application':
-				ApplicationType::find($request->id)->delete();
+				$del_app = ApplicationType::find($request->id);
+				$del_app->deleted_at = Carbon::now();
+				$del_app->save();
 				break;
 			case 'department':
-				Department::find($request->id)->delete();
+				$del_dept = Department::find($request->id);
+				$del_dept->deleted_at = Carbon::now();
+				$del_dept->save();
 				break;
 			case 'work_type':
-				WorkType::find($request->id)->delete();
+				$del_type = WorkType::find($request->id);
+				$del_type->deleted_at = Carbon::now();
+				$del_type->save();
 				break;
 		}
 
