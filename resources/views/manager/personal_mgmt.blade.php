@@ -7,10 +7,11 @@
     <header>
     </header>
     @section('content')
-{{-- テスト用 --}}
-@isset($items)
-@php var_dump($items) @endphp
-@endisset
+    @if (session()->has('message'))
+    <div class="alert alert-primary" role="alert">
+        {{session('message')}}
+    </div>
+    @endif
         <div class="container">
             <div class="contents">
 
@@ -127,7 +128,7 @@
                 <div class="input_form">
                 <form action="" method="POST">
                     @csrf
-                    <button type="submit" class="btn btn-primary btn-lg mb-3" name="user_id" value={{$user->id}}>更新する</button>
+                    <button type="submit" class="btn btn-primary btn-lg mb-3">更新する</button>
 
                     <table class="table table-bordered table-sm" id="input_table">
                         <thead>
@@ -156,6 +157,7 @@
                                 @endif
                                 >
                                 {{$dt->isoFormat('MM/DD(ddd)')}}
+                                <input type="hidden" name="user_id[]" value={{$user->id}}>
                                 <input type="hidden" name="date[]" value={{$dt->isoFormat('YYYY-MM-DD')}}>
                                 </td>
                                 @php $work_time = $work_times->where('date', $dt->isoFormat('YYYY-MM-DD'))->first(); @endphp

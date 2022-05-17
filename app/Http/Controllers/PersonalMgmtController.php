@@ -58,29 +58,31 @@ class PersonalMgmtController extends Controller
 
     public function update(Request $request) {
         $items = $request->all();
+        $count = count($items['date']);
 
-        foreach ($items['work_type'] as $work_type) {
-            $n = 0;
-            if ($work_type !== NULL) {
-                if (WorkTime::where('user_id', $items['user_id'])->exists()) {
-                WorkTime::where('user_id', $items['user_id'])
-                    ->where('date', $items['date'][$n])
-                    ->update([
-                        'work_type_id' => $items['work_type'][$n],
-                        'start_time' => $items['start_time'][$n],
-                        'left_time' => $items['left_time'][$n],
+        for ($i = 0; $i < $count; $i++)
+        {
+            if ($items['work_type'][$i] !== NULL) {
+                if (WorkTime::where('user_id', $items['user_id'])->where('date', $items['date'][$i])->exists())
+                {
+                    WorkTime::where('user_id', $items['user_id'])
+                        ->where('date', $items['date'][$i])
+                        ->update([
+                            'work_type_id' => $items['work_type'][$i],
+                            'start_time' => $items['start_time'][$i],
+                            'left_time' => $items['left_time'][$i],
                     ]);
                 } else {
                     $work_time = new WorkTime;
-                    $work_time->date = $items['date'][$n];
-                    $work_time->work_type_id = $items['work_type'][$n];
-                    $work_time->start_time = $items['start_time'][$n];
-                    $work_time->left_time = $items['left_time'][$n];
+                    $work_time->date = $items['date'][$i];
+                    $work_time->user_id = $items['user_id'][$i];
+                    $work_time->work_type_id = $items['work_type'][$i];
+                    $work_time->start_time = $items['start_time'][$i];
+                    $work_time->left_time = $items['left_time'][$i];
                     $work_time->save();
                 }
             }
-            $n += 1;
         }
-        return redirect('personal_management')->withInput($items);
+        return redirect('personal_management')->with('message', '勤務表を更新しました');
     }
 }
