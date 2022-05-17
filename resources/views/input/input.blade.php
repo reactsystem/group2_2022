@@ -5,9 +5,9 @@
 @endsection
 
     @section('content')
-        @if (session('sended_form'))
+        @if (session('sent_form'))
             <div class="alert alert-success text-center" role="alert">
-                {{ session('sended_form') }}
+                {{ session('sent_form') }}
             </div>
         @endif
         <div class="container">
@@ -46,7 +46,7 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td>{{$count_paid_leaves}}</td>
+                            <td>{{$work_times->where('work_type_id', 5)->count()}}</td>
                             <td>{{$paid_leaves->left_days}}</td>
                         </tr>
                         </tbody>
@@ -56,7 +56,7 @@
 
             <!-- 右カラム -->
             <div class="contents">
-                <form method="POST" id="select" action="/select_month" class="form-inline">
+                <form method="GET" id="select" action="" class="form-inline">
                     @csrf
                     <div class="form-group">
                         <select name="month" class="form-select col mr-2" aria-label="Default select example" onchange="submit_form()">
@@ -67,19 +67,20 @@
                             @endphp
                             @for ($i =1; $i <= 13; $i++)
                                 @php $month->addMonthNoOverflow(); @endphp
-                                <option value="@php echo $month; @endphp"
+                                <option value={{$month}}
                                 @if ($i == 7)
                                     selected
                                 @endif
-                            >{{$month->isoFormat('YYYY年M月')}}</option>
+                                >{{$month->isoFormat('YYYY年M月')}}
+                                </option>
                             @endfor
                         </select>
                     </div>
                     <div class="form-group">
-                        <button type="submit" name="month" value="@php echo $last_month @endphp" class="btn btn-outline-dark btn-sm mr-2">＜前月へ</button>
+                        <button type="submit" name="month" value={{$last_month}} class="btn btn-outline-dark btn-sm mr-2">＜前月へ</button>
                     </div>
                     <div class="form-group">
-                    <button type="submit" name="month" value="@php echo $next_month @endphp" class="btn btn-outline-dark btn-sm">翌月へ＞</button>
+                    <button type="submit" name="month" value={{$next_month}} class="btn btn-outline-dark btn-sm">翌月へ＞</button>
                     </div>
                 </form>
 
@@ -90,7 +91,7 @@
                             <thead>
                             <tr class="table-info">
                                 <th scope="col" style="width: 10%">日付</th>
-                                <th scope="col" style="width: 8%">勤務区分</th>
+                                <th scope="col" style="width: 10%">勤務区分</th>
                                 <th scope="col" style="width: 8%">開始</th>
                                 <th scope="col" style="width: 8%">終了</th>
                                 <th scope="col" style="width: 8%">休憩時間</th>
@@ -100,15 +101,16 @@
                             </tr>
                             </thead>
 
-                            {{-- TODO: 遅刻、早退の処理を追加する --}}
                             <tbody>
                             @for($i = 1; $i <= $daysInMonth; $i++)
                                 <tr>
                                     <td
                                     @if ($dt->isoFormat('ddd') === '土')
                                         style="color: blue;"
-                                    @elseif ($dt->isoFormat('ddd') === '日')
+                                    @elseif ($dt->isoFormat('ddd') === '日' || $holidays->isHoliday($dt))
                                         style="color: red;"
+                                    @else
+                                        id="weekday"
                                     @endif
                                     >
                                         @php echo $dt->isoFormat('MM/DD(ddd)'); @endphp
@@ -122,39 +124,66 @@
 
                                             <td>{{$work_time->workType->name}}</td>
                                             <td>
-                                                @if ($work_time->start_time !== NULL)
+                                                @isset ($work_time->start_time)
                                                 {{date('H:i', $start_time)}}
-                                                @endif
+                                                @endisset
                                             </td>
                                             <td>
-                                                @if ($work_time->left_time !== NULL)
+                                                @isset ($work_time->left_time)
                                                 {{date('H:i', $left_time)}}
-                                                @endif
+                                                @endisset
                                             </td>
                                             <td>
-                                                @if ($work_time->left_time !== NULL)
+                                                @isset ($work_time->left_time)
                                                     @if (date('H:i', $left_time) < '18:15')
                                                         00:45
                                                     @elseif (date('H:i', $left_time) >= '18:15')
                                                         01:00
                                                     @endif
-                                                @endif
+                                                @endisset
                                             </td>
                                             <td>
-                                                @if ($work_time->left_time !== NULL)
-                                                    @if (date('H:i', $left_time) < '18:15')
-                                                        07:45
-                                                    @elseif (date('H:i', $left_time) >= '18:15')
-                                                        @php $worked_time = strtotime("-1 hours", $left_time) - $start_time; @endphp
-                                                        {{gmdate("H:i", $worked_time)}}
+                                                @isset ($work_time->left_time)
+
+                                                    {{-- 遅刻した場合 --}}
+                                                    @if (date('H:i', $start_time) >= '09:30')
+                                                        @if (date('H:i', $left_time) < '18:00')
+                                                            @php $worked_time = strtotime("-45 min", $left_time) - $start_time; @endphp
+                                                            {{gmdate("H:i", $worked_time)}}
+                                                        @elseif (date('H:i', $left_time) >= '18:00' && date('H:i', $left_time) < '18:15')
+                                                            07:45
+                                                        @elseif (date('H:i', $left_time) >= '18:15')
+                                                            @php $worked_time = strtotime("-1 hours", $left_time) - $start_time; @endphp
+                                                            {{gmdate("H:i", $worked_time)}}
+                                                        @endif
+
+                                                    {{-- 始業開始よりも早く出勤した場合 --}}
+                                                    @elseif (date('H:i', $start_time) < '09:30')
+                                                        @if (date('H:i', $left_time) < '18:00')
+                                                            @php $worked_time = strtotime("-45 min", $left_time) - strtotime($fixed_time->start_time); @endphp
+                                                            {{gmdate("H:i", $worked_time)}}
+                                                        @elseif (date('H:i', $left_time) >= '18:00' && date('H:i', $left_time) < '18:15')
+                                                            07:45
+                                                        @elseif (date('H:i', $left_time) >= '18:15')
+                                                            @php $worked_time = strtotime("-1 hours", $left_time) - strtotime($fixed_time->start_time); @endphp
+                                                            {{gmdate("H:i", $worked_time)}}
+                                                        @endif
                                                     @endif
-                                                @endif
+                                                @endisset
                                             </td>
                                             <td>
                                                 @if (date('H:i', $left_time) < '18:15')
                                                     00:00
                                                 @elseif (date('H:i', $left_time) >= '18:15')
-                                                    {{gmdate("H:i", strtotime("-45 min -7 hours", $worked_time))}}
+                                                    {{-- 遅刻した場合 --}}
+                                                    @if (date('H:i', $start_time) >= '09:30')
+                                                        @php $worked_time = strtotime("-1 hours", $left_time) - $start_time; @endphp
+                                                        {{gmdate("H:i", strtotime("-45 min -7 hours", $worked_time))}}
+                                                    {{-- 始業開始よりも早く出勤した場合 --}}
+                                                    @elseif (date('H:i', $start_time) < '09:30')
+                                                        @php $worked_time = strtotime("-1 hours", $left_time) - strtotime($fixed_time->start_time); @endphp
+                                                        {{gmdate("H:i", strtotime("-45 min -7 hours", $worked_time))}}
+                                                    @endif
                                                 @endif
                                             </td>
                                             <td>{{$work_time->description}}</td>
@@ -183,7 +212,7 @@
                             </tr>
                             <tr>
                                 <td colspan="3"></td>
-                                <td></td>
+                                <td id="weekday_sum"></td>
                                 <td id="rest"></td>
                                 <td id="worked"></td>
                                 <td id="over"></td>

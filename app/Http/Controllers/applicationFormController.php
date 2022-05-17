@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use App\Http\Requests\ApplicationFormRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\SendMail;
+use App\Models\PaidLeave;
 use App\Models\WorkTime;
 use Illuminate\Support\Facades\Mail;
 
@@ -115,6 +116,22 @@ class ApplicationFormController extends Controller
     public function send(Request $request) {
         $user = Auth::user();
 
+        // 申請承認フォームのコメントに対するバリデーション
+        $rules = [
+            'comment' => 'max:60',
+        ];
+        $messages = [
+            'comment.max' => 'コメントは６０文字以下で入力してください。',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
         // 承認結果によってApplicationテーブルのstatusカラムを更新
         $application = Application::find($request->id);
         if ($request->result === '承認') {
@@ -135,6 +152,13 @@ class ApplicationFormController extends Controller
                 }
             }
 
+            // 有給休暇の場合、申請者の残り有給数を減らす
+            if ($application->application_type_id == 1) {
+                $paid_leave = PaidLeave::where('user_id', $application->user_id)->first();
+                $paid_leave->left_days = (int)$paid_leave->left_days - 1;
+                $paid_leave->save();
+            }
+
             // 申請種別が打刻時間修正の場合、work_timeテーブルの申請対象日の開始時間、終了時間を更新
             if ($application->application_type_id == 5) {
                 $work_time = WorkTime::where('user_id', $application->user_id)->where('date', $application->date)->first();
@@ -148,23 +172,7 @@ class ApplicationFormController extends Controller
         }
         $application->save();
 
-        // 申請承認フォームのコメントに対するバリデーション
-        $rules = [
-            'comment' => 'max:60',
-        ];
-
-        $messages = [
-            'comment.max' => 'コメントは６０文字以下で入力してください。',
-        ];
-
-        $validator = Validator::make($request->all(), $rules, $messages);
-
-        if ($validator->fails()) {
-            return back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-
+        // 申請結果通知メールの送信処理
         $data = [
             'user' => $user->name,
             'name' => $request->name,
@@ -176,7 +184,6 @@ class ApplicationFormController extends Controller
             'end_time' => $request->end_time,
             'comment' => $request->comment,
         ];
-        
         Mail::to('admin@hoge.co.jp')->send(new SendMail($data));
 
         return redirect('application/')->with('message', '申請結果を通知しました');

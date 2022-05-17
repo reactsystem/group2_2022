@@ -6,6 +6,7 @@ use App\Http\Controllers\ApplicationFormController;
 use App\Http\Controllers\EmployeesFormController;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\InputFormController;
+use App\Http\Controllers\PersonalMgmtController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -24,7 +25,7 @@ Auth::routes();
 // 勤怠入力フォーム
 Route::get('/', [InputFormController::class, 'show'])->name('input')->middleware('auth');
 Route::post('/', [InputFormController::class, 'add'])->name('input')->middleware('auth');
-Route::post('/select_month', [InputFormController::class, 'selectMonth'])->middleware('auth');
+// Route::post('/select_month', [InputFormController::class, 'selectMonth'])->middleware('auth');
 
 //社員管理フォーム
 Route::group(['prefix' => 'employees', 'as' => 'employees.', 'middleware' => 'auth'], function(){
@@ -36,9 +37,8 @@ Route::group(['prefix' => 'employees', 'as' => 'employees.', 'middleware' => 'au
 });
 
 // 個人勤怠管理フォーム
-Route::get('/personal_management', function () {
-    return view('personal_management');
-})->name('mgmt.personal');
+Route::get('/personal_management', [PersonalMgmtController::class, 'index'])->name('mgmt.personal');
+Route::post('/personal_management', [PersonalMgmtController::class, 'update'])->name('update');
 
 //申請フォーム
 Route::group(['prefix' => 'application', 'as' => 'application.', 'middleware' => 'auth'], function(){
