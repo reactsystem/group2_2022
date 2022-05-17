@@ -5,9 +5,9 @@
 @endsection
 
     @section('content')
-        @if (session('sended_form'))
+        @if (session('sent_form'))
             <div class="alert alert-success text-center" role="alert">
-                {{ session('sended_form') }}
+                {{ session('sent_form') }}
             </div>
         @endif
         <div class="container">
@@ -46,7 +46,7 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td>{{$count_paid_leaves}}</td>
+                            <td>{{$work_times->where('work_type_id', 5)->count()}}</td>
                             <td>{{$paid_leaves->left_days}}</td>
                         </tr>
                         </tbody>
@@ -56,7 +56,7 @@
 
             <!-- 右カラム -->
             <div class="contents">
-                <form method="POST" id="select" action="/select_month" class="form-inline">
+                <form method="GET" id="select" action="" class="form-inline">
                     @csrf
                     <div class="form-group">
                         <select name="month" class="form-select col mr-2" aria-label="Default select example" onchange="submit_form()">
@@ -67,19 +67,20 @@
                             @endphp
                             @for ($i =1; $i <= 13; $i++)
                                 @php $month->addMonthNoOverflow(); @endphp
-                                <option value="@php echo $month; @endphp"
+                                <option value={{$month}}
                                 @if ($i == 7)
                                     selected
                                 @endif
-                            >{{$month->isoFormat('YYYY年M月')}}</option>
+                                >{{$month->isoFormat('YYYY年M月')}}
+                                </option>
                             @endfor
                         </select>
                     </div>
                     <div class="form-group">
-                        <button type="submit" name="month" value="@php echo $last_month @endphp" class="btn btn-outline-dark btn-sm mr-2">＜前月へ</button>
+                        <button type="submit" name="month" value={{$last_month}} class="btn btn-outline-dark btn-sm mr-2">＜前月へ</button>
                     </div>
                     <div class="form-group">
-                    <button type="submit" name="month" value="@php echo $next_month @endphp" class="btn btn-outline-dark btn-sm">翌月へ＞</button>
+                    <button type="submit" name="month" value={{$next_month}} class="btn btn-outline-dark btn-sm">翌月へ＞</button>
                     </div>
                 </form>
 

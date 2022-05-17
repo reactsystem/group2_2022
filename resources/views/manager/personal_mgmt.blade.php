@@ -4,11 +4,9 @@
 <link href="{{ asset('css/input.css') }}" rel="stylesheet">
 @endsection
 
-    <header>
-    </header>
     @section('content')
     @if (session()->has('message'))
-    <div class="alert alert-primary" role="alert">
+    <div class="alert alert-primary text-center" role="alert">
         {{session('message')}}
     </div>
     @endif
@@ -17,7 +15,7 @@
 
                 <div class="select_month col">
                     <p class="mr-4">{{$user->name}}さんの勤務表</p>
-                    <form method="POST" id="select" action="/select_month" class="form-inline">
+                    <form method="GET" id="select" action="" class="form-inline">
                         @csrf
                         <div class="form-group">
                             <select name="month" class="form-select col mr-2" aria-label="Default select example" onchange="submit_form()">
@@ -28,7 +26,7 @@
                                 @endphp
                                 @for ($i =1; $i <= 13; $i++)
                                     @php $month->addMonthNoOverflow(); @endphp
-                                    <option value="@php echo $month; @endphp"
+                                    <option value={{$month}}
                                     @if ($i == 7)
                                         selected
                                     @endif
@@ -37,10 +35,10 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <button type="submit" name="month" value="@php echo $last_month @endphp" class="btn btn-outline-dark btn-sm mr-2">＜前月へ</button>
+                            <button type="submit" name="month" value={{$last_month}} class="btn btn-outline-dark btn-sm mr-2">＜前月へ</button>
                         </div>
                         <div class="form-group">
-                        <button type="submit" name="month" value="@php echo $next_month @endphp" class="btn btn-outline-dark btn-sm">翌月へ＞</button>
+                        <button type="submit" name="month" value={{$next_month}} class="btn btn-outline-dark btn-sm">翌月へ＞</button>
                         </div>
                     </form>
                 </div>

@@ -15,45 +15,51 @@ use Yasumi\Yasumi;
 class PersonalMgmtController extends Controller
 {
     public function index(Request $request) {
-        $items = $request->old();
+
         // 当日の日付表示と月表示を取得する
         Carbon::setLocale('ja');
         $today = Carbon::createFromDate();
-        $month = Carbon::createFromDate();
 
-        // 年間の祝日を取得する
-        $now = now();
-        $holidays = Yasumi::create('Japan', $now->year, 'ja_JP');
+        // 月選択フォームから表示月を指定された場合
+        if (isset($request->month)) {
+            $month = new Carbon($request->month); //選択月のデータを取得
+            $year = $month->format('Y');
+            $holidays = Yasumi::create('Japan', $year, 'ja_JP'); //選択月の年間の祝日を取得
+            $current_month = date("Y-m", strtotime($request->month)); //選択月のデータを変数に格納
+
+        // 勤怠入力フォームに直接アクセスされた場合
+        } else {
+            $month = Carbon::createFromDate();
+            $now = now();
+            $holidays = Yasumi::create('Japan', $now->year, 'ja_JP');
+            $current_month = date("Y-m");
+        }
 
         // 当日の打刻メモが存在すれば取得する
         $date = date("Y-m-d");
         $description = DB::table('work_times')->select('description')->where('date', $date)->first();
         
-        // 今月の最初の日付を取得する
-        $dt = Carbon::createFromDate();
-        $dt->startOfMonth(); //今月の最初の日
+        $dt = $month->copy()->startOfMonth(); //今月の最初の日
         $dt->timezone = 'Asia/Tokyo'; //日本時刻で表示
         $daysInMonth = $dt->daysInMonth; //今月は何日まであるか
 
         $user = Auth::user();
-        $current_month = date("Y-m");
         $work_times = WorkTime::where('user_id', $user->id)->where('date', 'like', $current_month . '%')->get();
         $fixed_time = FixedTime::first();
         $paid_leaves = PaidLeave::where('user_id', $user->id)->first();
 
-        return view('manager.personal_mgmt', [
-            'today' => $today,
-            'month' => $month,
-            'dt' => $dt,
-            'daysInMonth' => $daysInMonth,
-            'work_times' => $work_times,
-            'fixed_time' => $fixed_time,
-            'paid_leaves' => $paid_leaves,
-            'user' => $user,
-            'description' => $description,
-            'holidays' => $holidays,
-            'items' => $items,
-        ]);
+        return view('manager.personal_mgmt', compact(
+            'today',
+            'month',
+            'dt',
+            'daysInMonth',
+            'work_times',
+            'fixed_time',
+            'paid_leaves',
+            'user',
+            'description',
+            'holidays',
+        ));
     }
 
     public function update(Request $request) {
@@ -83,6 +89,7 @@ class PersonalMgmtController extends Controller
                 }
             }
         }
-        return redirect('personal_management')->with('message', '勤務表を更新しました');
+        return redirect('personal_management')
+            ->with('message', '勤務表を更新しました');
     }
 }

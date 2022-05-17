@@ -1,7 +1,7 @@
 // 月選択用のセレクトボックスを選択すると、submitする
 function submit_form() {
 	var target = document.getElementById("select");
-	target.method = "post";
+	target.method = "get";
 	target.submit();
 }
 
