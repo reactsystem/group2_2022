@@ -89,16 +89,16 @@
                     @csrf
                         <table class="table table-bordered table-sm" id="input_table">
                             <thead>
-                            <tr class="table-info">
-                                <th scope="col" style="width: 10%">日付</th>
-                                <th scope="col" style="width: 10%">勤務区分</th>
-                                <th scope="col" style="width: 8%">開始</th>
-                                <th scope="col" style="width: 8%">終了</th>
-                                <th scope="col" style="width: 8%">休憩時間</th>
-                                <th scope="col" style="width: 8%">労働時間</th>
-                                <th scope="col" style="width: 8%">時間外</th>
-                                <th scope="col">メモ</th>
-                            </tr>
+                                <tr class="table-info">
+                                    <th scope="col" style="width: 10%">日付</th>
+                                    <th scope="col" style="width: 10%">勤務区分</th>
+                                    <th scope="col" style="width: 8%">開始</th>
+                                    <th scope="col" style="width: 8%">終了</th>
+                                    <th scope="col" style="width: 8%">休憩時間</th>
+                                    <th scope="col" style="width: 8%">労働時間</th>
+                                    <th scope="col" style="width: 8%">時間外</th>
+                                    <th scope="col">メモ</th>
+                                </tr>
                             </thead>
 
                             <tbody>
@@ -113,7 +113,7 @@
                                         id="weekday"
                                     @endif
                                     >
-                                        @php echo $dt->isoFormat('MM/DD(ddd)'); @endphp
+                                    {{$dt->isoFormat('MM/DD(ddd)')}}
                                     </td>
                                     @php $work_time = $work_times->where('date', $dt->isoFormat('YYYY-MM-DD'))->first(); @endphp
                                         @if ($work_time !== NULL)
@@ -202,27 +202,27 @@
                             </tbody>
 
                             <tfoot>
-                            <tr class="table-info">
-                                <td colspan="3">合計</td>
-                                <td>所定時間</td>
-                                <td>休憩時間</td>
-                                <td>労働時間</td>
-                                <td>時間外</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td colspan="3"></td>
-                                <td id="weekday_sum"></td>
-                                <td id="rest"></td>
-                                <td id="worked"></td>
-                                <td id="over"></td>
-                                <td></td>
-                            </tr>
+                                <tr class="table-info">
+                                    <td colspan="3">合計</td>
+                                    <td>所定時間</td>
+                                    <td>休憩時間</td>
+                                    <td>労働時間</td>
+                                    <td>時間外</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3"></td>
+                                    <td id="weekday_sum"></td>
+                                    <td id="rest"></td>
+                                    <td id="worked"></td>
+                                    <td id="over"></td>
+                                    <td></td>
+                                </tr>
                             </tfoot>
-
                         </table>
-                </form>
+                    </form>
                 </div>
+            </div>
         </div>
         <script src="{{ asset('js/input.js') }}"></script>
     @endsection
