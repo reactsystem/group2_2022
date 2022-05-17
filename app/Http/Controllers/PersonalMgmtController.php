@@ -11,6 +11,8 @@ use App\Models\FixedTime;
 use App\Models\PaidLeave;
 use Carbon\Carbon;
 use Yasumi\Yasumi;
+use Illuminate\Support\Facades\Validator;
+use App\Rules\NullCheck;
 
 class PersonalMgmtController extends Controller
 {
@@ -69,6 +71,36 @@ class PersonalMgmtController extends Controller
         for ($i = 0; $i < $count; $i++)
         {
             if ($items['work_type'][$i] !== NULL) {
+
+                // バリデーション
+                // 勤務区分が「欠勤」の場合
+                if ($items['work_type'][$i] == 2) {
+                    $check = ['start_time' => $items['start_time'][$i], 'left_time' => $items['left_time'][$i],];
+                    $validator = Validator::make($check, [
+                        'start_time' => new NullCheck,
+                        'left_time' => new NullCheck,
+                    ]);
+
+                // 勤務区分が「出勤」「遅刻」「早退」「遅刻/早退」の場合
+                // } elseif ($items['work_type'][$i] == 1 || $items['work_type'][$i] == 3 || $items['work_type'][$i] == 4 || $items['work_type'][$i] == 7) {
+                //     $check = ['start_time' => $items['start_time'][$i], 'left_time' => $items['left_time'][$i],];
+                //     $rules = [
+                //         'start_time' => 'required|date_format: h:i',
+                //         'left_time' => 'required|date_format: h:i',
+                //     ];
+                //     $messages = [
+                //         'start_time.date_format' => '開始時刻は「00:00」～「23:59」の範囲で入力してください',
+                //         'left_time.date_format' => '開始時刻は「00:00」～「23:59」の範囲で入力してください',
+                //     ];
+                //     $validator = Validator::make($check, $rules, $messages);
+                }
+
+                if ($validator->fails()) {
+                    return back()
+                        ->withErrors($validator)
+                        ->withInput();
+                }
+
                 if (WorkTime::where('user_id', $items['user_id'])->where('date', $items['date'][$i])->exists())
                 {
                     WorkTime::where('user_id', $items['user_id'])
