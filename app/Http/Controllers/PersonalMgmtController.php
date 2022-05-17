@@ -12,7 +12,6 @@ use App\Models\PaidLeave;
 use Carbon\Carbon;
 use Yasumi\Yasumi;
 use Illuminate\Support\Facades\Validator;
-use App\Rules\NullCheck;
 
 class PersonalMgmtController extends Controller
 {
@@ -85,7 +84,7 @@ class PersonalMgmtController extends Controller
                         'left_time.max' => $items['date'][$i] .' :「欠勤」「有給休暇」「特別休暇」の場合は終了時刻を入力できません',
                     ];
                     $validator = Validator::make($check, $rules, $messages);
-                    
+
                     if ($validator->fails()) {
                         return back()
                             ->withErrors($validator)
