@@ -187,7 +187,11 @@
                                                     <option value={{$work_type->id}}
                                                     @if ($work_time->work_type_id == $work_type->id)
                                                         selected
-                                                    @endif>{{$work_type->name}}</option>
+                                                    @endif
+                                                    @if ($work_type->name == '有給休暇' || $work_type->name == '特別休暇')
+                                                        hidden
+                                                    @endif
+                                                    >{{$work_type->name}}</option>
                                                 @endforeach
                                             </select>
                                         </td>
