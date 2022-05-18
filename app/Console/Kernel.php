@@ -22,15 +22,16 @@ class Kernel extends ConsoleKernel
     {
         $now = Carbon::now('UTC');
 
-        // idは部署勤怠管理フォームからとってくる。今回は仮に「201704010001」とする。
-        $id = 201704010001;
-        $joining = User::find($id)->joining;
-        $joining_date = new Carbon($joining, 'UTC');
-        $joining_day = $joining_date->day;
-        $diff_months = $joining_date->diffInMonths($now);
-        
-        if($diff_months % 12 === 6){
-            $schedule->command('update')->monthlyOn($joining_day, '00:00');
+        $users = User::all();
+        foreach($users as $user){
+            $joining = $user->joining;
+            $joining_date = new Carbon($joining, 'UTC');
+            $joining_day = $joining_date->day;
+            $diff_months = $joining_date->diffInMonths($now);
+            
+            if($diff_months % 12 === 6){
+                $schedule->command('update')->monthlyOn($joining_day, '00:00');
+            }
         }
     }
 

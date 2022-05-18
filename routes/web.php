@@ -37,9 +37,6 @@ Route::group(['prefix' => 'employees', 'as' => 'employees.', 'middleware' => 'au
     Route::post('/edit{user}', [EmployeesFormController::class, 'update'])->name('update');
 });
 
-// 個人勤怠管理フォーム
-Route::get('/personal_management/{id}', [AddPaidLeavesController::class, 'index'])->name('index');
-
 //申請フォーム
 Route::group(['prefix' => 'application', 'as' => 'application.', 'middleware' => 'auth'], function(){
     Route::get('/', [ApplicationFormController::class, 'index'])->name('index');
