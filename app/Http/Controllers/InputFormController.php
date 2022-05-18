@@ -115,7 +115,7 @@ class InputFormController extends Controller
                 if ((strtotime($time) < strtotime($fixed_time->left_time))) {
                     if ($work_time->work_type_id == 3) {
                         WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([
-                        'work_type_id' => 7,
+                        'work_type_id' => 5,
                         ]);
                     } else {
                         WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([

@@ -46,7 +46,7 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td>{{$work_times->where('work_type_id', 5)->count()}}</td>
+                            <td>{{$work_times->where('work_type_id', 6)->count()}}</td>
                             <td>{{$paid_leaves->left_days}}</td>
                         </tr>
                         </tbody>
@@ -56,7 +56,7 @@
 
             <!-- 右カラム -->
             <div class="contents">
-                <form method="GET" id="select" action="" class="form-inline">
+                <form method="GET" id="select" action="" class="form-inline mb-2">
                     @csrf
                     <div class="form-group">
                         <select name="month" class="form-select col mr-2" aria-label="Default select example" onchange="submit_form()">

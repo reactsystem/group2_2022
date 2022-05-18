@@ -28,7 +28,7 @@
 
                 <div class="select_month col">
                     <p class="mr-4">{{$user->name}}さんの勤務表</p>
-                    <form method="GET" id="select" action="" class="form-inline">
+                    <form method="GET" id="select" action="" class="form-inline mb-2">
                         @csrf
                         <input type="hidden" name="user_id" value={{$user->id}}>
                         <div class="form-group">
