@@ -9,6 +9,7 @@ use App\Models\WorkTime;
 use App\Models\WorkType;
 use App\Models\FixedTime;
 use App\Models\PaidLeave;
+use App\Models\User;
 use Carbon\Carbon;
 use Yasumi\Yasumi;
 use Illuminate\Support\Facades\Validator;
@@ -44,7 +45,7 @@ class PersonalMgmtController extends Controller
         $dt->timezone = 'Asia/Tokyo'; //日本時刻で表示
         $daysInMonth = $dt->daysInMonth; //今月は何日まであるか
 
-        $user = Auth::user();
+        $user = User::find($request->user_id);
         $work_times = WorkTime::where('user_id', $user->id)->where('date', 'like', $current_month . '%')->get();
         $fixed_time = FixedTime::first();
         $paid_leaves = PaidLeave::where('user_id', $user->id)->first();
