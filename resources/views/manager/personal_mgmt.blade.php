@@ -181,34 +181,12 @@
 
                                         <td>
                                             <select name="work_type[]">
-                                                <option value="1"
-                                                @if($work_time->work_type_id == 1)
-                                                selected
-                                                @endif>出勤</option>
-                                                <option value="2"
-                                                @if($work_time->work_type_id == 2)
-                                                selected
-                                                @endif>欠勤</option>
-                                                <option value="3"
-                                                @if($work_time->work_type_id == 3)
-                                                selected
-                                                @endif>遅刻</option>
-                                                <option value="4"
-                                                @if($work_time->work_type_id == 4)
-                                                selected
-                                                @endif>早退</option>
-                                                <option value="5"
-                                                @if($work_time->work_type_id == 5)
-                                                selected
-                                                @endif>有給休暇</option>
-                                                <option value="6"
-                                                @if($work_time->work_type_id == 6)
-                                                selected
-                                                @endif>特別休暇</option>
-                                                <option value="7"
-                                                @if($work_time->work_type_id == 7)
-                                                selected
-                                                @endif>遅刻/早退</option>
+                                                @foreach ($work_types as $work_type)
+                                                    <option value={{$work_type->id}}
+                                                    @if ($work_time->work_type_id == $work_type->id)
+                                                        selected
+                                                    @endif>{{$work_type->name}}</option>
+                                                @endforeach
                                             </select>
                                         </td>
                                         <td><input type="text" name="start_time[]" size="5"

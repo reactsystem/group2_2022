@@ -46,6 +46,7 @@ class PersonalMgmtController extends Controller
         $daysInMonth = $dt->daysInMonth; //今月は何日まであるか
 
         $user = User::find($request->user_id);
+        $work_types = WorkType::all();
         $work_times = WorkTime::where('user_id', $user->id)->where('date', 'like', $current_month . '%')->get();
         $fixed_time = FixedTime::first();
         $paid_leaves = PaidLeave::where('user_id', $user->id)->first();
@@ -61,6 +62,7 @@ class PersonalMgmtController extends Controller
             'user',
             'description',
             'holidays',
+            'work_types',
         ));
     }
 
