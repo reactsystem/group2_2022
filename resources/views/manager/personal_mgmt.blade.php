@@ -305,5 +305,5 @@
             </form>
         </div>
     </div>
-    <script src="{{ asset('js/input.js') }}"></script>
+    <script src="{{ asset('js/personal_mgmt.js') }}"></script>
 @endsection
