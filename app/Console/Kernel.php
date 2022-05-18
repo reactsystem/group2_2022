@@ -4,6 +4,8 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Models\User;
+use Carbon\Carbon;
 
 class Kernel extends ConsoleKernel
 {
@@ -15,7 +17,19 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $now = Carbon::now('UTC');
+
+        $users = User::all();
+        foreach($users as $user){
+            $joining = $user->joining;
+            $joining_date = new Carbon($joining, 'UTC');
+            $joining_day = $joining_date->day;
+            $diff_months = $joining_date->diffInMonths($now);
+            
+            if($diff_months % 12 === 6){
+                $schedule->command('update')->monthlyOn($joining_day, '00:00');
+            }
+        }
     }
 
     /**
