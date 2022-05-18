@@ -10,6 +10,8 @@ class PaidLeave extends Model
 {
     use HasFactory;
 
+    const UPDATED_AT = NULL;
+
     public function user(){
         return $this->hasOne(User::class);
     }

@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Department;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Models\PaidLeave;
 
 class employeesFormController extends Controller
 {
@@ -96,6 +97,13 @@ class employeesFormController extends Controller
             'password' => $request->password,
             'manager' => (boolean)$request->authority,
             'created_at' => Carbon::now()
+        ]);
+
+        PaidLeave::insert([
+            'user_id' => $request->id,
+        ]);
+        PaidLeave::insert([
+            'user_id' => $request->id,
         ]);
 
         return redirect()->route('employees.show',['department' => $request->department])->with(['message' => '社員番号：'.$request->id.'、社員名：'.$request->name.'さんを新規追加しました。']);

@@ -31,15 +31,14 @@ class TaskBatch extends Command
      */
     public function handle()
     {
-        $now = Carbon::now('UTC');
+        $now = Carbon::now();
 
         $users = User::all();
         foreach($users as $user){
 
             // 入社日
             $joining = $user->joining;
-            $joining_day = new Carbon($joining, 'UTC');
-
+            $joining_day = new Carbon($joining);
             // 入社日から現在までの時差
             $diff_months = $joining_day->diffInMonths($now);
 
@@ -48,7 +47,7 @@ class TaskBatch extends Command
             $added_span = 12;
             $diff_years = 0;
             $limit_leaves = 40;
-    
+
             // 勤続年数が40年までと想定
             $i = 0;
             while($initial_span<=480){
@@ -63,43 +62,44 @@ class TaskBatch extends Command
             $leaves = AddPaidLeave::select('add_days')->where('years', '<=', $diff_years)->get();
 
             $i=0;
-            while($i<count($leaves)){
-                $added_leave[] = $leaves[$i]->add_days;
-                $i++;
-            }
-
-            // 社員が今期に付与される有給休暇
-            $provided_leave = end($added_leave);
-    
-            // 社員が付与された有給休暇全てを数字で取得 必要ないかも <<<<<<<<<<
-            $total_leave = array_sum($added_leave);
-
-
-            if($total_leave <= $limit_leaves){
-                $total_leave = array_sum($added_leave);
-            }else{
-                $total_leave = $limit_leaves;
-            }
-            // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
-            //社員の有給休暇残り日数
-            $remain_leave = $user->paidLeave->left_days;
-    
-            $paid_leave = PaidLeave::where('user_id', $user->id)->first();
-
-            //勤続年数によってPaidLeaveテーブル更新
-            if($paid_leave->left_days <= $limit_leaves){
-                $paid_leave->left_days = $remain_leave + $provided_leave;
-                if($paid_leave->left_days === null){
-                    $paid_leave->created_at = $now;
-                }else{
-                    $paid_leave->updated_at = $now;
+            if(!$leaves->isEmpty()){
+                while($i<count($leaves)){
+                    $added_leave[] = $leaves[$i]->add_days;
+                    $i++;
                 }
             }else{
-                $paid_leave->left_days = $limit_leaves;
-                $paid_leave->updated_at = $now;
+                $added_leave = 0;
             }
-            $paid_leave->save();
+            
+            // 社員が今期に付与される有給休暇
+            if($added_leave){
+                $provided_leave = end($added_leave);
+            }else{
+                $provided_leave = 0;
+            }
+            
+            // 社員の有給休暇残り日数、2年で2年前までの分リセット
+            $personal_leaves=PaidLeave::where('user_id', $user->id)->get();
+            for($j=0; $j<count($personal_leaves); $j++){
+                if(empty($personal_leaves[$j]->created_at)){
+                    $personal_leaves[$j]->left_days = $provided_leave;
+                    $personal_leaves[$j]->created_at = $now;
+                    $personal_leaves[$j]->save();
+                }else{
+                    $iniAddedDay = new Carbon($personal_leaves[$j]->created_at);
+                    $diffIniMonth = $iniAddedDay->diffInMonths($now);   
+                    if($diffIniMonth === 12){
+                        $personal_leaves[1]->left_days = $personal_leaves[0]->left_days + $provided_leave;
+                        $personal_leaves[1]->save();
+                        PaidLeave::insert([
+                            'user_id' => $personal_leaves[0]->id,
+                            'left_days' => $personal_leaves[0]->left_days + $provided_leave,
+                            'created_at' => $now,
+                        ]);
+                        $personal_leaves[0]->delete();
+                    }
+                }
+            }
         }
     }
 }
