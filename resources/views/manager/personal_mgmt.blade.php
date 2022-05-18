@@ -4,7 +4,7 @@
 <link href="{{ asset('css/input.css') }}" rel="stylesheet">
 @endsection
 
-    @section('content')
+@section('content')
     @if (session()->has('message'))
     <div class="alert alert-primary" role="alert">
         {{session('message')}}
@@ -44,7 +44,7 @@
                                     @if ($i == 7)
                                         selected
                                     @endif
-                                >{{$month->isoFormat('YYYY年M月')}}</option>
+                                    >{{$month->isoFormat('YYYY年M月')}}</option>
                                 @endfor
                             </select>
                         </div>
@@ -69,16 +69,16 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td><div class="collapse collapse0">所定時間</td>
-                        <td><div class="collapse collapse0">休憩時間</td>
-                        <td><div class="collapse collapse0">労働時間</td>
-                        <td><div class="collapse collapse0">時間外</td>
+                        <td><div class="collapse collapse0">所定時間</div></td>
+                        <td><div class="collapse collapse0">休憩時間</div></td>
+                        <td><div class="collapse collapse0">労働時間</div></td>
+                        <td><div class="collapse collapse0">時間外</div></td>
                     </tr>
                     <tr>
-                        <td><div class="collapse collapse0" id="weekday_sum_info"></td>
-                        <td><div class="collapse collapse0" id="rest_info"></td>
-                        <td><div class="collapse collapse0" id="worked_info"></td>
-                        <td><div class="collapse collapse0" id="over_info"></td>
+                        <td><div class="collapse collapse0" id="weekday_sum_info"></div></td>
+                        <td><div class="collapse collapse0" id="rest_info"></div></td>
+                        <td><div class="collapse collapse0" id="worked_info"></div></td>
+                        <td><div class="collapse collapse0" id="over_info"></div></td>
                     </tr>
                     </tbody>
                 </table>
@@ -96,7 +96,7 @@
                     <tbody>
                     <tr>
                         @foreach ($work_types as $work_type)
-                        <td><div class="collapse collapse1">{{$work_type->name}}</td>
+                            <td><div class="collapse collapse1">{{$work_type->name}}</td>
                             @if ($loop->iteration == 5)
                             @break
                             @endif
@@ -104,7 +104,7 @@
                     </tr>
                     <tr>
                         @foreach ($work_types as $work_type)
-                        <td><div class="collapse collapse1">{{$work_times->where('work_type_id', $work_type->id)->count()}}</td>
+                            <td><div class="collapse collapse1">{{$work_times->where('work_type_id', $work_type->id)->count()}}</td>
                             @if ($loop->iteration == 5)
                             @break
                             @endif
@@ -125,16 +125,16 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td><div class="collapse collapse2">有給休暇取得日数</td>
-                        <td><div class="collapse collapse2">特別休暇取得日数</td>
-                        <td><div class="collapse collapse2">有給休暇残り日数</td>
-                        <td><div class="collapse collapse2"></td>
+                        <td><div class="collapse collapse2">有給休暇取得日数</div></td>
+                        <td><div class="collapse collapse2">特別休暇取得日数</div></td>
+                        <td><div class="collapse collapse2">有給休暇残り日数</div></td>
+                        <td><div class="collapse collapse2"></div></td>
                     </tr>
                     <tr>
-                        <td><div class="collapse collapse2">{{$work_times->where('work_type_id', 6)->count()}}</td>
-                        <td><div class="collapse collapse2">{{$work_times->where('work_type_id', 7)->count()}}</td>
-                        <td><div class="collapse collapse2">{{$paid_leaves->left_days}}</td>
-                        <td><div class="collapse collapse2"></td>
+                        <td><div class="collapse collapse2">{{$work_times->where('work_type_id', 6)->count()}}</div></td>
+                        <td><div class="collapse collapse2">{{$work_times->where('work_type_id', 7)->count()}}</div></td>
+                        <td><div class="collapse collapse2">{{$paid_leaves->left_days}}</div></td>
+                        <td><div class="collapse collapse2"></div></td>
                     </tr>
                     </tbody>
                 </table>
@@ -197,12 +197,12 @@
                                         </td>
                                         <td><input type="text" name="start_time[]" size="5"
                                             @isset ($work_time->start_time)
-                                            value={{date('H:i', $start_time)}}
+                                                value={{date('H:i', $start_time)}}
                                             @endisset>
                                         </td>
                                         <td><input type="text" name="left_time[]" size="5"
                                             @isset ($work_time->left_time)
-                                            value={{date('H:i', $left_time)}}
+                                                value={{date('H:i', $left_time)}}
                                             @endisset>
                                         </td>
                                         <td>
@@ -244,7 +244,7 @@
                                         @endisset
                                         </td>
                                         <td>
-                                            @if (date('H:i', $left_time) < '18:15')
+                                        @if (date('H:i', $left_time) < '18:15')
                                             00:00
                                         @elseif (date('H:i', $left_time) >= '18:15')
                                             {{-- 遅刻した場合 --}}

@@ -42,7 +42,7 @@
                         </form>
                 </div>
                 <div class="info_form table-sm">
-                    <table class="table table-info table-striped" style="font-size : 10px;">
+                    <table class="table table-info table-striped" style="font-size: 10px;">
                         <thead>
                         <tr>
                             <th scope="col" style="width: 50%">当月の有給取得日数</th>
