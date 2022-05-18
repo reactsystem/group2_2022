@@ -95,18 +95,20 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td><div class="collapse collapse1">出勤</td>
-                        <td><div class="collapse collapse1">欠勤</td>
-                        <td><div class="collapse collapse1">遅刻</td>
-                        <td><div class="collapse collapse1">早退</td>
-                        <td><div class="collapse collapse1">遅刻/早退</td>
+                        @foreach ($work_types as $work_type)
+                        <td><div class="collapse collapse1">{{$work_type->name}}</td>
+                            @if ($loop->iteration == 5)
+                            @break
+                            @endif
+                        @endforeach
                     </tr>
                     <tr>
-                        <td><div class="collapse collapse1">{{$work_times->where('work_type_id', 1)->count()}}</td>
-                        <td><div class="collapse collapse1">{{$work_times->where('work_type_id', 2)->count()}}</td>
-                        <td><div class="collapse collapse1">{{$work_times->where('work_type_id', 3)->count()}}</td>
-                        <td><div class="collapse collapse1">{{$work_times->where('work_type_id', 4)->count()}}</td>
-                        <td><div class="collapse collapse1">{{$work_times->where('work_type_id', 7)->count()}}</td>
+                        @foreach ($work_types as $work_type)
+                        <td><div class="collapse collapse1">{{$work_times->where('work_type_id', $work_type->id)->count()}}</td>
+                            @if ($loop->iteration == 5)
+                            @break
+                            @endif
+                        @endforeach
                     </tr>
                     </tbody>
                 </table>
@@ -129,8 +131,8 @@
                         <td><div class="collapse collapse2"></td>
                     </tr>
                     <tr>
-                        <td><div class="collapse collapse2">{{$work_times->where('work_type_id', 5)->count()}}</td>
                         <td><div class="collapse collapse2">{{$work_times->where('work_type_id', 6)->count()}}</td>
+                        <td><div class="collapse collapse2">{{$work_times->where('work_type_id', 7)->count()}}</td>
                         <td><div class="collapse collapse2">{{$paid_leaves->left_days}}</td>
                         <td><div class="collapse collapse2"></td>
                     </tr>
@@ -257,11 +259,12 @@
                                         <td>
                                             <select name="work_type[]">
                                                 <option></option>
-                                                <option value="1">出勤</option>
-                                                <option value="2">欠勤</option>
-                                                <option value="3">遅刻</option>
-                                                <option value="4">早退</option>
-                                                <option value="7">遅刻/早退</option>
+                                                @foreach ($work_types as $work_type)
+                                                <option value={{$work_type->id}}>{{$work_type->name}}</option>
+                                                    @if ($loop->iteration == 5)
+                                                    @break
+                                                    @endif
+                                                @endforeach
                                             </select>
                                         </td>
                                         <td><input type="text" name="start_time[]" size="5"></td>
