@@ -87,13 +87,14 @@ class TaskBatch extends Command
                     $personal_leaves[$j]->save();
                 }else{
                     $iniAddedDay = new Carbon($personal_leaves[$j]->created_at);
-                    $diffIniMonth = $iniAddedDay->diffInMonths($now);   
-                    if($diffIniMonth === 12){
-                        $personal_leaves[1]->left_days = $personal_leaves[0]->left_days + $provided_leave;
-                        $personal_leaves[1]->save();
+                    $diffIniMonth = $iniAddedDay->diffInMonths($now); 
+                    $personal_leaves[1]->left_days = $personal_leaves[0]->left_days + $provided_leave;
+                    $personal_leaves[1]->save();  
+                    if($diffIniMonth === 24){
+                        $personal_leaves[1]->left_days = $personal_leaves[1]->left_days - $personal_leaves[0]->left_days;
                         PaidLeave::insert([
                             'user_id' => $personal_leaves[0]->id,
-                            'left_days' => $personal_leaves[0]->left_days + $provided_leave,
+                            'left_days' => $personal_leaves[1]->left_days,
                             'created_at' => $now,
                         ]);
                         $personal_leaves[0]->delete();

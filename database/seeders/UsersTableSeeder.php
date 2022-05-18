@@ -26,7 +26,7 @@ class UsersTableSeeder extends Seeder
                 'manager' => false,
                 'email' => 'eigyoutarou@test.com',
                 'password' => Hash::make('hogehoge'),
-                'joining' => '2000-04-01',
+                'joining' => '2021-04-01',
             ],
 
             [
@@ -36,7 +36,7 @@ class UsersTableSeeder extends Seeder
                 'manager' => false,
                 'email' => 'keiritarou@test.com',
                 'password' => Hash::make('hogehoge'),
-                'joining' => '2022-04-01',
+                'joining' => '2021-04-01',
             ],
             
             [
