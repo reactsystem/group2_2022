@@ -29,10 +29,15 @@
                                 <button type="submit" class="btn btn-info btn-lg mb-3" name="start_time" value="#">出勤</button>
                                 <button type="submit" class="btn btn-warning btn-lg mb-3" name="left_time" value="#">退勤</button>
                                 <div class="form-floating">
-                                    <textarea class="form-control" name="description" placeholder="Leave a comment here" id="description" style="height: 100px"
+                                    <textarea class="form-control" name="description" placeholder="Leave a comment here" id="description" style="height: 100px; font-size: 10px;"
                                     >@isset($description){{$description->description}}@endisset</textarea>
-                                    <label for="description">打刻メモを入力できます</label>
+                                    <label for="description" style="font-size: 10px;">60文字以内で打刻メモを入力できます</label>
                                 </div>
+                                @if ($errors->has('description'))
+                                <div class="alert alert-danger" role="alert" style="font-size: 10px;">
+                                    {{ $errors->first('description') }}
+                                </div>
+                                @endif
                                 <button type="submit" name="description_submit" value="#" class="btn btn-secondary btn-sm mt-3">打刻メモを送信</button>
                         </form>
                 </div>
@@ -84,19 +89,19 @@
                     </div>
                 </form>
 
-                <div class="input_form">
+                <div class="input_form" style="font-size: 12px;">
                 <form action="/" method="POST">
                     @csrf
                         <table class="table table-bordered table-sm" id="input_table">
                             <thead>
                                 <tr class="table-info">
-                                    <th scope="col" style="width: 10%">日付</th>
-                                    <th scope="col" style="width: 10%">勤務区分</th>
+                                    <th scope="col" style="width: 8%">日付</th>
+                                    <th scope="col" style="width: 8%">勤務区分</th>
                                     <th scope="col" style="width: 8%">開始</th>
                                     <th scope="col" style="width: 8%">終了</th>
                                     <th scope="col" style="width: 8%">休憩時間</th>
                                     <th scope="col" style="width: 8%">労働時間</th>
-                                    <th scope="col" style="width: 8%">時間外</th>
+                                    <th scope="col" style="width: 7%">時間外</th>
                                     <th scope="col">メモ</th>
                                 </tr>
                             </thead>

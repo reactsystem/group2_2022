@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Models\WorkTime;
 use App\Models\WorkType;
 use App\Models\FixedTime;
@@ -66,6 +67,15 @@ class InputFormController extends Controller
         $fixed_time = FixedTime::first(); //定時のデータを取得
         $date = date("Y-m-d"); //打刻した時の日付を取得
         $time = date("H:i:s"); //打刻した時の時間を取得
+
+        // 申請承認フォームのコメントに対するバリデーション
+        $rules = ['description' => 'max:60',];
+        $messages = ['description.max' => '60文字以下で入力してください',];
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
 
         // 出勤ボタンを打刻した時の処理
         if (isset($request->start_time)){

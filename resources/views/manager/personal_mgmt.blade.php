@@ -139,16 +139,16 @@
                     </tbody>
                 </table>
 
-                <div class="input_form">
+                <div class="input_form" style="font-size: 12px;">
                 <form action="" method="POST">
                     @csrf
-                    <button type="submit" class="btn btn-primary btn-lg mb-3">更新する</button>
+                    <button type="submit" class="btn btn-primary mb-3">更新する</button>
 
                     <table class="table table-bordered table-sm" id="input_table">
                         <thead>
                         <tr class="table-info">
-                            <th scope="col" style="width: 10%">日付</th>
-                            <th scope="col" style="width: 10%">勤務区分</th>
+                            <th scope="col" style="width: 8%">日付</th>
+                            <th scope="col" style="width: 8%">勤務区分</th>
                             <th scope="col" style="width: 8%">開始</th>
                             <th scope="col" style="width: 8%">終了</th>
                             <th scope="col" style="width: 8%">休憩時間</th>
