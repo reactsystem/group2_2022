@@ -5,14 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use App\Models\ApplicationType;
 use App\Models\Department;
 use App\Models\FixedTime;
 use App\Models\User;
 use App\Models\WorkTime;
-use App\Models\WorkType;
 
-class ManagerController extends Controller
+class DepartmentMgmtController extends Controller
 {
 	public function index(Request $request)
 	{
@@ -47,25 +45,9 @@ class ManagerController extends Controller
 			'work_times' => $work_times,
 			'disp_limit' => $request->disp_limit,
 		];
-		return view('manager.dept_attendance_mgmt', $param);
+		return view('manager.department_mgmt', $param);
 	}
-	
-	public function getMaster(Request $request)
-	{
-		$fixed_time = FixedTime::first();
-		$departments = Department::all();
-		$work_types = WorkType::all();
-		$app_types = ApplicationType::all();
 
-		$param = [
-			'fixed_time' => $fixed_time,
-			'departments' => $departments,
-			'work_types' => $work_types,
-			'app_types' => $app_types,
-		];
-		return view('manager.master_mgmt', $param);
-	}
-	
 	public function workTimeExport(int $department_id, Carbon $date)
 	{
 		$user = User::where('department_id', $department_id)->get();

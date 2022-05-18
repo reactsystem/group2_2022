@@ -3,9 +3,10 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ApplicationFormController;
+use App\Http\Controllers\DepartmentMgmtController;
 use App\Http\Controllers\EmployeesFormController;
-use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\InputFormController;
+use App\Http\Controllers\MasterController;
 use App\Http\Controllers\PersonalMgmtController;
 use Illuminate\Support\Facades\Auth;
 
@@ -50,8 +51,13 @@ Route::group(['prefix' => 'application', 'as' => 'application.', 'middleware' =>
 });
 
 // 部署勤怠管理フォーム
-Route::get('/management', [ManagerController::class, 'index'])->name('mgmt.dept');
-Route::post('/management', [ManagerController::class, 'index'])->name('mgmt.dept.post');
+Route::get('/management', [DepartmentMgmtController::class, 'index'])->name('mgmt.dept');
+Route::post('/management', [DepartmentMgmtController::class, 'index'])->name('mgmt.dept.post');
 
 // マスタ管理フォーム
-Route::get('/management/master', [ManagerController::class, 'getMaster'])->name('master');
+Route::group(['prefix' => 'master', 'as' => 'master.'], function(){
+	Route::get('/', [MasterController::class, 'show'])->name('show');
+	Route::post('/add', [MasterController::class, 'create'])->name('create');
+	Route::post('/edit', [MasterController::class, 'update'])->name('update');
+	Route::post('/delete', [MasterController::class, 'delete'])->name('delete');
+});

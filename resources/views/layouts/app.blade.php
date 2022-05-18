@@ -47,7 +47,7 @@
 						<li><a href="{{ route('mgmt.dept') }}" class="nav-link">勤怠管理</a></li>
 						<li><a href="{{ route('application.index', array_merge(Request::query(), ['department' => auth()->user()->department_id])) }}" class="nav-link">申請一覧</a></li>
 						<li><a href="{{ route('employees.show', array_merge(Request::query(), ['department' => auth()->user()->department_id])) }}" class="nav-link">社員管理</a></li>
-						<li><a href="{{ route('master') }}" class="nav-link">基本情報</a></li>
+						<li><a href="{{ route('master.show') }}" class="nav-link">基本情報</a></li>
 					</ul>
 
 					<!-- Right Side Of Navbar(ユーザー名、ログアウト処理) -->
