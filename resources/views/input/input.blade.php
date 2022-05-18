@@ -149,7 +149,6 @@
                                             </td>
                                             <td>
                                                 @isset ($work_time->left_time)
-
                                                     {{-- 遅刻した場合 --}}
                                                     @if (date('H:i', $start_time) >= '09:30')
                                                         @if (date('H:i', $left_time) < '18:00')
@@ -175,6 +174,10 @@
                                                         @endif
                                                     @endif
                                                 @endisset
+                                                {{-- 「有給休暇」「特別休暇」は有給扱いのため、勤務時間を表示する --}}
+                                                @if ($work_time->workType->name == '有給休暇' || $work_time->workType->name == '特別休暇')
+                                                07:45
+                                                @endif
                                             </td>
                                             <td>
                                                 @if (date('H:i', $left_time) < '18:15')

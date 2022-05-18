@@ -216,32 +216,35 @@
                                         </td>
                                         <td>
                                             @isset ($work_time->left_time)
+                                                {{-- 遅刻した場合 --}}
+                                                @if (date('H:i', $start_time) >= '09:30')
+                                                    @if (date('H:i', $left_time) < '18:00')
+                                                        @php $worked_time = strtotime("-45 min", $left_time) - $start_time; @endphp
+                                                        {{gmdate("H:i", $worked_time)}}
+                                                    @elseif (date('H:i', $left_time) >= '18:00' && date('H:i', $left_time) < '18:15')
+                                                        07:45
+                                                    @elseif (date('H:i', $left_time) >= '18:15')
+                                                        @php $worked_time = strtotime("-1 hours", $left_time) - $start_time; @endphp
+                                                        {{gmdate("H:i", $worked_time)}}
+                                                    @endif
 
-                                            {{-- 遅刻した場合 --}}
-                                            @if (date('H:i', $start_time) >= '09:30')
-                                                @if (date('H:i', $left_time) < '18:00')
-                                                    @php $worked_time = strtotime("-45 min", $left_time) - $start_time; @endphp
-                                                    {{gmdate("H:i", $worked_time)}}
-                                                @elseif (date('H:i', $left_time) >= '18:00' && date('H:i', $left_time) < '18:15')
-                                                    07:45
-                                                @elseif (date('H:i', $left_time) >= '18:15')
-                                                    @php $worked_time = strtotime("-1 hours", $left_time) - $start_time; @endphp
-                                                    {{gmdate("H:i", $worked_time)}}
+                                                {{-- 始業開始よりも早く出勤した場合 --}}
+                                                @elseif (date('H:i', $start_time) < '09:30')
+                                                    @if (date('H:i', $left_time) < '18:00')
+                                                        @php $worked_time = strtotime("-45 min", $left_time) - strtotime($fixed_time->start_time); @endphp
+                                                        {{gmdate("H:i", $worked_time)}}
+                                                    @elseif (date('H:i', $left_time) >= '18:00' && date('H:i', $left_time) < '18:15')
+                                                        07:45
+                                                    @elseif (date('H:i', $left_time) >= '18:15')
+                                                        @php $worked_time = strtotime("-1 hours", $left_time) - strtotime($fixed_time->start_time); @endphp
+                                                        {{gmdate("H:i", $worked_time)}}
+                                                    @endif
                                                 @endif
-
-                                            {{-- 始業開始よりも早く出勤した場合 --}}
-                                            @elseif (date('H:i', $start_time) < '09:30')
-                                                @if (date('H:i', $left_time) < '18:00')
-                                                    @php $worked_time = strtotime("-45 min", $left_time) - strtotime($fixed_time->start_time); @endphp
-                                                    {{gmdate("H:i", $worked_time)}}
-                                                @elseif (date('H:i', $left_time) >= '18:00' && date('H:i', $left_time) < '18:15')
-                                                    07:45
-                                                @elseif (date('H:i', $left_time) >= '18:15')
-                                                    @php $worked_time = strtotime("-1 hours", $left_time) - strtotime($fixed_time->start_time); @endphp
-                                                    {{gmdate("H:i", $worked_time)}}
-                                                @endif
+                                            @endisset
+                                            {{-- 「有給休暇」「特別休暇」は有給扱いのため、勤務時間を表示する --}}
+                                            @if ($work_time->workType->name == '有給休暇' || $work_time->workType->name == '特別休暇')
+                                                7:45
                                             @endif
-                                        @endisset
                                         </td>
                                         <td>
                                         @if (date('H:i', $left_time) < '18:15')

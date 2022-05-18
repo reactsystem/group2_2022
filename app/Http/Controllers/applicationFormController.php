@@ -115,6 +115,7 @@ class ApplicationFormController extends Controller
 
     public function send(Request $request) {
         $user = Auth::user();
+        $fixed_time = FixedTime::first();
 
         // 申請承認フォームのコメントに対するバリデーション
         $rules = ['comment' => 'max:60',];

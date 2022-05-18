@@ -75,7 +75,7 @@ class PersonalMgmtController extends Controller
             if ($items['work_type'][$i] !== NULL) {
 
                 // バリデーション
-                // 勤務区分が「欠勤」「有給休暇」「特別休暇」の場合
+                // 勤務区分が「欠勤」「有給休暇」「特別休暇」の場合、時刻を入力させない
                 if ($items['work_type'][$i] == 2 || $items['work_type'][$i] == 6 || $items['work_type'][$i] == 7) {
                     $check = ['start_time' => $items['start_time'][$i], 'left_time' => $items['left_time'][$i],];
                     $rules = [
@@ -93,10 +93,7 @@ class PersonalMgmtController extends Controller
                             ->withErrors($validator)
                             ->withInput();
                     }
-                }
-
-                // 勤務区分が「出勤」「遅刻」「早退」「遅刻/早退」の場合
-                if ($items['work_type'][$i] == 1 || $items['work_type'][$i] == 3 || $items['work_type'][$i] == 4 || $items['work_type'][$i] == 5) {
+                } else { // 勤務区分がその他の場合、必ず時刻を入力させる
                     $check = ['start_time' => $items['start_time'][$i], 'left_time' => $items['left_time'][$i],];
                     $rules = [
                         'start_time' => 'required|date_format:H:i',
