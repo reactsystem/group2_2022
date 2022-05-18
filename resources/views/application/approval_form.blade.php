@@ -97,6 +97,7 @@
                             <label for="comment" class="col-md-4 col-form-label text-md-end">コメント</label>
                             <div class="col-md-6">
                                 <textarea class="form-control" name="comment" id="comment" autocomplete="comment" autofocus>{{ old('comment') }}</textarea>
+                                <p class="help-block">※60文字以内で書いてください</p>
                                 @if ($errors->has('comment'))
                                 <div class="alert alert-danger" role="alert">
                                     {{ $errors->first('comment') }}

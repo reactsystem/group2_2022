@@ -146,7 +146,7 @@
 
                     <table class="table table-bordered table-sm" id="input_table">
                         <thead>
-                        <tr class="table-info">
+                        <tr class="table-info" style="text-align: center;">
                             <th scope="col" style="width: 8%">日付</th>
                             <th scope="col" style="width: 8%">勤務区分</th>
                             <th scope="col" style="width: 8%">開始</th>

@@ -45,7 +45,7 @@
                     <table class="table table-info table-striped" style="font-size : 10px;">
                         <thead>
                         <tr>
-                            <th scope="col">当月の有給取得日数</th>
+                            <th scope="col" style="width: 50%">当月の有給取得日数</th>
                             <th scope="col">有給残り日数</th>
                         </tr>
                         </thead>
@@ -94,7 +94,7 @@
                     @csrf
                         <table class="table table-bordered table-sm" id="input_table">
                             <thead>
-                                <tr class="table-info">
+                                <tr class="table-info" style="text-align: center;">
                                     <th scope="col" style="width: 8%">日付</th>
                                     <th scope="col" style="width: 8%">勤務区分</th>
                                     <th scope="col" style="width: 8%">開始</th>
