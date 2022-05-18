@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\AddPaidLeavesController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ApplicationFormController;
 use App\Http\Controllers\EmployeesFormController;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\InputFormController;
+
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -36,9 +38,7 @@ Route::group(['prefix' => 'employees', 'as' => 'employees.', 'middleware' => 'au
 });
 
 // 個人勤怠管理フォーム
-Route::get('/personal_management', function () {
-    return view('personal_management');
-})->name('mgmt.personal');
+Route::get('/personal_management/{id}', [AddPaidLeavesController::class, 'index'])->name('index');
 
 //申請フォーム
 Route::group(['prefix' => 'application', 'as' => 'application.', 'middleware' => 'auth'], function(){

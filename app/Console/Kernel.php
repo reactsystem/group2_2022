@@ -4,6 +4,11 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use app\Console\Commands\TaskBatch;
+use App\Models\AddPaidLeave;
+use App\Models\PaidLeave;
+use App\Models\User;
+use Carbon\Carbon;
 
 class Kernel extends ConsoleKernel
 {
@@ -15,7 +20,18 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $now = Carbon::now('UTC');
+
+        // idは部署勤怠管理フォームからとってくる。今回は仮に「201704010001」とする。
+        $id = 201704010001;
+        $joining = User::find($id)->joining;
+        $joining_date = new Carbon($joining, 'UTC');
+        $joining_day = $joining_date->day;
+        $diff_months = $joining_date->diffInMonths($now);
+        
+        if($diff_months % 12 === 6){
+            $schedule->command('update')->monthlyOn($joining_day, '00:00');
+        }
     }
 
     /**

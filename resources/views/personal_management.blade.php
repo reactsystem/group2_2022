@@ -12,7 +12,7 @@
             <div class="contents">
 
                 <div class="select_month col">
-                    <p class="mr-4">◎◎△△さんの勤務表</p>
+                    <p class="mr-4">{{$user->name}}さんの勤務表</p>
                     <form action="" method="POST">
                         <select name="month" class="form-select col" aria-label="Default select example">
                             <option value="">２０２２年５月</option>
@@ -44,10 +44,10 @@
                         <td><div class="collapse collapse0">時間外</td>
                     </tr>
                     <tr>
-                        <td><div class="collapse collapse0">18:05</td>
-                        <td><div class="collapse collapse0">00:45</td>
-                        <td><div class="collapse collapse0">07:45</td>
-                        <td><div class="collapse collapse0">00:00</td>
+                        <td><div class="collapse collapse0">{{$fixedWorkTime}}</td>
+                        <td><div class="collapse collapse0">{{$totalRestTime}}</td>
+                        <td><div class="collapse collapse0">{{$totalWorkTime}}</td>
+                        <td><div class="collapse collapse0">{{$totalOverTime}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -96,9 +96,9 @@
                         <td><div class="collapse collapse2"></td>
                     </tr>
                     <tr>
+                        <td><div class="collapse collapse2">{{$total_leave}}</td>
                         <td><div class="collapse collapse2">0</td>
-                        <td><div class="collapse collapse2">0</td>
-                        <td><div class="collapse collapse2">20</td>
+                        <td><div class="collapse collapse2">{{$remain_leave}}</td>
                         <td><div class="collapse collapse2"></td>
                     </tr>
                     </tbody>
@@ -109,7 +109,7 @@
                     @csrf
                     <button type="button" class="btn btn-primary btn-lg mb-3">更新する</button>
 
-                        <table class="table table-bordered col-10 table-sm">
+                        <table class="table table-bordered col-10 table-sm text-center">
                             <thead>
                             <tr class="table-info">
                                 <th scope="col">日付</th>
@@ -123,42 +123,52 @@
                             </tr>
                             </thead>
                             <tbody>
+                            @foreach($period as $day)
                             <tr>
-                                <td>5/1(月)</td>
+                                <td>{{$day->format('m/d')}}({{$day->isoFormat(('ddd'))}})</td>
                                 <td><select name="work_type">
-                                    <option value=""></option>
-                                    <option value="1" selected>出勤</option>
-                                    <option value="2">欠勤</option>
-                                    <option value="3">遅刻</option>
-                                    <option value="4">早退</option>
+                                    <option value="" @if(empty($userInfo[$loop->index])) selected @endif></option>
+                                    @foreach($workTypes as $workType)
+                                        <option value="{{$workType->id}}" @if(!empty($userInfo[$loop->index]) && $userInfo[$loop->index]->work_type_id == $workType->id) selected @endif>{{$workType->name}}</option>
+                                    @endforeach
                                     </select>
                                 </td>
-                                <td><input type="text" name="start_time" size="5" value="09:27"></td>
-                                <td><input type="text" name="left_time" size="5" value="18:05"></td>
-                                <td>00:45</td>
-                                <td>07:45</td>
-                                <td>00:00</td>
-                                <td>・勤怠管理システムの画面設計書を作成</td>
-                            </tr>
-                            @for($n = 2; $n <= 31; $n++)
-                            <tr>
-                                <td>5/{{$n}}(月)</td>
-                                <td><select name="work_type">
-                                    <option value=""></option>
-                                    <option value="1">出勤</option>
-                                    <option value="2">欠勤</option>
-                                    <option value="3">遅刻</option>
-                                    <option value="4">早退</option>
-                                    </select>
+                                <td>
+                                    @if(!empty($userInfo[$loop->index]->start_time))
+                                        <input type="text" size="6" name="start_time" value="{{substr($userInfo[$loop->index]->start_time, 0, 5)}}">
+                                    @else
+                                        <input type="text" size="6" name="start_time" value="">
+                                    @endif
                                 </td>
-                                <td><input type="text" name="start_time" size="5"></td>
-                                <td><input type="text" name="left_time" size="5"></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>
+                                    @if(!empty($userInfo[$loop->index]->left_time))
+                                        <input type="text" size="6" name="left_time" value="{{substr($userInfo[$loop->index]->left_time, 0, 5)}}">
+                                    @else
+                                        <input type="text" size="6" name="left_time" value="">
+                                    @endif
+                                </td>
+                                <td>
+                                    @if(!empty($userInfo[$loop->index]->rest_time))
+                                        {{substr($userInfo[$loop->index]->rest_time, 0, 5)}}
+                                    @endif
+                                </td>
+                                <td>
+                                    @if(!empty($userInfo[$loop->index]->over_time))
+                                        {{substr($userInfo[$loop->index]->over_time, 0, 5)}}
+                                    @endif
+                                </td>
+                                <td>
+                                    @if(!empty($userInfo[$loop->index]->over_time))
+                                        {{substr($userInfo[$loop->index]->over_time, 0, 5)}}
+                                    @endif
+                                </td>
+                                <td>
+                                    @if(!empty($userInfo[$loop->index]->description))
+                                        {{$userInfo[$loop->index]->description}}
+                                    @endif
+                                </td>
                             </tr>
-                            @endfor
+                            @endforeach
                             </tbody>
 
                             <tfoot>
@@ -172,10 +182,10 @@
                             </tr>
                             <tr>
                                 <td colspan="3"></td>
-                                <td>18:05</td>
-                                <td>00:45</td>
-                                <td>07:45</td>
-                                <td>00:00</td>
+                                <td>{{$fixedWorkTime}}</td>
+                                <td>{{$totalRestTime}}</td>
+                                <td>{{$totalOverTime}}</td>
+                                <td>{{$totalWorkTime}}</td>
                                 <td></td>
                             </tr>
                             </tfoot>
