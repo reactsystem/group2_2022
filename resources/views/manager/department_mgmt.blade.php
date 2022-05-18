@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('css')
-	<link href="{{ asset('css/manager.css') }}" rel="stylesheet">
+	<link href="{{ asset('css/department_mgmt.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -9,7 +9,7 @@
 		<div class="col-lg-12 card">
 			<div class="card-header bg-light">
 				<!-- 絞り込み条件選択フォーム --------------------------------->
-				<form action="" method="POST" id="cond-form" class="form-inline">
+				<form action="" method="POST" id="form-cond" class="form-inline">
 					@csrf
 					<!-- ページ表示条件 -->
 					<input type="hidden" name="disp_limit" value="{{$disp_limit}}">
@@ -17,11 +17,11 @@
 					<!-- 部署選択 -->
 					<input type="hidden" name="department" value="{{$dept->id}}">
 					<div class="dropdown">
-						<button type="button" id="dropdown1" class="btn btn-light dropdown-toggle"
+						<button type="button" id="dpdn-dept" class="btn btn-light dropdown-toggle"
 							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							{{$dept->name}}
 						</button>
-						<div class="dropdown-menu" aria-labelledby="dropdown1">
+						<div class="dropdown-menu" aria-labelledby="dpdn-dept">
 							@foreach ($departments as $department)
 								@if ($department->id === $dept->id)
 									<button type="submit" name="department" value="{{$department->id}}" class="dropdown-item active">{{$department->name}}</button>
@@ -59,7 +59,7 @@
 				<ul class="list-group list-group-flush">
 					<!-- ページ表示条件 ----------------------------------------------->
 					<li class="list-group-item">
-						<form action="" method="POST" id="disp-form" class="form-inline">
+						<form action="" method="POST" class="form-inline">
 							@csrf
 							<!-- 絞り込み条件 -->
 							<input type="hidden" name="department" value="{{$dept->id}}">
@@ -73,6 +73,7 @@
 								])
 								->links()}}
 
+							<!-- 隙間を開けるための記述 -->
 							<div class="col-sm-1"></div>
 
 							<!-- 表示件数 -->
@@ -103,7 +104,7 @@
 					<!-- 部署別勤務表 --------------------------------------------->
 					<?php
 						// 労働時間計算関数
-						// js sectionに分けて書いたら見つからないと怒られたのでとりあえずここに書いてます。
+						// jsに分けて書いたら見つからないと怒られたのでとりあえずここに書いてます。
 						function calcWorkTime($start_time, $left_time, $rest_time)
 						{
 							$start = new DateTime($start_time);
@@ -118,7 +119,7 @@
 						}
 					?>
 					<li class="list-group-item">
-						<table class="table table-striped  table-bordered">
+						<table class="table table-striped table-bordered">
 							<thead class="thead-light">
 								<tr><th></th><th>名前</th><th>勤務区分</th><th>開始</th><th>終了</th><th>休憩時間</th><th>労働時間</th><th>時間外</th>
 									<th class="col-sm-4">メモ</th>
@@ -177,19 +178,5 @@
 @endsection
 
 @section('js')
-	<script>
-		$(document).ready(function () {
-			// DatePicker
-			$('#date-picker').datetimepicker(
-			{
-				locale: 'ja',
-				dayViewHeaderFormat: 'YYYY年M月',
-				format: 'YYYY/MM/DD'
-			});
-			$('#date-picker').on('change.datetimepicker', function()
-			{
-				$('#cond-form').submit();
-			});
-		});
-	</script>
+	<script src="{{asset('js/department_mgmt.js')}}"></script>
 @endsection

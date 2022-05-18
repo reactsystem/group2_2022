@@ -1,0 +1,4 @@
+.icon-del::-webkit-calendar-picker-indicator
+{
+	display: none;
+}
