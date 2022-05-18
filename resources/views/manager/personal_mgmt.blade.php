@@ -6,10 +6,23 @@
 
     @section('content')
     @if (session()->has('message'))
-    <div class="alert alert-primary text-center" role="alert">
+    <div class="alert alert-primary" role="alert">
         {{session('message')}}
     </div>
     @endif
+
+    @if ($errors->has('start_time'))
+    <div class="alert alert-danger" role="alert">
+        {{ $errors->first('start_time') }}
+    </div>
+    @endif
+
+    @if ($errors->has('left_time'))
+    <div class="alert alert-danger" role="alert">
+        {{ $errors->first('left_time') }}
+    </div>
+    @endif
+
         <div class="container">
             <div class="contents">
 
