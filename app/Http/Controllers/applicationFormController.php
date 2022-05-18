@@ -103,7 +103,7 @@ class ApplicationFormController extends Controller
             'status' => 0
         ]);
 
-        return redirect('/')->with('sended_form', '申請書が送信されました');
+        return redirect('/')->with('sent_form', '申請書が送信されました');
     }
 
     public function approve(Request $request){
