@@ -99,13 +99,6 @@ class employeesFormController extends Controller
             'created_at' => Carbon::now()
         ]);
 
-        PaidLeave::insert([
-            'user_id' => $request->id,
-        ]);
-        PaidLeave::insert([
-            'user_id' => $request->id,
-        ]);
-
         return redirect()->route('employees.show',['department' => $request->department])->with(['message' => '社員番号：'.$request->id.'、社員名：'.$request->name.'さんを新規追加しました。']);
     }
 

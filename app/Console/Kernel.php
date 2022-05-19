@@ -17,14 +17,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $now = Carbon::now('UTC');
+        $now = Carbon::now();
 
         $users = User::all();
         foreach($users as $user){
             $joining = $user->joining;
-            $joining_date = new Carbon($joining, 'UTC');
-            $joining_day = $joining_date->day;
-            $diff_months = $joining_date->diffInMonths($now);
+            $joining_day = new Carbon($joining);
+            $diff_months = $joining_day->diffInMonths($now);
             
             if($diff_months % 12 === 6){
                 $schedule->command('update')->monthlyOn($joining_day, '00:00');

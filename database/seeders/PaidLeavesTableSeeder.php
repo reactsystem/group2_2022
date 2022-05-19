@@ -18,24 +18,7 @@ class PaidLeavesTableSeeder extends Seeder
     {
         $params =
         [
-            [
-                'user_id' => '202204010001',
-            ],
-            [
-                'user_id' => '202204010001',
-            ],
-            [
-                'user_id' => '202204010004',
-            ],
-            [
-                'user_id' => '202204010004',
-            ],
-            [
-                'user_id' => '202204010005',
-            ],  
-            [
-                'user_id' => '202204010005',
-            ],  
+            
         ];
         DB::table('paid_leaves')->insert($params);   
     }
