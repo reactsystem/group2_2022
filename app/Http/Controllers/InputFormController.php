@@ -80,9 +80,9 @@ class InputFormController extends Controller
         // 出勤ボタンを打刻した時の処理
         if (isset($request->start_time)){
 
-            // ログインユーザーの当日のレコードが存在しないかチェック
+            // ログインユーザーの当日のレコードが存在する場合
             if (DB::table('work_times')->where('user_id', $request->user_id)->where('date', $date)->exists()) {
-                return redirect('/')->with('message', '既に出勤の打刻が完了しています');
+                return redirect('/')->with('message', '既に勤怠の入力が完了しています');
 
             // レコードが存在しない場合はレコードを作成する
             } else {

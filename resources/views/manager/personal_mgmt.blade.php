@@ -96,7 +96,11 @@
                     <tbody>
                     <tr>
                         @foreach ($work_types as $work_type)
-                            <td><div class="collapse collapse1">{{$work_type->name}}</td>
+                            <td>
+                                <div class="collapse collapse1">
+                                    {{$work_type->name}}
+                                </div>
+                            </td>
                             @if ($loop->iteration == 5)
                             @break
                             @endif
@@ -104,7 +108,11 @@
                     </tr>
                     <tr>
                         @foreach ($work_types as $work_type)
-                            <td><div class="collapse collapse1">{{$work_times->where('work_type_id', $work_type->id)->count()}}</td>
+                            <td>
+                                <div class="collapse collapse1">
+                                    {{$work_times->where('work_type_id', $work_type->id)->count()}}
+                                </div>
+                            </td>
                             @if ($loop->iteration == 5)
                             @break
                             @endif
@@ -182,7 +190,14 @@
                                         @endphp
 
                                         <td>
+                                            {{-- 過去の有給休暇は変更不可にする --}}
+                                            @if ($work_time->date < $today->isoFormat('YYYY-MM-DD') && $work_time->work_type_id == 6)
+                                            <select name="work_type[]" style="pointer-events: none; background: gray;" tabindex="-1">
+                                            @else
+                                            
                                             <select name="work_type[]">
+                                            @endif
+                                                    <option value='delete'></option>
                                                 @foreach ($work_types as $work_type)
                                                     <option value={{$work_type->id}}
                                                     @if ($work_time->work_type_id == $work_type->id)
