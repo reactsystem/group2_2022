@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\WorkTime;
-use App\Models\WorkType;
 use App\Models\FixedTime;
 use App\Models\PaidLeave;
 use App\Models\User;
@@ -67,62 +66,61 @@ class PersonalMgmtController extends Controller
             // 初期に付与される有給休暇、付与される期間、上限
             $initial_span = 6;
             $added_span = 12;
-            $diff_years = 0;
+            $diff_years = 0.5;
             $limit_leaves = 40;
 
             // 勤続年数が40年までと想定
             $i = 0;
             while($initial_span<=480){
                 if($initial_span <= $diff_months && $diff_months<= $initial_span+$added_span){
-                    $diff_years = 0.5+$i;
+                    $diff_years += $i;
                 }
                 $i++;
                 $initial_span += $added_span;
             }
             
-            // 勤続年数によって、今までに付与された有給休暇の全てを配列で取得
-            $leaves = AddPaidLeave::select('add_days')->where('years', '<=', $diff_years)->get();
+            // 勤続年数によって、今期付与される有給休暇
+            $provided_leave = AddPaidLeave::select('add_days')->where('years', '=', $diff_years)->first()->add_days;
 
-            $i=0;
-            if(!$leaves->isEmpty()){
-                while($i<count($leaves)){
-                    $added_leave[] = $leaves[$i]->add_days;
-                    $i++;
-                }
-            }else{
-                $added_leave = 0;
-            }
-            
-            // 社員が今期に付与される有給休暇
-            if($added_leave){
-                $provided_leave = end($added_leave);
-            }else{
-                $provided_leave = 0;
-            }
-            
             // 社員の有給休暇残り日数、2年で2年前までの分リセット、上限$limit_leaves
+
+            // 社員1人分の有給休暇
             $personal_leaves=PaidLeave::where('user_id', $user->id)->get();
+
             for($j=0; $j<count($personal_leaves); $j++){
+
+                // もしcreated_atが空なら今期の有給休暇付与分、created_atを追加
                 if(empty($personal_leaves[$j]->created_at)){
                     $personal_leaves[$j]->left_days = $provided_leave;
                     $personal_leaves[$j]->created_at = $now;
                     $personal_leaves[$j]->save();
                 }else{
+                    // もしupdated_atが空なら2つの内1つ目のデータにupdated_atを挿入
                     if(empty($personal_leaves[$j]->updated_at)){
                         $personal_leaves[0]->updated_at = $now;
                         $personal_leaves[0]->save();
                     }
+
+                    // created_atと現在までの差分を取得
                     $iniAddedDay = new Carbon($personal_leaves[$j]->created_at);
                     $diffIniMonth = $iniAddedDay->diffInMonths($now);
+
+                    // もし有給休暇が上限に達していたらleft_days=40、達していなかったら2つ目のデータに1つ目のデータプラス今期付与される有給休暇
                     if($personal_leaves[1]->left_days <= $limit_leaves){
                         $personal_leaves[1]->left_days = $personal_leaves[0]->left_days + $provided_leave;
                     }else{
                         $personal_leaves[1]->left_days = 40;
                     }
                     $personal_leaves[1]->save();  
+
+                    // もしcreated_atと現在までの差分が2年だったら(上手くいっていない)
                     if($diffIniMonth === 24){
+                        // 2つ目の有給休暇ー1つ目の有給休暇(2年経過分)
                         $personal_leaves[1]->left_days = $personal_leaves[1]->left_days - $personal_leaves[0]->left_days;
-                        for($h=0; $h<1; $h++){
+                        
+                        // 1回だけデータ挿入
+                        $m = 0;
+                        while($m == 0){
                             if($personal_leaves[1]->left_days <= $limit_leaves){
                                 PaidLeave::insert([
                                     'user_id' => $user->id,
@@ -137,6 +135,7 @@ class PersonalMgmtController extends Controller
                                 ]);
                             }
                         }
+                        // 1つ目のデータ削除
                         $personal_leaves[0]->delete();
                     }
                 }
