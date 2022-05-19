@@ -15,9 +15,10 @@ return new class extends Migration
     {
         Schema::create('paid_leaves', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
+            $table->string('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->integer('left_days');
+            $table->integer('left_days')->nullable();
+            $table->date('expire_date')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

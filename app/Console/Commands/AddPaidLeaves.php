@@ -4,8 +4,9 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\User;
-use App\Models\PaidLeave;
+use Carbon\Carbon;
 use App\Models\AddPaidLeave;
+use App\Models\PaidLeave;
 
 class AddPaidLeaves extends Command
 {
@@ -14,7 +15,7 @@ class AddPaidLeaves extends Command
      *
      * @var string
      */
-    protected $signature = 'add-paid-leaves';
+    protected $signature = 'command:update';
 
     /**
      * The console command description.
@@ -30,44 +31,64 @@ class AddPaidLeaves extends Command
      */
     public function handle()
     {
+        //現在
+        $now = Carbon::now();
+        $nowDate = $now->format('Y-m-d');
+
+        //2年後
+        $twoYearsLater = $now->copy()->addYear(2);
+
         $users = User::all();
 
-        foreach ($users as $user) {
-            // 勤続年数を計算
-            $user_years = (strtotime("now") - strtotime($user->joining)) / 86400 / 365 ;
+        foreach($users as $user){
 
-            if ($user_years == 0.5) {
-                $add_paid_leave = AddPaidLeave::find(1);
-                $user->paidLeave->left_days += $add_paid_leave->add_days;
+            // 入社日
+            $joining = $user->joining;
+            $joining_day = new Carbon($joining);
+            // 入社日から現在までの時差
+            $diff_months = $joining_day->diffInMonths($now);
+            
+            // 初期に付与される有給休暇、付与される期間
+            $initial_span = 6;
+            $added_span = 12;
+            $diff_years = 0.5;
+
+            // 勤続年数が40年までと想定、月→年に変換
+            $i = 0;
+            while($initial_span<=480){
+                if($initial_span <= $diff_months && $diff_months <= $initial_span+$added_span){
+                    $diff_years += $i;
+                }
+                $i++;
+                $initial_span += $added_span;
             }
-            if ($user_years == 1.5) {
-                $add_paid_leave = AddPaidLeave::find(2);
-                $user->paidLeave->left_days += $add_paid_leave->add_days;
-            }
-            if ($user_years == 2.5) {
-                $add_paid_leave = AddPaidLeave::find(3);
-                $user->paidLeave->left_days += $add_paid_leave->add_days;
-            }
-            if ($user_years == 3.5) {
-                $add_paid_leave = AddPaidLeave::find(4);
-                $user->paidLeave->left_days += $add_paid_leave->add_days;
-            }
-            if ($user_years == 4.5) {
-                $add_paid_leave = AddPaidLeave::find(5);
-                $user->paidLeave->left_days += $add_paid_leave->add_days;
-            }
-            if ($user_years == 5.5) {
-                $add_paid_leave = AddPaidLeave::find(6);
-                $user->paidLeave->left_days += $add_paid_leave->add_days;
-            }
-            if ($user_years == 6.5) {
-                $add_paid_leave = AddPaidLeave::find(7);
-                $user->paidLeave->left_days += $add_paid_leave->add_days;
+            
+            // 勤続年数によって今期付与される有給休暇(1年ごと)
+            if($diff_months % 12 === 6){
+                $provided_leave = AddPaidLeave::select('add_days')->where('years', '=', $diff_years)->first()->add_days;
+                for($m=0; $m<=0; $m++){
+                    PaidLeave::insert([
+                        'user_id' => $user->id,
+                        'left_days' => $provided_leave,
+                        'created_at' => $now,
+                        'expire_date' => $twoYearsLater
+                    ]);
+                }
+            }else{
+                $provided_leave = 0;
             }
 
-            // TODO:7.5年以降の処理を追加,有給付与上限の場合は超えた分を追加しない設定を追加
+            // 社員1人分の有給休暇
+            $personal_leaves=PaidLeave::where('user_id', $user->id)->get();
 
+            //expire_dateに達したデータをソフトデリート
+            for($j=0; $j<count($personal_leaves); $j++){
+                $expire_date = new Carbon($personal_leaves[$j]->expire_date);
+                $expired_date = $expire_date->format('Y-m-d');
+                if($nowDate === $expired_date){
+                    $personal_leaves[0]->delete();
+                }
+            }
         }
-
     }
 }
