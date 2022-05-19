@@ -31,13 +31,13 @@ class WorkTypesTableSeeder extends Seeder
                 'name' => '早退',
             ],
             [
+                'name' => '遅刻/早退'
+            ],
+            [
                 'name' => '有給休暇',
             ],
             [
                 'name' => '特別休暇',
-            ],
-            [
-                'name' => '遅刻/早退'
             ],
         ];
 

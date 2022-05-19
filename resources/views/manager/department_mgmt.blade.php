@@ -129,7 +129,7 @@
 							@foreach ($work_times as $index => $work_time)
 								<tr>
 									<td>{{$index + 1}}</td>
-									<td><a href="{{route('mgmt.personal')}}">{{$work_time->user->name}}</a></td>
+									<td><a href="{{route('mgmt.personal', ['user_id' => $work_time->user->id,])}}">{{$work_time->user->name}}</a></td>
 									<td>{{$work_time->workType->name}}</td>
 									<td>{{substr($work_time->start_time, 0, 5)}}</td>
 									<td>{{substr($work_time->left_time, 0, 5)}}</td>

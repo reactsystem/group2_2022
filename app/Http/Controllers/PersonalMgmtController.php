@@ -9,6 +9,7 @@ use App\Models\WorkTime;
 use App\Models\WorkType;
 use App\Models\FixedTime;
 use App\Models\PaidLeave;
+use App\Models\User;
 use Carbon\Carbon;
 use Yasumi\Yasumi;
 use Illuminate\Support\Facades\Validator;
@@ -44,7 +45,8 @@ class PersonalMgmtController extends Controller
         $dt->timezone = 'Asia/Tokyo'; //日本時刻で表示
         $daysInMonth = $dt->daysInMonth; //今月は何日まであるか
 
-        $user = Auth::user();
+        $user = User::find($request->user_id);
+        $work_types = WorkType::all();
         $work_times = WorkTime::where('user_id', $user->id)->where('date', 'like', $current_month . '%')->get();
         $fixed_time = FixedTime::first();
         $paid_leaves = PaidLeave::where('user_id', $user->id)->first();
@@ -60,6 +62,7 @@ class PersonalMgmtController extends Controller
             'user',
             'description',
             'holidays',
+            'work_types',
         ));
     }
 
@@ -72,8 +75,8 @@ class PersonalMgmtController extends Controller
             if ($items['work_type'][$i] !== NULL) {
 
                 // バリデーション
-                // 勤務区分が「欠勤」「有給休暇」「特別休暇」の場合
-                if ($items['work_type'][$i] == 2 || $items['work_type'][$i] == 5 || $items['work_type'][$i] == 6) {
+                // 勤務区分が「欠勤」「有給休暇」「特別休暇」の場合、時刻を入力させない
+                if ($items['work_type'][$i] == 2 || $items['work_type'][$i] == 6 || $items['work_type'][$i] == 7) {
                     $check = ['start_time' => $items['start_time'][$i], 'left_time' => $items['left_time'][$i],];
                     $rules = [
                         'start_time' => 'max:0',
@@ -90,10 +93,7 @@ class PersonalMgmtController extends Controller
                             ->withErrors($validator)
                             ->withInput();
                     }
-                }
-
-                // 勤務区分が「出勤」「遅刻」「早退」「遅刻/早退」の場合
-                if ($items['work_type'][$i] == 1 || $items['work_type'][$i] == 3 || $items['work_type'][$i] == 4 || $items['work_type'][$i] == 7) {
+                } else { // 勤務区分がその他の場合、必ず時刻を入力させる
                     $check = ['start_time' => $items['start_time'][$i], 'left_time' => $items['left_time'][$i],];
                     $rules = [
                         'start_time' => 'required|date_format:H:i',
