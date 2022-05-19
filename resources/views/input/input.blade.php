@@ -47,7 +47,13 @@
                         <tbody>
                         <tr>
                             <td>{{$work_times->where('work_type_id', 5)->count()}}</td>
-                            <td>{{$paid_leaves->left_days}}</td>
+                            <td>
+                                @if(!empty($paid_leaves->left_days))
+                                    {{$paid_leaves->left_days}}
+                                @else
+                                    0
+                                @endif
+                            </td>
                         </tr>
                         </tbody>
                     </table>
