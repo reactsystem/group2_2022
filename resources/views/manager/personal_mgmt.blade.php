@@ -133,23 +133,32 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td><div class="collapse collapse2">有給休暇取得日数</div></td>
-                        <td><div class="collapse collapse2">特別休暇取得日数</div></td>
+                        <td><div class="collapse collapse2">当月の有給休暇取得日数</div></td>
                         <td><div class="collapse collapse2">有給休暇残り日数</div></td>
+                        <td><div class="collapse collapse2">特別休暇取得日数</div></td>
                         <td><div class="collapse collapse2"></div></td>
                     </tr>
                     <tr>
-                        <td><div class="collapse collapse2">{{$work_times->where('work_type_id', 5)->count()}}</td>
-                        <td><div class="collapse collapse2">{{$work_times->where('work_type_id', 6)->count()}}</td>
-                        <td><div class="collapse collapse2">
-                            @if(!empty($paid_leave_sum))
-                                {{$paid_leave_sum}}
-                            @else
-                                0
-                            @endif
+                        <td>
+                            <div class="collapse collapse2">
+                                済：{{$work_times->where('date', '<', $today->isoFormat('YYYY-MM-DD'))->where('work_type_id', 6)->count()}}
+                                /予定：{{$work_times->where('date', '>=', $today->isoFormat('YYYY-MM-DD'))->where('work_type_id', 6)->count()}}
+                            </div>
                         </td>
-                        <td><div class="collapse collapse2"></td>
-                        
+                    </td>
+                    <td><div class="collapse collapse2">
+                        @if(!empty($paid_leave_sum))
+                            {{$paid_leave_sum}}
+                        @else
+                            0
+                        @endif
+                    </td>
+                    <td>
+                        <div class="collapse collapse2">
+                            済：{{$work_times->where('date', '<', $today->isoFormat('YYYY-MM-DD'))->where('work_type_id', 7)->count()}}
+                            /予定：{{$work_times->where('date', '>=', $today->isoFormat('YYYY-MM-DD'))->where('work_type_id', 7)->count()}}
+                        </div>
+                    <td><div class="collapse collapse2"></td>
                     </tr>
                     </tbody>
                 </table>
