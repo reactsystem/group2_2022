@@ -120,24 +120,33 @@ class InputFormController extends Controller
                 return redirect('/')->with('message', '出勤の打刻が完了していません');
             } elseif ($work_time->left_time !== NULL) {
                 return redirect('/')->with('message', '既に退勤の打刻が完了しています');
+            
+            // 時間外が発生していない場合
+            } elseif (strtotime($time) < strtotime("+15 min", strtotime($fixed_time->left_time))) {
+                WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([
+                    'left_time' => $time,
+                    'description' => $request->description,
+                    'rest_time' => $fixed_time->rest_time,
+                ]);
+            // 時間外が発生している場合
             } else {
                 WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([
                     'left_time' => $time,
-                    'rest_time' => '00:45:00',
                     'description' => $request->description,
+                    'rest_time' => gmdate("H:i:s", strtotime("+15 min", strtotime($fixed_time->rest_time))),
                 ]);
+            }
 
-                // 定時よりも退勤打刻時間が早い場合、遅刻の時は「遅刻/早退」、そうでない場合は「早退」に更新する 
-                if ((strtotime($time) < strtotime($fixed_time->left_time))) {
-                    if ($work_time->work_type_id == 3) {
-                        WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([
-                        'work_type_id' => 5,
-                        ]);
-                    } else {
-                        WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([
-                        'work_type_id' => 4,
-                        ]);
-                    }
+            // 定時よりも退勤打刻時間が早い場合、遅刻の時は「遅刻/早退」、そうでない場合は「早退」に更新する 
+            if ((strtotime($time) < strtotime($fixed_time->left_time))) {
+                if ($work_time->work_type_id == 3) {
+                    WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([
+                    'work_type_id' => 5,
+                    ]);
+                } else {
+                    WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([
+                    'work_type_id' => 4,
+                    ]);
                 }
             }
         }
