@@ -29,24 +29,29 @@
                                 <button type="submit" class="btn btn-info btn-lg mb-3" name="start_time" value="#">出勤</button>
                                 <button type="submit" class="btn btn-warning btn-lg mb-3" name="left_time" value="#">退勤</button>
                                 <div class="form-floating">
-                                    <textarea class="form-control" name="description" placeholder="Leave a comment here" id="description" style="height: 100px"
+                                    <textarea class="form-control" name="description" placeholder="Leave a comment here" id="description" style="height: 100px; font-size: 10px;"
                                     >@isset($description){{$description->description}}@endisset</textarea>
-                                    <label for="description">打刻メモを入力できます</label>
+                                    <label for="description" style="font-size: 10px;">60文字以内で打刻メモを入力できます</label>
                                 </div>
+                                @if ($errors->has('description'))
+                                <div class="alert alert-danger" role="alert" style="font-size: 10px;">
+                                    {{ $errors->first('description') }}
+                                </div>
+                                @endif
                                 <button type="submit" name="description_submit" value="#" class="btn btn-secondary btn-sm mt-3">打刻メモを送信</button>
                         </form>
                 </div>
                 <div class="info_form table-sm">
-                    <table class="table table-info table-striped" style="font-size : 10px;">
+                    <table class="table table-info table-striped" style="font-size: 10px;">
                         <thead>
                         <tr>
-                            <th scope="col">当月の有給取得日数</th>
+                            <th scope="col" style="width: 50%">当月の有給取得日数</th>
                             <th scope="col">有給残り日数</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td>{{$work_times->where('work_type_id', 5)->count()}}</td>
+                            <td>{{$work_times->where('work_type_id', 6)->count()}}</td>
                             <td>
                                 @if(!empty($paid_leaves->left_days))
                                     {{$paid_leaves->left_days}}
@@ -62,7 +67,7 @@
 
             <!-- 右カラム -->
             <div class="contents">
-                <form method="GET" id="select" action="" class="form-inline">
+                <form method="GET" id="select" action="" class="form-inline mb-2">
                     @csrf
                     <div class="form-group">
                         <select name="month" class="form-select col mr-2" aria-label="Default select example" onchange="submit_form()">
@@ -90,19 +95,19 @@
                     </div>
                 </form>
 
-                <div class="input_form">
+                <div class="input_form" style="font-size: 12px;">
                 <form action="/" method="POST">
                     @csrf
                         <table class="table table-bordered table-sm" id="input_table">
                             <thead>
-                                <tr class="table-info">
-                                    <th scope="col" style="width: 10%">日付</th>
-                                    <th scope="col" style="width: 10%">勤務区分</th>
+                                <tr class="table-info" style="text-align: center;">
+                                    <th scope="col" style="width: 8%">日付</th>
+                                    <th scope="col" style="width: 8%">勤務区分</th>
                                     <th scope="col" style="width: 8%">開始</th>
                                     <th scope="col" style="width: 8%">終了</th>
                                     <th scope="col" style="width: 8%">休憩時間</th>
                                     <th scope="col" style="width: 8%">労働時間</th>
-                                    <th scope="col" style="width: 8%">時間外</th>
+                                    <th scope="col" style="width: 7%">時間外</th>
                                     <th scope="col">メモ</th>
                                 </tr>
                             </thead>
@@ -150,7 +155,6 @@
                                             </td>
                                             <td>
                                                 @isset ($work_time->left_time)
-
                                                     {{-- 遅刻した場合 --}}
                                                     @if (date('H:i', $start_time) >= '09:30')
                                                         @if (date('H:i', $left_time) < '18:00')
@@ -176,6 +180,10 @@
                                                         @endif
                                                     @endif
                                                 @endisset
+                                                {{-- 「有給休暇」「特別休暇」は有給扱いのため、勤務時間を表示する --}}
+                                                @if ($work_time->workType->name == '有給休暇' || $work_time->workType->name == '特別休暇')
+                                                07:45
+                                                @endif
                                             </td>
                                             <td>
                                                 @if (date('H:i', $left_time) < '18:15')

@@ -20,11 +20,11 @@ class ApplicationTypesTableSeeder extends Seeder
         [
             [
                 'name' => '有給休暇',
-                'work_type_id' => '5',
+                'work_type_id' => '6',
             ],
             [
                 'name' => '特別休暇',
-                'work_type_id' => '6',
+                'work_type_id' => '7',
             ],
             [
                 'name' => '休日出勤',
