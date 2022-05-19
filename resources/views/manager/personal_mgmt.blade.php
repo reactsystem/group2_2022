@@ -131,10 +131,17 @@
                         <td><div class="collapse collapse2"></div></td>
                     </tr>
                     <tr>
-                        <td><div class="collapse collapse2">{{$work_times->where('work_type_id', 6)->count()}}</div></td>
-                        <td><div class="collapse collapse2">{{$work_times->where('work_type_id', 7)->count()}}</div></td>
-                        <td><div class="collapse collapse2">{{$paid_leaves->left_days}}</div></td>
-                        <td><div class="collapse collapse2"></div></td>
+                        <td><div class="collapse collapse2">{{$work_times->where('work_type_id', 5)->count()}}</td>
+                        <td><div class="collapse collapse2">{{$work_times->where('work_type_id', 6)->count()}}</td>
+                        <td><div class="collapse collapse2">
+                            @if(!empty($paid_leaves->left_days))
+                                {{$paid_leaves->left_days}}
+                            @else
+                                0
+                            @endif
+                        </td>
+                        <td><div class="collapse collapse2"></td>
+                        
                     </tr>
                     </tbody>
                 </table>
