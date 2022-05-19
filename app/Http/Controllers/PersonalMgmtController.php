@@ -77,13 +77,16 @@ class PersonalMgmtController extends Controller
     public function update(Request $request) {
         $items = $request->all();
         $count = count($items['date']);
+        $today = Carbon::createFromDate();
 
         for ($i = 0; $i < $count; $i++)
         {
             if ($items['work_type'][$i] !== NULL) {
 
-                // 勤務区分が「delete」以外の場合はバリデーションをかける
-                if ($items['work_type'][$i] !== 'delete') {
+                // 勤務区分が「delete」の場合はレコードを削除するため、バリデーションをかけない
+                // 日付が本日のデータは入力途中の可能性があるため、バリデーションをかけない
+                if ($items['work_type'][$i] != 'delete' && $items['date'][$i] != $today->isoFormat('YYYY-MM-DD')) {
+                    // ここからバリデーション
                     // 勤務区分が「欠勤」「有給休暇」「特別休暇」の場合、時刻を入力させない
                     if ($items['work_type'][$i] == 2 || $items['work_type'][$i] == 6 || $items['work_type'][$i] == 7) {
                         $check = ['start_time' => $items['start_time'][$i], 'left_time' => $items['left_time'][$i],];
@@ -119,16 +122,18 @@ class PersonalMgmtController extends Controller
                 }
 
                 // 「有給休暇」「特別休暇」をその他の勤務区分へ変更する場合、当該申請のステータスを「３(取り消し)」へ更新する
-                $work_time = WorkTime::where('user_id', $items['user_id'])->where('date', $items['date'][$i])->first();
-                if ($work_time->work_type_id == 6 || $work_time->work_type_id == 7) {
-                    if ($items['work_type'][$i] !== 6 && $items['work_type'][$i] !== 7) {
-                        $application = Application::where('user_id', $items['user_id'])
-                                                    ->where('date', $items['date'][$i])
-                                                    ->where('application_type_id', 1)
-                                                    ->orWhere('application_type_id', 2)
-                                                    ->first();
-                        $application->status = 3;
-                        $application->save();
+                if (WorkTime::where('user_id', $items['user_id'])->where('date', $items['date'][$i])->exists()) {
+                    $work_time = WorkTime::where('user_id', $items['user_id'])->where('date', $items['date'][$i])->first();
+                    if ($work_time->work_type_id == 6 || $work_time->work_type_id == 7) {
+                        if ($items['work_type'][$i] !== 6 && $items['work_type'][$i] !== 7) {
+                            $application = Application::where('user_id', $items['user_id'])
+                                                        ->where('date', $items['date'][$i])
+                                                        ->where('application_type_id', 1)
+                                                        ->orWhere('application_type_id', 2)
+                                                        ->first();
+                            $application->status = 3;
+                            $application->save();
+                        }
                     }
                 }
 
