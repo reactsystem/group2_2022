@@ -22,9 +22,11 @@ class Kernel extends ConsoleKernel
         $users = User::all();
         foreach($users as $user){
             $joining = $user->joining;
-            $joining_day = new Carbon($joining);
-            $diff_months = $joining_day->diffInMonths($now);
+            $joining_date = new Carbon($joining);
+            $joining_day = $joining_date->day;
+            $diff_months = $joining_date->diffInMonths($now);
             
+            //月の入社日の日で更新(新入社員6ヶ月後、以降1年ごと)
             if($diff_months % 12 === 6){
                 $schedule->command('update')->monthlyOn($joining_day, '00:00');
             }
