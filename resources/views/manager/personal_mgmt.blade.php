@@ -142,8 +142,8 @@
                         <td><div class="collapse collapse2">{{$work_times->where('work_type_id', 5)->count()}}</td>
                         <td><div class="collapse collapse2">{{$work_times->where('work_type_id', 6)->count()}}</td>
                         <td><div class="collapse collapse2">
-                            @if(!empty($paid_leaves->left_days))
-                                {{$paid_leaves->left_days}}
+                            @if(!empty($paid_leave_sum))
+                                {{$paid_leave_sum}}
                             @else
                                 0
                             @endif
@@ -201,7 +201,7 @@
                                             @if ($work_time->date < $today->isoFormat('YYYY-MM-DD') && $work_time->work_type_id == 6)
                                             <select name="work_type[]" style="pointer-events: none; background: gray;" tabindex="-1">
                                             @else
-                                            
+
                                             <select name="work_type[]">
                                             @endif
                                                     <option value='delete'></option>

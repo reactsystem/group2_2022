@@ -47,7 +47,13 @@ class InputFormController extends Controller
         $user = Auth::user();
         $work_times = WorkTime::where('user_id', $user->id)->where('date', 'like', $current_month . '%')->get();
         $fixed_time = FixedTime::first();
-        $paid_leaves = PaidLeave::where('user_id', $user->id)->first();
+
+        // 有効な有給休暇の数を取得する
+        $paid_leaves = PaidLeave::where('user_id', $user->id)->whereNull('deleted_at')->get();
+        $paid_leave_sum = 0;
+        foreach ($paid_leaves as $paid_leave) {
+            $paid_leave_sum += $paid_leave->left_days;
+        }
 
         return view('input.input', compact(
             'today',
@@ -56,7 +62,7 @@ class InputFormController extends Controller
             'daysInMonth',
             'work_times',
             'fixed_time',
-            'paid_leaves',
+            'paid_leave_sum',
             'user',
             'description',
             'holidays',
