@@ -103,7 +103,7 @@ class ApplicationFormController extends Controller
             'status' => 0
         ]);
 
-        return redirect('/')->with('sended_form', '申請書が送信されました');
+        return redirect('/')->with('sent_form', '申請書が送信されました');
     }
 
     public function approve(Request $request){
@@ -115,21 +115,15 @@ class ApplicationFormController extends Controller
 
     public function send(Request $request) {
         $user = Auth::user();
+        $fixed_time = FixedTime::first();
 
         // 申請承認フォームのコメントに対するバリデーション
-        $rules = [
-            'comment' => 'max:60',
-        ];
-        $messages = [
-            'comment.max' => 'コメントは６０文字以下で入力してください。',
-        ];
-
+        $rules = ['comment' => 'max:60',];
+        $messages = ['comment.max' => 'コメントは60文字以下で入力してください。',];
         $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->fails()) {
-            return back()
-                ->withErrors($validator)
-                ->withInput();
+            return back()->withErrors($validator)->withInput();
         }
 
         // 承認結果によってApplicationテーブルのstatusカラムを更新
