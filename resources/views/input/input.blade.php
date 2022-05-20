@@ -51,12 +51,15 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td>{{$work_times->where('work_type_id', 6)->count()}}</td>
                             <td>
-                                @if(!empty($paid_leaves->left_days))
-                                    {{$paid_leaves->left_days}}
+                                済：{{$work_times->where('date', '<', $today->isoFormat('YYYY-MM-DD'))->where('work_type_id', 6)->count()}}日
+                                /予定：{{$work_times->where('date', '>=', $today->isoFormat('YYYY-MM-DD'))->where('work_type_id', 6)->count()}}日
+                            </td>
+                            <td>
+                                @if(!empty($paid_leave_sum))
+                                    {{$paid_leave_sum}}日
                                 @else
-                                    0
+                                    0日
                                 @endif
                             </td>
                         </tr>
