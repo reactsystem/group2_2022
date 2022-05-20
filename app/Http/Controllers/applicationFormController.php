@@ -160,6 +160,19 @@ class ApplicationFormController extends Controller
                 $work_time = WorkTime::where('user_id', $application->user_id)->where('date', $application->date)->first();
                 $work_time->start_time = $application->start_time;
                 $work_time->left_time = $application->end_time;
+
+                // 勤務時間を分で取得
+                $worked_time = (strtotime($application->end_time) - strtotime($application->start_time)) / 60;
+                // 勤務時間が６時間に満たない場合は、休憩時間に「00:00:00」を追加
+                if ($worked_time < 360) {
+                    $work_time->rest_time = '00:00:00';
+                // 退勤時刻が時間外の場合は、休憩時間に15分を追加
+                } elseif ($application->end_time >= '18:15') {
+                    $work_time->rest_time = date("H:i", strtotime("+15 min", strtotime($fixed_time->rest_time)));
+                } else {
+                    $work_time->rest_time = $fixed_time->rest_time;
+                }
+
                 $work_time->save();
             }
 
