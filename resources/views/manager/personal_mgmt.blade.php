@@ -96,7 +96,11 @@
                     <tbody>
                     <tr>
                         @foreach ($work_types as $work_type)
-                            <td><div class="collapse collapse1">{{$work_type->name}}</td>
+                            <td>
+                                <div class="collapse collapse1">
+                                    {{$work_type->name}}
+                                </div>
+                            </td>
                             @if ($loop->iteration == 5)
                             @break
                             @endif
@@ -104,7 +108,11 @@
                     </tr>
                     <tr>
                         @foreach ($work_types as $work_type)
-                            <td><div class="collapse collapse1">{{$work_times->where('work_type_id', $work_type->id)->count()}}</td>
+                            <td>
+                                <div class="collapse collapse1">
+                                    {{$work_times->where('work_type_id', $work_type->id)->count()}}
+                                </div>
+                            </td>
                             @if ($loop->iteration == 5)
                             @break
                             @endif
@@ -125,23 +133,32 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td><div class="collapse collapse2">有給休暇取得日数</div></td>
-                        <td><div class="collapse collapse2">特別休暇取得日数</div></td>
+                        <td><div class="collapse collapse2">当月の有給休暇取得日数</div></td>
                         <td><div class="collapse collapse2">有給休暇残り日数</div></td>
+                        <td><div class="collapse collapse2">特別休暇取得日数</div></td>
                         <td><div class="collapse collapse2"></div></td>
                     </tr>
                     <tr>
-                        <td><div class="collapse collapse2">{{$work_times->where('work_type_id', 5)->count()}}</td>
-                        <td><div class="collapse collapse2">{{$work_times->where('work_type_id', 6)->count()}}</td>
-                        <td><div class="collapse collapse2">
-                            @if(!empty($paid_leaves->left_days))
-                                {{$paid_leaves->left_days}}
-                            @else
-                                0
-                            @endif
+                        <td>
+                            <div class="collapse collapse2">
+                                済：{{$work_times->where('date', '<', $today->isoFormat('YYYY-MM-DD'))->where('work_type_id', 6)->count()}}
+                                /予定：{{$work_times->where('date', '>=', $today->isoFormat('YYYY-MM-DD'))->where('work_type_id', 6)->count()}}
+                            </div>
                         </td>
-                        <td><div class="collapse collapse2"></td>
-                        
+                    </td>
+                    <td><div class="collapse collapse2">
+                        @if(!empty($paid_leave_sum))
+                            {{$paid_leave_sum}}
+                        @else
+                            0
+                        @endif
+                    </td>
+                    <td>
+                        <div class="collapse collapse2">
+                            済：{{$work_times->where('date', '<', $today->isoFormat('YYYY-MM-DD'))->where('work_type_id', 7)->count()}}
+                            /予定：{{$work_times->where('date', '>=', $today->isoFormat('YYYY-MM-DD'))->where('work_type_id', 7)->count()}}
+                        </div>
+                    <td><div class="collapse collapse2"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -189,7 +206,14 @@
                                         @endphp
 
                                         <td>
+                                            {{-- 過去の有給休暇は変更不可にする --}}
+                                            @if ($work_time->date < $today->isoFormat('YYYY-MM-DD') && $work_time->work_type_id == 6)
+                                            <select name="work_type[]" style="pointer-events: none; background: gray;" tabindex="-1">
+                                            @else
+
                                             <select name="work_type[]">
+                                            @endif
+                                                    <option value='delete'></option>
                                                 @foreach ($work_types as $work_type)
                                                     <option value={{$work_type->id}}
                                                     @if ($work_time->work_type_id == $work_type->id)
