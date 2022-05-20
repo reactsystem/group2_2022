@@ -12,4 +12,11 @@ $(document).ready(function () {
 	{
 		$('#form-cond').submit();
 	});
+
+	// modalのformが送信されたらmodalを非表示にする
+	$('#form-export').submit(function()
+	{
+		$('.modal-backdrop').remove();
+		$('#modal-export').hide();
+	});
 });

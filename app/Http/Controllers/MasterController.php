@@ -12,6 +12,7 @@ use Carbon\Carbon;
 
 class MasterController extends Controller
 {
+	/* マスタ管理フォームの表示 ----------------------------------*/
 	public function show(Request $request)
 	{
 		$fixed_time = FixedTime::first();
@@ -19,15 +20,16 @@ class MasterController extends Controller
 		$work_types = WorkType::whereNull('deleted_at')->get();
 		$app_types = ApplicationType::whereNull('deleted_at')->get();
 
-		$param = [
-			'fixed_time' => $fixed_time,
-			'departments' => $departments,
-			'work_types' => $work_types,
-			'app_types' => $app_types,
-		];
-		return view('manager.master_mgmt', $param);
+		return view('manager.master_mgmt', compact(
+			'fixed_time',
+			'departments',
+			'work_types',
+			'app_types',
+		));
 	}
+	/*============================================ end function ==*/
 
+	/* 各種マスタ情報の追加 --------------------------------------*/
 	public function create(Request $request)
 	{
 		switch($request->table)
@@ -55,7 +57,9 @@ class MasterController extends Controller
 
 		return redirect(route('master.show'));
 	}
+	/*============================================ end function ==*/
 
+	/* 各種マスタ情報の変更 --------------------------------------*/
 	public function update(Request $request)
 	{
 		switch($request->table)
@@ -91,7 +95,9 @@ class MasterController extends Controller
 
 		return redirect(route('master.show'));
 	}
+	/*============================================ end function ==*/
 
+	/* 各種マスタ情報の削除 --------------------------------------*/
 	public function delete(Request $request)
 	{
 		switch($request->table)
@@ -115,4 +121,5 @@ class MasterController extends Controller
 
 		return redirect(route('master.show'));
 	}
+	/*============================================ end function ==*/
 }
