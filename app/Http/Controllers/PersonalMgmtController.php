@@ -78,6 +78,7 @@ class PersonalMgmtController extends Controller
         $items = $request->all();
         $count = count($items['date']);
         $today = Carbon::createFromDate();
+        $fixed_time = FixedTime::first();
 
         for ($i = 0; $i < $count; $i++)
         {
@@ -146,12 +147,25 @@ class PersonalMgmtController extends Controller
                 // その他の場合、レコードの有無によって更新処理
                 } elseif (WorkTime::where('user_id', $items['user_id'])->where('date', $items['date'][$i])->exists())
                 {
+                    // 勤務時間を分で取得
+                    $worked_time = (strtotime($items['left_time'][$i]) - strtotime($items['start_time'][$i])) / 60;
+                    // 勤務時間が６時間に満たない場合は、休憩時間に「00:00:00」を追加
+                    if ($worked_time < 360) {
+                        $rest_time = '00:00:00';
+                    // 退勤時刻が時間外の場合は、休憩時間に15分を追加
+                    } elseif ($items['left_time'][$i] >= '18:15') {
+                        $rest_time = date("H:i", strtotime("+15 min", strtotime($fixed_time->rest_time)));
+                    } else {
+                        $rest_time = $fixed_time->rest_time;
+                    }
+
                     WorkTime::where('user_id', $items['user_id'])
                         ->where('date', $items['date'][$i])
                         ->update([
                             'work_type_id' => $items['work_type'][$i],
                             'start_time' => $items['start_time'][$i],
                             'left_time' => $items['left_time'][$i],
+                            'rest_time' => $rest_time,
                     ]);
                 } else {
                     $work_time = new WorkTime;
@@ -160,6 +174,19 @@ class PersonalMgmtController extends Controller
                     $work_time->work_type_id = $items['work_type'][$i];
                     $work_time->start_time = $items['start_time'][$i];
                     $work_time->left_time = $items['left_time'][$i];
+
+                    // 勤務時間を分で取得
+                    $worked_time = (strtotime($items['left_time'][$i]) - strtotime($items['start_time'][$i])) / 60;
+                    // 勤務時間が６時間に満たない場合は、休憩時間に「00:00:00」を追加
+                    if ($worked_time < 360) {
+                        $work_time->rest_time = '00:00:00';
+                    // 退勤時刻が時間外の場合は、休憩時間に15分を追加
+                    } elseif ($items['left_time'][$i] >= '18:15') {
+                        $work_time->rest_time = date("H:i", strtotime("+15 min", strtotime($fixed_time->rest_time)));
+                    } else {
+                        $work_time->rest_time = $fixed_time->rest_time;
+                    }
+
                     $work_time->save();
                 }
             }
