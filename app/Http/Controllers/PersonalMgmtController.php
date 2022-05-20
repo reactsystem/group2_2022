@@ -10,6 +10,7 @@ use App\Models\WorkTime;
 use App\Models\FixedTime;
 use App\Models\PaidLeave;
 use App\Models\User;
+use App\Models\WorkType;
 use Carbon\Carbon;
 use Yasumi\Yasumi;
 use Illuminate\Support\Facades\Validator;
