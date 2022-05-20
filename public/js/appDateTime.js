@@ -9,20 +9,7 @@ $(document).ready(function()
 
     const left_time = $('#left_time').data();
 
-    //開始時間、終了時間
-    $('#startTimePicker').datetimepicker({
-        locale: 'ja',
-        format: 'HH:mm',
-        minDate: {h:left_time.name.slice(0, 2), m:left_time.name.slice(3, 5)},
-        maxDate: moment({h:24}),
-    });
-    
-    $('#endTimePicker').datetimepicker({
-        locale: 'ja',
-        format: 'HH:mm',
-        minDate: {h:left_time.name.slice(0, 2), m:left_time.name.slice(3, 5)},
-        maxDate: moment({h:24}),
-    });        
+            
     
     // 初期値なし
     if(!$('[name=appliedContent]').val()){
@@ -30,27 +17,99 @@ $(document).ready(function()
         $('[name=end_time]').val('');
     }
 
+    //時間入力必須化
+    function timeToRequire(){
+        $('[name=start_time]').prop({'disabled': false, 'required': true});
+        $('[name=end_time]').prop({'disabled': false, 'required': true});
+        $('.startTimePicker').addClass('badge badge-danger ml-1');
+        $('.startTimePicker').text('必須');
+        $('.endTimePicker').addClass('badge badge-danger ml-1');
+        $('.endTimePicker').text('必須');
+    }
+
+    //時間入力させない
+    function timeToDisable(){
+        $('[name=start_time]').prop({'disabled': true, 'required': false});
+        $('[name=end_time]').prop({'disabled': true, 'required': false});
+        $('.startTimePicker').removeClass('badge badge-danger ml-1');
+        $('.startTimePicker').text('');
+        $('.endTimePicker').removeClass('badge badge-danger ml-1');
+        $('.endTimePicker').text('');
+    }
+
+    //開始時間、終了時間(初期設定)
+    function iniTime(){
+        $('#startTimePicker').datetimepicker({
+            locale: 'ja',
+            format: 'HH:mm',
+            maxDate: moment({h:24}),
+        });  
+        $('#endTimePicker').datetimepicker({
+            locale: 'ja',
+            format: 'HH:mm',
+            maxDate: moment({h:24}),
+        });
+    }
+
     //時間外勤務と打刻時間修正を選ばれている時のみ開始時間、終了時間を記入可
     function ableSelectTime(){
         let text = $('[name=appliedContent] option:selected').text().trim();
-        if(text === '時間外勤務' || text === '打刻時間修正'){
-            $('[name=start_time]').prop({'disabled': false, 'required': true});
-            $('[name=end_time]').prop({'disabled': false, 'required': true});
-            $('.startTimePicker').addClass('badge badge-danger ml-1');
-            $('.startTimePicker').text('必須');
-            $('.endTimePicker').addClass('badge badge-danger ml-1');
-            $('.endTimePicker').text('必須');
+        if(text === '時間外勤務'){
+            timeToRequire();
+            //初期設定
+            iniTime();
+            //開始時間、終了時間(終業時間より後のみ選択可)
+            $('#startTimePicker').datetimepicker('minDate', moment({h:left_time.name.slice(0, 2), m:left_time.name.slice(3, 5)}));  
+            $('#endTimePicker').datetimepicker('minDate', moment({h:left_time.name.slice(0, 2), m:left_time.name.slice(3, 5)}));
+        }else if(text === '打刻時間修正'){
+            timeToRequire();
+            //初期設定
+            iniTime();
+            //開始時間、終了時間(何時でも選択可)
+            $('#startTimePicker').datetimepicker('minDate', false);
+            $('#endTimePicker').datetimepicker('minDate', false);
         }else{
-            $('[name=start_time]').prop({'disabled': true, 'required': false});
-            $('[name=end_time]').prop({'disabled': true, 'required': false});
-            $('.startTimePicker').removeClass('badge badge-danger ml-1');
-            $('.startTimePicker').text('');
-            $('.endTimePicker').removeClass('badge badge-danger ml-1');
-            $('.endTimePicker').text('');
+            //時間入力させない
+            timeToDisable()
+        }
+        //開始時間、終了時間のバリデーション
+        let limitStartTime = left_time.name
+        if(text === '時間外勤務'){
+            $('[name=start_time]').on('blur', function(e){
+                $('.startTimeErrorMsg').text('');
+                $('.startTimeError').addClass('d-none');
+                const startInputTime = e.target.value;
+                console.log(startInputTime);
+                const inputTime = e.target.value.replace(':', '');
+                if(inputTime < left_time.name.replace(':', '')){
+                    $('.startTimeError').removeClass('d-none');
+                    $('.startTimeErrorMsg').text(`${limitStartTime}分以降を選択してください。`);
+                }
+                $('[name=end_time]').on('blur', function(val){
+                    $('.endTimeErrorMsg').text('');
+                    $('.endTimeError').addClass('d-none');
+                    const endInputTime = val.target.value.replace(':', '');
+                    console.log(endInputTime < inputTime)
+                    if(endInputTime <= left_time.name.replace(':', '')){
+                        $('.endTimeError').removeClass('d-none');
+                        $('.endTimeErrorMsg').text(`${limitStartTime}分以降を選択してください。`);
+                    }else if(endInputTime <= inputTime){
+                        $('.endTimeError').removeClass('d-none');
+                        $('.endTimeErrorMsg').text(`開始時間よりも遅い時間を選択してください。`);  
+                    }
+                })
+            })
+            // $('[name=end_time]').on('blur', function(e){
+            //     const inputTime = e.target.value.replace(':', '');
+            //     if(inputTime < left_time.name.replace(':', '')){
+            //         $('.endTimeError').removeClass('d-none');
+            //         $('.endTimeErrorMsg').text(`${limitStartTime}分以降を選択してください。`);
+            //     }
+            // })
         }
     }
 
-    ableSelectTime()
+    ableSelectTime();
 
     //開始時間、終了時間、申請日の記入を維持
     if($('[name=start_time]').val() ||$('[name=end_time]').val() || $('[name=date]').val()){
@@ -64,9 +123,13 @@ $(document).ready(function()
 
     
     //開始時間、終了時間を記入できるかどうか
-    $('[name=appliedContent]').change(function() {
-        ableSelectTime()
+    $('#applied-content').change(function() {
+        $('.endTimeError').addClass('d-none');
+        $('.startTimeError').addClass('d-none');
+        ableSelectTime();
         $('[name=start_time]').val('');
         $('[name=end_time]').val('');
     });
+
+   
 })
