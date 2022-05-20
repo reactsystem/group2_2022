@@ -9,7 +9,6 @@ use App\Models\User;
 use App\Models\Department;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use App\Models\PaidLeave;
 
 class employeesFormController extends Controller
 {

@@ -11,6 +11,7 @@ use App\Models\WorkType;
 use App\Models\FixedTime;
 use App\Models\PaidLeave;
 use App\Models\User;
+use App\Models\WorkType;
 use App\Models\Application;
 use Carbon\Carbon;
 use Yasumi\Yasumi;
