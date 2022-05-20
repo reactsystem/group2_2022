@@ -34,7 +34,7 @@ class GetPaidLeaves extends Command
         $nowDate = $now->format('Y-m-d');
         $approvePaidLeaves = Application::where('application_type_id', 1)->where('date', $nowDate)->where('status', 1)->get();
         foreach($approvePaidLeaves as $approvePaidLeave){
-            $paid_leave = PaidLeave::where('user_id', $approvePaidLeave->user_id)->oldest('expire_date')->first();
+            $paid_leave = PaidLeave::where('user_id', $approvePaidLeave->user_id)->where('left_days', '>', '0')->oldest('expire_date')->first();
             if(!empty($paid_leave->left_days) && $paid_leave->left_days > 0){
                 $paid_leave->left_days = $paid_leave->left_days-1;
                 $paid_leave->updated_at = $now;

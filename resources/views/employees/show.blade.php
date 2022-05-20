@@ -16,19 +16,19 @@
     <form action="" method="get" id="search">
         <div class="row g-3 align-items-center">
             <div class="search-box mb-3">
-                <div class="col-auto">
+                <div class="flex-grow-0">
                     <label for="department" class="col-form-label text-md-end">部署名：</label>
                 </div>
-                <div class="col-auto">
+                <div class="flex-grow-2 mr-3">
                     <select name="department" id="department" class="form-select">
                         <option value="{{$loginUser}}" selected>{{$loginUserDepartment}}</option>
                         @foreach($departments as $department)
+                            @if($loop->first)
+                                <option value="0" @if(\Request::get('department') === '0') selected @endif>全て</option>
+                            @endif
                             @if($loginUser === $department->id)
                                 @continue
                             @else
-                                @if($loop->first)
-                                    <option value="0" @if(\Request::get('department') === '0') selected @endif>全て</option>
-                                @endif
                                 <option value="{{$department->id}}" @if(\Request::get('department') == $department->id) selected @endif>
                                     {{$department->name}}
                                 </option>
@@ -36,7 +36,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="d-flex search-column">
+                <div class="d-flex search-column flex-grow-2">
                     <!-- 名前＆ID検索 -->
                     <input id="search-input" type="search" id="form1" class="form-control" name="keyword" placeholder="社員番号または名前検索" value="{{ $params['keyword'] ?? null }}" />
                     <button id="search-button" type="submit" class="btn btn-secondary">

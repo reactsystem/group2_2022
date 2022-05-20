@@ -14,20 +14,20 @@
 
     <!-- 検索フォーム -->
     <form id="search" action="" method="get">
-        <div class="row g-3 align-items-center">
-            <div class="col-auto">
+        <div class="d-flex flex-nowrap align-items-center">
+            <div>
                 <label for="department" class="col-form-label text-md-end">部署名：</label>
             </div>
-            <div class="col-auto">
+            <div>
                 <select name="department" id="department" class="form-select">
                     <option value="{{$loginUser}}" selected>{{$loginUserDepartment}}</option>
                     @foreach($departments as $department)
+                        @if($loop->first)
+                            <option value="0" @if(\Request::get('department') === '0') selected @endif>全て</option>
+                        @endif
                         @if($loginUser === $department->id)
                             @continue
                         @else
-                            @if($loop->first)
-                                <option value="0" @if(\Request::get('department') === '0') selected @endif>全て</option>
-                            @endif
                             <option value="{{$department->id}}" @if(\Request::get('department') == $department->id) selected @endif>
                                 {{$department->name}}
                             </option>
