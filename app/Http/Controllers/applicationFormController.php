@@ -19,9 +19,8 @@ use Illuminate\Support\Facades\Mail;
 
 class ApplicationFormController extends Controller
 {
-    // 申請一覧フォーム
+	/* 申請一覧フォーム ------------------------------------------*/
     public function index(Request $request){
-
         $loginUser = Auth::user()->department_id;
         $loginUserDepartment = Department::where('id', $loginUser)->first()->name;
         $departments = Department::whereNull('deleted_at')->get();
@@ -75,8 +74,9 @@ class ApplicationFormController extends Controller
 
         return view('application.index', compact('loginUser', 'loginUserDepartment', 'departments', 'applications', 'limit_disp'));
     }
+	/*============================================ end function ==*/
 
-    // 申請フォーム
+	/* 申請フォーム ----------------------------------------------*/
     public function show(){
         $user = Auth::user();
         $types = ApplicationType::whereNull('deleted_at')->get();
@@ -84,12 +84,12 @@ class ApplicationFormController extends Controller
 
 		// 有給残り日数
 		$paid = PaidLeave::where('user_id', $user->id)
-						->where('expire_date', '>=', date('Y-m-d'))
-						->get();
+			->where('expire_date', '>=', date('Y-m-d'))
+			->get();
 		$app_paid = Application::where('user_id', $user->id)
-								->where('application_type_id', 1)
-								->where('date', '>', date('Y-m-d'))
-								->count();
+			->where('application_type_id', 1)
+			->where('date', '>', date('Y-m-d'))
+			->count();
 		$left_days = 0;
 		foreach($paid as $days)
 		{
@@ -104,8 +104,9 @@ class ApplicationFormController extends Controller
 
         return view('application.form', compact('user', 'types', 'left_time', 'left_days'));
     }
+	/*============================================ end function ==*/
 
-    // 申請フォームの内容をApplicationテーブルに格納
+	/* 申請フォームの内容をApplicationテーブルに格納 -------------*/
     public function create(ApplicationFormRequest $request, $user){
 
         Application::insert([
@@ -120,11 +121,11 @@ class ApplicationFormController extends Controller
 
         return redirect('/')->with('sent_form', '申請書が送信されました');
     }
+	/*============================================ end function ==*/
 
-	// 申請承認
+	/* 申請承認 --------------------------------------------------*/
     public function send(Request $request) {
         $user = Auth::user();
-        $fixed_time = FixedTime::first();
 
         // 申請承認フォームのコメントに対するバリデーション
         $rules = ['comment' => 'max:60',];
@@ -189,5 +190,5 @@ class ApplicationFormController extends Controller
 
         return redirect('application/')->with('message', '申請結果を通知しました');
     }
-
+	/*============================================ end function ==*/
 }
