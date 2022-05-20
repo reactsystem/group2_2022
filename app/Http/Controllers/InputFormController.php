@@ -121,8 +121,15 @@ class InputFormController extends Controller
             $calculate_rest = "-" . $minutes . "min";
             
             // 実労働時間(勤務時間 - 休憩時間)を分で取得
-            $worked_time = (strtotime($work_time->left_time) - strtotime($work_time->start_time));
-            $worked_time = strtotime($calculate_rest, $worked_time) / 60;
+            // 規定時刻より早く出社した場合
+            if ($work_time->start_time < $fixed_time->start_time) {
+                $worked_time = (strtotime($work_time->left_time) - strtotime($fixed_time->start_time));
+                $worked_time = strtotime($calculate_rest, $worked_time) / 60;
+            // 規定時刻より後に出社した場合
+            } else {
+                $worked_time = (strtotime($work_time->left_time) - strtotime($work_time->start_time));
+                $worked_time = strtotime($calculate_rest, $worked_time) / 60;
+            }
             
             // ログインユーザーの当日のレコードが存在しないかチェック
             if (DB::table('work_times')->where('user_id', $request->user_id)->where('date', $date)->doesntExist()) {
