@@ -37,6 +37,8 @@ class ApplicationsTableSeeder extends Seeder
                 'user_id' => '202204010001',
                 'application_type_id' => 4,
                 'date' => '2022-05-27',
+                'start_time' => '18:15:00',
+                'end_time' => '19:00:00',
                 'status' => 0,
                 'reason' => '私用のため',
             ],
