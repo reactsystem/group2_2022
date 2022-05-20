@@ -15,14 +15,14 @@ class AddPaidLeaves extends Command
      *
      * @var string
      */
-    protected $signature = 'command:update';
+    protected $signature = 'command:addPaidLeave';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = '有給付与日が来たら有給を付与する&二年経過した分はソフトデリートします。';
 
     /**
      * Execute the console command.
@@ -86,7 +86,7 @@ class AddPaidLeaves extends Command
                 $expire_date = new Carbon($personal_leaves[$j]->expire_date);
                 $expired_date = $expire_date->format('Y-m-d');
                 if($nowDate === $expired_date){
-                    $personal_leaves[0]->delete();
+                    $personal_leaves[$j]->where('expire_date', $nowDate)->delete();
                 }
             }
         }

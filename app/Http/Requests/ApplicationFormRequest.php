@@ -33,8 +33,8 @@ class ApplicationFormRequest extends FormRequest
 
         return [
             'date' => 'required|date|date_format:Y/m/d',
-            'start_time' => ['date_format:H:i'],
-            'end_time' => 'date_format:H:i',
+            'start_time' => ['nullable', 'date_format:H:i'],
+            'end_time' => 'nullable|date_format:H:i',
             'reason' => 'nullable|string|max:60'
         ];
     }

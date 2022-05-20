@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-    <h1 class="text-center mt-3 mb-3">勤怠管理システム</h1>
+    <h1 class="text-center mt-3 mb-3">ReMAD</h1>
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">

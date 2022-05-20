@@ -28,8 +28,10 @@ class Kernel extends ConsoleKernel
             
             //月の入社日の日で更新(新入社員6ヶ月後、以降1年ごと)
             if($diff_months % 12 === 6){
-                $schedule->command('update')->monthlyOn($joining_day, '00:00');
+                $schedule->command('addPaidLeave')->monthlyOn($joining_day, '00:00');
             }
+            //1日に一回有給休暇取得実行
+            $schedule->command('getPaidLeave')->daily();
         }
     }
 
