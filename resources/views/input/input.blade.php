@@ -145,6 +145,7 @@
                                                 $end = strtotime($work_time->rest_time);
                                                 $minutes = ($end - $from) / 60;
                                                 $calculate_rest = "-" . $minutes . "min";
+
                                             @endphp
 
                                             <td>{{$work_time->workType->name}}</td>

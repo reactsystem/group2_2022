@@ -161,14 +161,21 @@ class ApplicationFormController extends Controller
                 $work_time->start_time = $application->start_time;
                 $work_time->left_time = $application->end_time;
 
-                // 勤務時間を分で取得
-                $worked_time = (strtotime($application->end_time) - strtotime($application->start_time)) / 60;
-                // 勤務時間が６時間に満たない場合は、休憩時間に「00:00:00」を追加
+                // 勤務時間から差し引く既定の休憩時間を取得
+                $from = strtotime('00:00:00');
+                $end = strtotime($fixed_time->rest_time);
+                $minutes = ($end - $from) / 60;
+                $calculate_rest = "-" . $minutes . "min";
+                
+                // 実労働時間(勤務時間 - 休憩時間)を分で取得
+                $worked_time = (strtotime($application->end_time) - strtotime($application->start_time));
+                $worked_time = strtotime($calculate_rest, $worked_time) / 60;
+                // 実労働時間が６時間に満たない場合は、休憩時間に「00:00:00」を追加
                 if ($worked_time < 360) {
                     $work_time->rest_time = '00:00:00';
-                // 退勤時刻が時間外の場合は、休憩時間に15分を追加
-                } elseif ($application->end_time >= '18:15') {
-                    $work_time->rest_time = date("H:i", strtotime("+15 min", strtotime($fixed_time->rest_time)));
+                // 実労働時間が８時間を超える場合で、かつ既定の休憩時間が１時間未満の場合、休憩時間を「01:00:00」にする
+                } elseif ($worked_time >= 480 && $fixed_time->rest_time < '01:00:00') {
+                    $work_time->rest_time = '01:00:00';
                 } else {
                     $work_time->rest_time = $fixed_time->rest_time;
                 }
@@ -176,7 +183,7 @@ class ApplicationFormController extends Controller
                 $work_time->save();
             }
 
-        } else if ($request->result === '差し戻し') {
+        } elseif ($request->result === '差し戻し') {
             $application->status = 2;
         }
         $application->save();
