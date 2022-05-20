@@ -97,20 +97,27 @@
 					<tr>
 						<td>{{$work_type->id}}</td>
 						<td>{{$work_type->name}}</td>
-						<td><button type="button" class="btn btn-outline-secondary"
-								data-toggle="modal" data-target="#modal-edit"
-								data-title="勤務区分" data-label="区分名"
-								data-table="work_type" data-id="{{$work_type->id}}" data-name="{{$work_type->name}}">
-								変更
-							</button>
-						</td>
-						<td><button type="button" class="btn btn-outline-danger"
-								data-toggle="modal" data-target="#modal-del"
-								data-label="勤務区分"
-								data-table="work_type" data-id="{{$work_type->id}}" data-name="{{$work_type->name}}">
-								削除
-							</button>
-						</td>
+
+						<!-- work_type->id の 1-7 は変更、削除不可 -->
+						@if ($work_type->id > 7)
+							<td><button type="button" class="btn btn-outline-secondary"
+									data-toggle="modal" data-target="#modal-edit"
+									data-title="勤務区分" data-label="区分名"
+									data-table="work_type" data-id="{{$work_type->id}}" data-name="{{$work_type->name}}">
+									変更
+								</button>
+							</td>
+							<td><button type="button" class="btn btn-outline-danger"
+									data-toggle="modal" data-target="#modal-del"
+									data-label="勤務区分"
+									data-table="work_type" data-id="{{$work_type->id}}" data-name="{{$work_type->name}}">
+									削除
+								</button>
+							</td>
+						@else
+							<td></td>
+							<td></td>
+						@endif
 					</tr>
 				@endforeach
 				</table>

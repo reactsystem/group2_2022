@@ -51,8 +51,11 @@ Route::group(['prefix' => 'application', 'as' => 'application.', 'middleware' =>
 });
 
 // 部署勤怠管理フォーム
-Route::get('/management', [DepartmentMgmtController::class, 'index'])->name('mgmt.dept');
-Route::post('/management', [DepartmentMgmtController::class, 'index'])->name('mgmt.dept.post');
+Route::group(['prefix' => 'management', 'as' => 'mgmt.'], function(){
+	Route::get('/', [DepartmentMgmtController::class, 'index'])->name('dept');
+	Route::post('/', [DepartmentMgmtController::class, 'index'])->name('dept.post');
+	Route::post('/export', [DepartmentMgmtController::class, 'export'])->name('export');
+});
 
 // マスタ管理フォーム
 Route::group(['prefix' => 'master', 'as' => 'master.'], function(){
