@@ -25,20 +25,7 @@ class ApplicationsTableSeeder extends Seeder
                 'status' => 1,
                 'reason' => '私用のため',
             ],
-            [
-                'user_id' => '201904010003',
-                'application_type_id' => 2,
-                'date' => '2022-05-27',
-                'status' => 1,
-                'reason' => '私用のため',
-            ],
-            [
-                'user_id' => '201904010003',
-                'application_type_id' => 3,
-                'date' => '2022-05-27',
-                'status' => 1,
-                'reason' => '私用のため',
-            ],
+            
             [
                 'user_id' => '202204010001',
                 'application_type_id' => 2,
@@ -53,13 +40,7 @@ class ApplicationsTableSeeder extends Seeder
                 'status' => 0,
                 'reason' => '私用のため',
             ],
-            [
-                'user_id' => '201904010003',
-                'application_type_id' => 5,
-                'date' => '2022-05-27',
-                'status' => 0,
-                'reason' => '私用のため',
-            ],
+        
             [
                 'user_id' => '202204010001',
                 'application_type_id' => 1,
@@ -284,13 +265,7 @@ class ApplicationsTableSeeder extends Seeder
                 'status' => 0,
                 'reason' => '私用のため',
             ],
-            [
-                'user_id' => '201904010003',
-                'application_type_id' => 3,
-                'date' => '2022-05-27',
-                'status' => 0,
-                'reason' => '私用のため',
-            ],
+            
             [
                 'user_id' => '202204010001',
                 'application_type_id' => 3,
@@ -298,13 +273,7 @@ class ApplicationsTableSeeder extends Seeder
                 'status' => 0,
                 'reason' => '私用のため',
             ],
-            [
-                'user_id' => '201904010003',
-                'application_type_id' => 3,
-                'date' => '2022-05-27',
-                'status' => 0,
-                'reason' => '私用のため',
-            ],
+            
         ];
 
         DB::table('applications')->insert($params);

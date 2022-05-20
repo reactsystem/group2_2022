@@ -25,8 +25,7 @@ Auth::routes();
 
 // 勤怠入力フォーム
 Route::get('/', [InputFormController::class, 'show'])->name('input')->middleware('auth');
-Route::post('/', [InputFormController::class, 'add'])->name('input')->middleware('auth');
-// Route::post('/select_month', [InputFormController::class, 'selectMonth'])->middleware('auth');
+Route::post('/', [InputFormController::class, 'add'])->name('add')->middleware('auth');
 
 //社員管理フォーム
 Route::group(['prefix' => 'employees', 'as' => 'employees.', 'middleware' => 'auth'], function(){

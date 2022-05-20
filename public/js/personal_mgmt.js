@@ -38,6 +38,11 @@ function calculate(cell_num, column_id) {
 	document.getElementById(column_id).innerText = result;
 }
 
+// 休憩時間、労働時間、残業時間の合計値を上部のインフォメーションテーブルに表示する
+window.addEventListener = calculate(4, 'rest_info');
+window.addEventListener = calculate(5, 'worked_info');
+window.addEventListener = calculate(6, 'over_info');
+
 // 休憩時間、労働時間、残業時間の合計値をテーブル下部に表示する
 window.addEventListener = calculate(4, 'rest');
 window.addEventListener = calculate(5, 'worked');
@@ -62,4 +67,5 @@ window.addEventListener = function () {
 	var result = hh1 + ':' + mm1;
 
 	document.getElementById('weekday_sum').innerText = result;
+	document.getElementById('weekday_sum_info').innerText = result;
 };

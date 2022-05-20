@@ -29,3 +29,7 @@
 .date-width{
     width: 51%;
 }
+
+.search-box{
+    display: flex;
+}

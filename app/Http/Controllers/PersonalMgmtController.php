@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AddPaidLeave;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -9,8 +10,11 @@ use App\Models\WorkTime;
 use App\Models\WorkType;
 use App\Models\FixedTime;
 use App\Models\PaidLeave;
+use App\Models\User;
+use App\Models\Application;
 use Carbon\Carbon;
 use Yasumi\Yasumi;
+use Illuminate\Support\Facades\Validator;
 
 class PersonalMgmtController extends Controller
 {
@@ -43,10 +47,17 @@ class PersonalMgmtController extends Controller
         $dt->timezone = 'Asia/Tokyo'; //日本時刻で表示
         $daysInMonth = $dt->daysInMonth; //今月は何日まであるか
 
-        $user = Auth::user();
+        $user = User::find($request->user_id);
+        $work_types = WorkType::all();
         $work_times = WorkTime::where('user_id', $user->id)->where('date', 'like', $current_month . '%')->get();
         $fixed_time = FixedTime::first();
-        $paid_leaves = PaidLeave::where('user_id', $user->id)->first();
+
+        // 有効な有給休暇の数を取得する
+        $paid_leaves = PaidLeave::where('user_id', $user->id)->whereNull('deleted_at')->get();
+        $paid_leave_sum = 0;
+        foreach ($paid_leaves as $paid_leave) {
+            $paid_leave_sum += $paid_leave->left_days;
+        }
 
         return view('manager.personal_mgmt', compact(
             'today',
@@ -55,21 +66,85 @@ class PersonalMgmtController extends Controller
             'daysInMonth',
             'work_times',
             'fixed_time',
-            'paid_leaves',
+            'paid_leave_sum',
             'user',
             'description',
             'holidays',
+            'work_types',
         ));
     }
 
     public function update(Request $request) {
         $items = $request->all();
         $count = count($items['date']);
+        $today = Carbon::createFromDate();
 
         for ($i = 0; $i < $count; $i++)
         {
             if ($items['work_type'][$i] !== NULL) {
-                if (WorkTime::where('user_id', $items['user_id'])->where('date', $items['date'][$i])->exists())
+
+                // 勤務区分が「delete」の場合はレコードを削除するため、バリデーションをかけない
+                // 日付が本日のデータは入力途中の可能性があるため、バリデーションをかけない
+                if ($items['work_type'][$i] != 'delete' && $items['date'][$i] != $today->isoFormat('YYYY-MM-DD')) {
+                    // ここからバリデーション
+                    // 勤務区分が「欠勤」「有給休暇」「特別休暇」の場合、時刻を入力させない
+                    if ($items['work_type'][$i] == 2 || $items['work_type'][$i] == 6 || $items['work_type'][$i] == 7) {
+                        $check = ['start_time' => $items['start_time'][$i], 'left_time' => $items['left_time'][$i],];
+                        $rules = [
+                            'start_time' => 'max:0',
+                            'left_time' => 'max:0',
+                        ];
+                        $messages = [
+                            'start_time.max' => $items['date'][$i] .' :「欠勤」「有給休暇」「特別休暇」の場合は開始時刻を入力できません',
+                            'left_time.max' => $items['date'][$i] .' :「欠勤」「有給休暇」「特別休暇」の場合は終了時刻を入力できません',
+                        ];
+                        $validator = Validator::make($check, $rules, $messages);
+                    } else { // 勤務区分がその他の場合、必ず時刻を入力させる
+                        $check = ['start_time' => $items['start_time'][$i], 'left_time' => $items['left_time'][$i],];
+                        $rules = [
+                            'start_time' => 'required|date_format:H:i',
+                            'left_time' => 'required|date_format:H:i',
+                        ];
+                        $messages = [
+                            'start_time.required' => $items['date'][$i] .' :開始時刻を入力してください',
+                            'left_time.required' => $items['date'][$i] .' :終了時刻を入力してください',
+                            'start_time.date_format' => $items['date'][$i] .' :開始時刻は「00:00」～「23:59」の範囲で入力してください',
+                            'left_time.date_format' => $items['date'][$i] .' :終了時刻は「00:00」～「23:59」の範囲で入力してください',
+                        ];
+                        $validator = Validator::make($check, $rules, $messages);
+                    }
+
+                    if ($validator->fails()) {
+                        return back()
+                            ->withErrors($validator)
+                            ->withInput();
+                    }
+                }
+
+                // 「有給休暇」「特別休暇」をその他の勤務区分へ変更する場合、当該申請のステータスを「３(取り消し)」へ更新する
+                if (WorkTime::where('user_id', $items['user_id'])->where('date', $items['date'][$i])->exists()) {
+                    $work_time = WorkTime::where('user_id', $items['user_id'])->where('date', $items['date'][$i])->first();
+                    if ($work_time->work_type_id == 6 || $work_time->work_type_id == 7) {
+                        if ($items['work_type'][$i] !== 6 && $items['work_type'][$i] !== 7) {
+                            $application = Application::where('user_id', $items['user_id'])
+                                                        ->where('date', $items['date'][$i])
+                                                        ->where('application_type_id', 1)
+                                                        ->orWhere('application_type_id', 2)
+                                                        ->first();
+                            $application->status = 3;
+                            $application->save();
+                        }
+                    }
+                }
+
+                // 勤務区分が「delete」の場合はレコードを削除
+                if ($items['work_type'][$i] == 'delete')
+                {
+                    WorkTime::where('user_id', $items['user_id'])
+                    ->where('date', $items['date'][$i])
+                    ->delete();
+                // その他の場合、レコードの有無によって更新処理
+                } elseif (WorkTime::where('user_id', $items['user_id'])->where('date', $items['date'][$i])->exists())
                 {
                     WorkTime::where('user_id', $items['user_id'])
                         ->where('date', $items['date'][$i])
@@ -89,7 +164,7 @@ class PersonalMgmtController extends Controller
                 }
             }
         }
-        return redirect('personal_management')
+        return back()
             ->with('message', '勤務表を更新しました');
     }
 }
