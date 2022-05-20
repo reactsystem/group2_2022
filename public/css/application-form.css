@@ -16,3 +16,26 @@
 .date-width{
     width: 51%;
 }
+
+.endTimeError,
+.startTimeError{
+    position: absolute;
+    top: 110%;
+    margin-bottom: 20px;
+    white-space: nowrap;
+}
+
+@media screen and (max-width:768px) {
+    .datetime{
+        flex-wrap: wrap
+    }
+    .startTimeError{
+        word-wrap: inherit;
+    }
+    .endTimeError{
+        white-space: normal;
+    }
+    .date-width{
+        width: 100%;
+    }
+}

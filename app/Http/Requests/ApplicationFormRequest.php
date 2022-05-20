@@ -33,8 +33,8 @@ class ApplicationFormRequest extends FormRequest
 
         return [
             'date' => 'required|date|date_format:Y/m/d',
-            'start_time' => ['date_format:H:i','after:'.$left_time],
-            'end_time' => 'date_format:H:i|after:start_time',
+            'start_time' => ['date_format:H:i'],
+            'end_time' => 'date_format:H:i',
             'reason' => 'nullable|string|max:60'
         ];
     }
@@ -59,9 +59,7 @@ class ApplicationFormRequest extends FormRequest
         return[
             'date.date_format' => '申請日は ○○○○/○○/○○ という形で指定してください。',
             'start_time.date_format' => '開始時間は ○○:○○ という形で指定してください',
-            'start_time.after' => '開始時間は'.$left_time.'以降の時間を指定してください。',
             'end_time.date_format' => '終了時間は ○○:○○ という形で指定してください',
-            'end_time.after' => '終了時間は'.$this->start_time.'以降の時間を指定してください。',
         ];
     }
 }
