@@ -15,14 +15,14 @@ class AddPaidLeaves extends Command
      *
      * @var string
      */
-    protected $signature = 'command:update';
+    protected $signature = 'command:addPaidLeave';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = '有給付与日が来たら有給を付与する&二年経過した分はソフトデリートします。';
 
     /**
      * Execute the console command.
