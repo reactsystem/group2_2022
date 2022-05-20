@@ -30,7 +30,7 @@ class UsersTableSeeder extends Seeder
             ],
 
             [
-                'id' => '202204010004',
+                'id' => '202204010001',
                 'department_id' => 3,
                 'name' => '経理太郎',
                 'manager' => false,

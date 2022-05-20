@@ -31,6 +31,7 @@ class Kernel extends ConsoleKernel
                 $schedule->command('addPaidLeave')->monthlyOn($joining_day, '00:00');
             }
             //1日に一回有給休暇取得実行
+            $schedule->command('getPaidLeave')->daily();
         }
     }
 

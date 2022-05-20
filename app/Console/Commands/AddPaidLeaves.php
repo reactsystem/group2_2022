@@ -86,7 +86,7 @@ class AddPaidLeaves extends Command
                 $expire_date = new Carbon($personal_leaves[$j]->expire_date);
                 $expired_date = $expire_date->format('Y-m-d');
                 if($nowDate === $expired_date){
-                    $personal_leaves[0]->delete();
+                    $personal_leaves[$j]->where('expire_date', $nowDate)->delete();
                 }
             }
         }
