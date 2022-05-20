@@ -136,12 +136,14 @@ class ApplicationFormController extends Controller
                 if (WorkTime::where('user_id', $application->user_id)->where('date', $application->date)->exists()) {
                     $work_time = WorkTime::where('user_id', $application->user_id)->where('date', $application->date)->first();
                     $work_time->work_type_id = $application->applicationType->work_type_id;
+                    $work_time->rest_time = $fixed_time->rest_time;
                     $work_time->save();
                 } else {
                     $work_time = new WorkTime;
                     $work_time->user_id = $application->user_id;
                     $work_time->work_type_id = $application->applicationType->work_type_id;
                     $work_time->date = $application->date;
+                    $work_time->rest_time = $fixed_time->rest_time;
                     $work_time->save();
                 }
             }

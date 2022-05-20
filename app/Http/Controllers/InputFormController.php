@@ -114,6 +114,8 @@ class InputFormController extends Controller
         // 退勤ボタンを打刻した時の処理
         if (isset($request->left_time)){
             $work_time = DB::table('work_times')->where('user_id', $request->user_id)->where('date', $date)->first();
+            // 勤務時間を分で取得
+            $worked_time = (strtotime($time) - strtotime($fixed_time->start_time)) / 60;
             
             // ログインユーザーの当日のレコードが存在しないかチェック
             if (DB::table('work_times')->where('user_id', $request->user_id)->where('date', $date)->doesntExist()) {
@@ -121,14 +123,21 @@ class InputFormController extends Controller
             } elseif ($work_time->left_time !== NULL) {
                 return redirect('/')->with('message', '既に退勤の打刻が完了しています');
             
-            // 時間外が発生していない場合
+            // 勤務時間が定時から６時間に満たない場合は、休憩時間を00:00:00にする
+            } elseif ($worked_time < 360) {
+                WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([
+                    'left_time' => $time,
+                    'description' => $request->description,
+                    'rest_time' => '00:00:00',
+                ]);
+            // 時間外が発生していない場合は、既定の休憩時間を入れる
             } elseif (strtotime($time) < strtotime("+15 min", strtotime($fixed_time->left_time))) {
                 WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([
                     'left_time' => $time,
                     'description' => $request->description,
                     'rest_time' => $fixed_time->rest_time,
                 ]);
-            // 時間外が発生している場合
+            // 時間外が発生している場合は、既定の休憩時間に「15分」を加える
             } else {
                 WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([
                     'left_time' => $time,
