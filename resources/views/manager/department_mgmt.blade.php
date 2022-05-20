@@ -84,7 +84,7 @@
 							<!-- 表示件数 -->
 							<input type="hidden" name="disp_limit" value="{{$disp_limit}}">
 							<label>表示件数：</label>
-							<div class="dropdown">
+							<div class="dropdown col-md-6">
 								<button type="button" id="dpdn-limit" class="btn btn-sm page-link text-dark dropdown-toggle"
 									data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 									@if (isset($disp_limit))
