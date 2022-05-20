@@ -139,8 +139,6 @@
                                                 $fixed_start = strtotime($fixed_time->start_time);
                                                 $fixed_left = strtotime($fixed_time->left_time);
                                                 $fixed_left_over = strtotime("+15 min", strtotime($fixed_time->left_time));
-                                                $fixed_rest = strtotime($fixed_time->rest_time);
-                                                $fixed_rest_over = strtotime("+15 min", strtotime($fixed_time->rest_time));
 
                                                 // 勤務時間から差し引く休憩時間を取得
                                                 $from = strtotime('00:00:00');
