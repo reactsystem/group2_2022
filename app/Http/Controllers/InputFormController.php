@@ -112,7 +112,7 @@ class InputFormController extends Controller
         }
 
         // 退勤ボタンを打刻した時の処理
-        if (isset($request->left_time)){
+        if (isset($request->left_time)) {
             $work_time = DB::table('work_times')->where('user_id', $request->user_id)->where('date', $date)->first();
             // 勤務時間から差し引く既定の休憩時間を取得
             $from = strtotime('00:00:00');
@@ -151,7 +151,6 @@ class InputFormController extends Controller
                     'description' => $request->description,
                     'rest_time' => '01:00:00',
                 ]);
-            }
             // その他の場合は、既定の休憩時間を入れる
             } else {
                 WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([
@@ -159,6 +158,7 @@ class InputFormController extends Controller
                     'description' => $request->description,
                     'rest_time' => $fixed_time->rest_time,
                 ]);
+            }
 
             // 定時よりも退勤打刻時間が早い場合、遅刻の時は「遅刻/早退」、そうでない場合は「早退」に更新する 
             if ((strtotime($time) < strtotime($fixed_time->left_time))) {
