@@ -136,6 +136,7 @@
                                                 $start_time = strtotime($work_time->start_time);
                                                 $left_time = strtotime($work_time->left_time);
                                                 $rest_time = strtotime($work_time->rest_time);
+                                                $over_time = strtotime($work_time->over_time);
                                                 $fixed_start = strtotime($fixed_time->start_time);
                                                 $fixed_left = strtotime($fixed_time->left_time);
                                                 $fixed_left_over = strtotime("+15 min", strtotime($fixed_time->left_time));
@@ -199,19 +200,11 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                @if ($left_time < $fixed_left_over)
-                                                    00:00
-                                                @elseif ($left_time >= $fixed_left_over)
-                                                    {{-- 遅刻した場合 --}}
-                                                    @if ($start_time >= $fixed_start)
-                                                        @php $worked_time = strtotime($calculate_rest, $left_time) - $start_time; @endphp
-                                                        {{gmdate("H:i", strtotime("-45 min -7 hours", $worked_time))}}
-                                                    {{-- 始業開始よりも早く出勤した場合 --}}
-                                                    @elseif ($start_time < $fixed_start)
-                                                        @php $worked_time = strtotime($calculate_rest, $left_time) - $fixed_start; @endphp
-                                                        {{gmdate("H:i", strtotime("-45 min -7 hours", $worked_time))}}
-                                                    @endif
-                                                @endif
+                                                @isset ($work_time->over_time)
+                                                {{date('H:i', $over_time)}}
+                                                @else
+                                                00:00
+                                                @endisset
                                             </td>
                                             <td>{{$work_time->description}}</td>
                                         @else
