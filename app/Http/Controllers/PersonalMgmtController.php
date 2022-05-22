@@ -227,8 +227,9 @@ class PersonalMgmtController extends Controller
                     if ($left_time >= $fixed_left_over) {
                         $over_time = $left_time - $fixed_left_over;
                         $over_time = gmdate("H:i", $over_time);
+                        $work_time->over_time = $over_time;
                     } else {
-                        $over_time = '00:00:00';
+                        $work_time->over_time = '00:00:00';
                     }
 
                     $work_time->save();
