@@ -87,6 +87,7 @@
                         </div>
 
                         <!-- 申請したい時間 -->
+
 						<!-- 開始時間 -->
 						<div class="row mb-4 mt-2 datetime">
 							<label for="startTimePicker" class="col-md-4 col-form-label text-md-end">開始時間<span class="startTimePicker"></span></label>
@@ -132,7 +133,7 @@
                         <!-- 申請ボタン -->
                         <div class="row mb-0">
                             <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button id="application-button" type="submit" class="btn btn-primary">
                                     申請する
                                 </button>
                             </div>

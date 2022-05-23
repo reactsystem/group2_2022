@@ -87,33 +87,62 @@ $(document).ready(function()
         let limitStartTime = left_time.name
         if(text === '時間外勤務'){
             $('[name=start_time]').on('blur', function(e){
-                
-                // 開始時間のエラーメッセージを初期化
-                $('.startTimeErrorMsg').text('');
-                $('.startTimeError').addClass('d-none');
-                const inputTime = e.target.value.replace(':', '');
+                // 始業時間と終業時間のエラーメッセージが空なら申請ボタンを押せないように
+                if($('.endTimeErrorMsg').text('') && $('.startTimeErrorMsg').text('') || $('.endTimeErrorMsg').is(':empty') && $('.startTimeErrorMsg').is(':empty')){
+                    $('#application-button').prop("disabled", false); 
+                }
                 
                 //開始時間が終業時間より早かったらエラーメッセージ
-                if(inputTime < left_time.name.replace(':', '')){
+                if(e.target.value.replace(':', '') < left_time.name.replace(':', '')){
                     $('.startTimeError').removeClass('d-none');
                     $('.startTimeErrorMsg').text(`${limitStartTime}分以降を選択してください。`);
+                    $('#application-button').prop("disabled", true); 
+                }else{
+                    $('.startTimeErrorMsg').text('');
+                    $('.startTimeError').addClass('d-none');
                 }
+                
                 $('[name=end_time]').on('blur', function(val){
-                    
-                    // 終了時間のエラーメッセージを初期化
-                    $('.endTimeErrorMsg').text('');
-                    $('.endTimeError').addClass('d-none');
                     const endInputTime = val.target.value.replace(':', '');
                     
                     //終了時間が終業時間より早かったらエラーメッセージ
                     if(endInputTime <= left_time.name.replace(':', '')){
                         $('.endTimeError').removeClass('d-none');
                         $('.endTimeErrorMsg').text(`${limitStartTime}分以降を選択してください。`);
+                        $('#application-button').prop("disabled", true);
                     
                     //終了時間が開始時間より早かったらエラーメッセージ
-                    }else if(endInputTime <= inputTime){
+                    }else if(endInputTime <= e.target.value.replace(':', '')){
                         $('.endTimeError').removeClass('d-none');
-                        $('.endTimeErrorMsg').text(`開始時間よりも遅い時間を選択してください。`);  
+                        $('.endTimeErrorMsg').text(`開始時間よりも遅い時間を選択してください。`); 
+                        $('#application-button').prop("disabled", true); 
+                    }else{
+                        $('.endTimeErrorMsg').text('');
+                        $('.endTimeError').addClass('d-none');
+                    }
+                    //開始時間が終業時間より早かったらエラーメッセージ
+                    if(e.target.value.replace(':', '') < left_time.name.replace(':', '')){
+                        $('.startTimeError').removeClass('d-none');
+                        $('.startTimeErrorMsg').text(`${limitStartTime}分以降を選択してください。`);
+                        $('#application-button').prop("disabled", true);
+                    }
+                })
+            })
+            $('[name = end_time]').on('blur', val=>{
+                // 始業時間と終業時間のエラーメッセージが空なら申請ボタンを押せないように
+                if($('.endTimeErrorMsg').text('') && $('.startTimeErrorMsg').text('') || $('.endTimeErrorMsg').is(':empty') && $('.startTimeErrorMsg').is(':empty')){
+                    $('#application-button').prop("disabled", false); 
+                }
+                //終了時間が開始時間より早かったらエラーメッセージ
+                $('[name = start_time]').on('blur', e=>{
+                    const inputTime = e.target.value.replace(':', '');
+                    if(val.target.value.replace(':', '') <= inputTime){
+                        $('.endTimeError').removeClass('d-none');
+                        $('.endTimeErrorMsg').text(`開始時間よりも遅い時間を選択してください。`); 
+                        $('#application-button').prop("disabled", true); 
+                    }else{
+                        $('.endTimeErrorMsg').text('');
+                        $('.endTimeError').addClass('d-none');
                     }
                 })
             })
@@ -139,10 +168,11 @@ $(document).ready(function()
         // 開始時間、終了時間のエラーメッセージを無しに
         $('.endTimeError').addClass('d-none');
         $('.startTimeError').addClass('d-none');
-
+    
         //時間外勤務と打刻時間修正を選ばれている時のみ開始時間、終了時間を記入可
         ableSelectTime();
-        
+        $('#application-button').prop("disabled", false);
+    
         // 開始時間、終了時間を初期化
         $('[name=start_time]').val('');
         $('[name=end_time]').val('');
