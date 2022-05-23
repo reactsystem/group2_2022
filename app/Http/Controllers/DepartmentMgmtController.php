@@ -37,11 +37,11 @@ class DepartmentMgmtController extends Controller
 		// 各種テーブルの取得
 		$departments = Department::whereNull('deleted_at')->get();
 		$fixed_time = FixedTime::first();
-		$users = User::where('department_id', $dept->id)->whereNull('leaving')->get();
+		$users = User::where('department_id', $dept->id)->whereNull('leaving')->paginate($disp_limit);
 		$work_times = WorkTime::where('date', $date->copy()->toDateString())
 			->whereHas('user', function($query) use($dept)
 				{ $query->where('department_id', $dept->id); })
-			->paginate($disp_limit);
+			->get();
 
 		// 祝日の取得
 		$holidays = Yasumi::create('Japan', $date->year, 'ja_JP');
