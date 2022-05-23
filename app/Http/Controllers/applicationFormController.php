@@ -126,6 +126,7 @@ class ApplicationFormController extends Controller
 	/* 申請承認 --------------------------------------------------*/
     public function send(Request $request) {
         $user = Auth::user();
+        $fixed_time = FixedTime::first();
 
         // 申請承認フォームのコメントに対するバリデーション
         $rules = ['comment' => 'max:60',];
@@ -164,16 +165,8 @@ class ApplicationFormController extends Controller
             // 申請種別が打刻時間修正の場合、work_timeテーブルの申請対象日の開始時間、終了時間を更新
             if ($application->application_type_id == 5) {
                 $work_time = WorkTime::where('user_id', $application->user_id)->where('date', $application->date)->first();
-
                 if(isset($application->start_time))	{ $work_time->start_time = $application->start_time; }
                 if(isset($application->end_time))	{ $work_time->left_time = $application->end_time; }
-                $work_time->save();
-            }
-
-        } else if ($request->result === '却下') {
-
-                $work_time->start_time = $application->start_time;
-                $work_time->left_time = $application->end_time;
 
                 // 勤務時間から差し引く既定の休憩時間を取得
                 $from = strtotime('00:00:00');
@@ -191,6 +184,7 @@ class ApplicationFormController extends Controller
                     $worked_time = (strtotime($work_time->left_time) - strtotime($work_time->start_time));
                     $worked_time = strtotime($calculate_rest, $worked_time) / 60;
                 }
+
                 // 実労働時間が６時間に満たない場合は、休憩時間に「00:00:00」を追加
                 if ($worked_time < 360) {
                     $work_time->rest_time = '00:00:00';
@@ -209,13 +203,12 @@ class ApplicationFormController extends Controller
                     $over_time = gmdate("H:i", $over_time);
                     $work_time->over_time = $over_time;
                 }
-
                 $work_time->save();
             }
 
-        } elseif ($request->result === '差し戻し') {
+        } elseif ($request->result === '却下') {
             $application->status = 2;
-        } else if ($request->result === '取り下げ') {
+        } elseif ($request->result === '取り下げ') {
             $application->status = 3;
 		}
         $application->save();
