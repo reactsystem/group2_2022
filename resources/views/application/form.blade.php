@@ -84,7 +84,7 @@
                         <div class="row mb-3">
 
                             <!-- 開始時間 -->
-                            <div class="row mb-4 mt-2 datetime">
+                            <div class="row mb-3 mt-2 datetime">
                                 <label for="startTimePicker" class="col-md-4 col-form-label text-md-end">開始時間<span class="startTimePicker"></span></label>
                                 <div id="startTimePicker" class="col-md-6 input-group date date-width" data-target-input="nearest">
                                     <input type="text" id="startTimePicker" name="start_time" value="{{old('start_time')}}" data-name="{{old('start_time')}}" class="form-control datetimepicker-input @error('start_time') is-invalid @enderror" data-target="#startTimePicker" data-toggle="datetimepicker"/>
@@ -103,7 +103,7 @@
                             </div>
 
                             <!-- 終了時間 -->
-                            <div class="row mb-5 mt-2 datetime">
+                            <div class="row mb-3 mt-2 datetime">
                                 <label for="endTimePicker" class="col-md-4 col-form-label text-md-end">終了時間<span class="endTimePicker"></span></label>
                                 <div id="endTimePicker" class="col-md-6 input-group date date-width" data-target-input="nearest">
                                     <input type="text" name="end_time" value="{{old('end_time')}}" data-name="{{old('end_time')}}" class="form-control datetimepicker-input @error('end_time') is-invalid @enderror" data-target="#endTimePicker" data-toggle="datetimepicker"/>
@@ -125,7 +125,7 @@
                         <!-- 申請ボタン -->
                         <div class="row mb-0">
                             <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button id="application-button" type="submit" class="btn btn-primary">
                                     申請する
                                 </button>
                             </div>
