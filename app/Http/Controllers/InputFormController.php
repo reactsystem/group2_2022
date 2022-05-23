@@ -72,7 +72,7 @@ class InputFormController extends Controller
     public function add(Request $request){
         $fixed_time = FixedTime::first(); //定時のデータを取得
         $date = date("Y-m-d"); //打刻した時の日付を取得
-        $time = date("H:i:s"); //打刻した時の時間を取得
+        $time = date("H:i"); //打刻した時の時間を取得
 
         // 申請承認フォームのコメントに対するバリデーション
         $rules = ['description' => 'max:60',];
@@ -112,8 +112,19 @@ class InputFormController extends Controller
         }
 
         // 退勤ボタンを打刻した時の処理
-        if (isset($request->left_time)){
+        if (isset($request->left_time)) {
             $work_time = DB::table('work_times')->where('user_id', $request->user_id)->where('date', $date)->first();
+            // 勤務時間から差し引く既定の休憩時間を取得
+            $calculate_fixed_rest = $this->getRestTime($fixed_time->rest_time);
+            
+            // 実労働時間(勤務時間 - 既定の休憩時間)を分で取得
+            // 規定時刻より早く出社した場合
+            if ($work_time->start_time < $fixed_time->start_time) {
+                $worked_time = $this->getWorkedTime($time, $fixed_time->start_time, $calculate_fixed_rest);
+            // 規定時刻より後に出社した場合
+            } else {
+                $worked_time = $this->getWorkedTime($time, $work_time->start_time, $calculate_fixed_rest);
+            }
             
             // ログインユーザーの当日のレコードが存在しないかチェック
             if (DB::table('work_times')->where('user_id', $request->user_id)->where('date', $date)->doesntExist()) {
@@ -121,22 +132,42 @@ class InputFormController extends Controller
             } elseif ($work_time->left_time !== NULL) {
                 return redirect('/')->with('message', '既に退勤の打刻が完了しています');
             
-            // 時間外が発生していない場合
-            } elseif (strtotime($time) < strtotime("+15 min", strtotime($fixed_time->left_time))) {
+            //休憩時間の処理
+            // 実労働時間が定時から６時間に満たない場合は、休憩時間を00:00:00にする
+            } elseif ($worked_time < 360) {
+                WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([
+                    'left_time' => $time,
+                    'description' => $request->description,
+                    'rest_time' => '00:00:00',
+                ]);
+            // 実労働時間が８時間を超える場合で、かつ既定の休憩時間が１時間未満の場合、休憩時間を「01:00:00」にする
+            } elseif ($worked_time < 480 && $fixed_time->rest_time < '01:00:00') {
+                WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([
+                    'left_time' => $time,
+                    'description' => $request->description,
+                    'rest_time' => '01:00:00',
+                ]);
+            // その他の場合は、既定の休憩時間を入れる
+            } else {
                 WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([
                     'left_time' => $time,
                     'description' => $request->description,
                     'rest_time' => $fixed_time->rest_time,
                 ]);
-            // 時間外が発生している場合
-            } else {
+            }
+
+            // 時間外労働の処理
+            $fixed_left_over = strtotime("+15 min", strtotime($fixed_time->left_time));
+            $left_time = strtotime($time);
+            if ($left_time >= $fixed_left_over) {
+                $over_time = $left_time - $fixed_left_over;
+                $over_time = gmdate("H:i", $over_time);
                 WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([
-                    'left_time' => $time,
-                    'description' => $request->description,
-                    'rest_time' => gmdate("H:i:s", strtotime("+15 min", strtotime($fixed_time->rest_time))),
+                    'over_time' => $over_time,
                 ]);
             }
 
+            // 勤務区分の処理
             // 定時よりも退勤打刻時間が早い場合、遅刻の時は「遅刻/早退」、そうでない場合は「早退」に更新する 
             if ((strtotime($time) < strtotime($fixed_time->left_time))) {
                 if ($work_time->work_type_id == 3) {
@@ -163,6 +194,20 @@ class InputFormController extends Controller
             }
         }
         return redirect('/')->with('sent_form', '打刻を完了しました');
+    }
+
+    public function getRestTime($rest) {
+        $from = strtotime('00:00:00');
+        $end = strtotime($rest);
+        $minutes = ($end - $from) / 60;
+        $calculate_rest = "-" . $minutes . "min";
+        return $calculate_rest;
+    }
+
+    public function getWorkedTime($left, $start, $calculate_rest) {
+        $worked_time = (strtotime($left) - strtotime($start));
+        $worked_time = strtotime($calculate_rest, $worked_time) / 60;
+        return $worked_time;
     }
 
 }
