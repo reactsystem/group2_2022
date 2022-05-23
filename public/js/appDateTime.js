@@ -161,7 +161,7 @@ $(document).ready(function()
         $('[name=end_time]').val(end_time.name);
     }
 
-    
+
     //開始時間、終了時間を記入できるかどうか
     $('#applied-content').change(function() {
         
@@ -176,7 +176,25 @@ $(document).ready(function()
         // 開始時間、終了時間を初期化
         $('[name=start_time]').val('');
         $('[name=end_time]').val('');
+
+		// 申請項目が変更されたら有給のエラーメッセージを無しに
+        $('.appTypeError').addClass('d-none');
     });
 
-   
+	// 有給申請されたときに有給がなかったらメッセージを表示する
+	$('#form-app').submit(function() {
+		var app_type = $('[name=appliedContent] option:selected').text().trim();
+		var left_days = $('input#left-days').val();
+
+		// 有給の残り日数がない場合
+		if(app_type === '有給休暇' && left_days <= 0)
+		{
+			// error message
+			$('.appTypeError').removeClass('d-none');
+			$('.appTypeErrorMsg').text('有給休暇の残り日数が 0日 です。');
+
+			// submitキャンセル
+			return false;
+		}
+	});
 })

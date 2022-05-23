@@ -67,7 +67,19 @@
         @foreach($applications as $application)
             <tr>
                 <td>{{$loop->iteration}}</td>
-                <td><a href="{{route('application.approve', ['user' => $application->user->id, 'application' => $application->id])}}">{{$application->user->name}}</a></td>
+                <td><a	href=""
+						data-toggle="modal" data-target="#modal-approval"
+						data-id="{{$application->id}}"
+						data-name="{{$application->user->name}}"
+						data-dept="{{$application->user->department->name}}"
+						data-type="{{$application->applicationType->name}}"
+						data-reason="{{$application->reason}}"
+						data-date="{{date('Y/m/d', strtotime($application->date))}}" 
+						data-start="{{isset($application->start_time) ? date('H:i', strtotime($application->start_time)):''}}"
+						data-end="{{isset($application->end_time) ? date('H:i', strtotime($application->end_time)):''}}">
+						{{$application->user->name}}
+				</a>
+				</td>
                 <td>{{$application->user->department->name}}</td>
                 <td>{{$application->date}}</td>
                 <td>{{$application->applicationType->name}}</td>
@@ -76,6 +88,111 @@
     </tbody>
     </table>
 </div>
+
+<!-- Modal ---------------------------------------------------->
+<!-- 申請承認フォーム -->
+<div class="modal fade" id="modal-approval" tabindex="-1" aria-labelledby="label-fixed" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered">
+		<div class="modal-content">
+			<form action="{{route('application.approve')}}" method="POST">
+				@csrf
+				<div class="modal-header">
+					<h5 class="modal-title">申請承認フォーム</h5>
+				</div>
+
+				<div class="modal-body">
+					<input type="hidden" name="id" id="app-id">
+
+					<!-- 申請者の名前 -->
+					<div class="row mb-3">
+						<label for="name" class="col-md-4 col-form-label text-md-end">申請者</label>
+						<div class="col-md-6">
+							<input type="text" name="name" id="app-name" class="form-control" readonly>
+						</div>
+					</div>
+
+					<!-- 申請者の部署名 -->
+					<div class="row mb-3">
+						<label for="department" class="col-md-4 col-form-label text-md-end">部署名</label>
+						<div class="col-md-6">
+							<input type="text" name="department" id="app-dept" class="form-control" readonly>
+						</div>
+					</div>
+
+					<!-- 申請種類 -->
+					<div class="row mb-3">
+						<label for="applied_content" class="col-md-4 col-form-label text-md-end">申請内容</label>
+						<div class="col-md-6">
+							<input type="text" name="applied_content" id="app-type" class="form-control" readonly>
+						</div>
+					</div>
+
+					<!-- 申請理由 -->
+					<div class="row mb-3">
+						<label for="reason" class="col-md-4 col-form-label text-md-end">申請理由</label>
+						<div class="col-md-6">
+							<textarea name="reason" id="app-reason" class="form-control" readonly></textarea>
+						</div>
+					</div>
+
+					<!-- 申請したい日 -->
+					<div class="row mb-3">
+						<label for="date" class="col-md-4 col-form-label text-md-end">申請日</label>
+						<div class="col-md-6">
+							<input type="text" name="date" id="app-date" class="form-control" readonly>
+						</div>
+					</div>
+
+					<!-- 開始時間 -->
+					<div class="row mb-3">
+						<label for="start_time" class="col-md-4 col-form-label text-md-end">開始時間</label>
+						<div class="col-md-6">
+							<input type="text" name="start_time" id="app-start" class="form-control" readonly>
+						</div>
+					</div>
+
+					<!-- 終了時間 -->
+					<div class="row mb-3">
+						<label for="end_time" class="col-md-4 col-form-label text-md-end">終了時間</label>
+						<div class="col-md-6">
+							<input type="text" name="end_time" id="app-end" class="form-control" readonly>
+						</div>
+					</div>
+
+					<!-- 承認/差し戻しコメント -->
+					<div class="row mb-3">
+						<label for="comment" class="col-md-4 col-form-label text-md-end">コメント</label>
+						<div class="col-md-6">
+							<textarea class="form-control" name="comment" id="comment" autocomplete="comment" autofocus>{{ old('comment') }}</textarea>
+							<p class="help-block">※60文字以内で書いてください</p>
+							@if ($errors->has('comment'))
+							<div class="alert alert-danger" role="alert">
+								{{ $errors->first('comment') }}
+							</div>
+							@endif
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<!-- 承認/却下/取り下げボタン -->
+					<div class="col-md-8 offset-md-4">
+						<button type="submit" name="result" value="承認" class="btn btn-primary ml-2 mr-4">
+							承認
+						</button>
+						<button type="submit" name="result" value="却下" class="btn btn-danger ml-4 mr-3">
+							却下
+						</button>
+						<button type="submit" name="result" value="取り下げ" class="btn btn-secondary ml-4 mr-3">
+							取り下げ
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<!-------------------------------------------------end Modal -->
 @endsection
 
 @section('js')

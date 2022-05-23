@@ -78,6 +78,7 @@ class PersonalMgmtController extends Controller
         $items = $request->all();
         $count = count($items['date']);
         $today = Carbon::createFromDate();
+        $fixed_time = FixedTime::first();
 
         for ($i = 0; $i < $count; $i++)
         {
@@ -146,12 +147,47 @@ class PersonalMgmtController extends Controller
                 // その他の場合、レコードの有無によって更新処理
                 } elseif (WorkTime::where('user_id', $items['user_id'])->where('date', $items['date'][$i])->exists())
                 {
+                    // 勤務時間から差し引く既定の休憩時間を取得
+                    $calculate_rest = $this->getRestTime($fixed_time->rest_time);
+                    
+                    // 実労働時間(勤務時間 - 休憩時間)を分で取得
+                    // 規定時刻より早く出社した場合
+                    if ($work_time->start_time < $fixed_time->start_time) {
+                        $worked_time = $this->getWorkedTime($items['left_time'][$i], $fixed_time->start_time, $calculate_rest);
+                    // 規定時刻より後に出社した場合
+                    } else {
+                        $worked_time = $this->getWorkedTime($items['left_time'][$i], $work_time->start_time, $calculate_rest);
+                    }
+
+                    // 休憩時間の処理
+                    // 実労働時間が６時間に満たない場合は、休憩時間に「00:00:00」を追加
+                    if ($worked_time < 360) {
+                        $rest_time = '00:00:00';
+                    // 実労働時間が８時間を超える場合で、かつ既定の休憩時間が１時間未満の場合、休憩時間を「01:00:00」にする
+                    } elseif ($worked_time >= 480 && $fixed_time->rest_time < '01:00:00') {
+                        $rest_time = '01:00:00';
+                    } else {
+                        $rest_time = $fixed_time->rest_time;
+                    }
+
+                    // 時間外労働の処理
+                    $fixed_left_over = strtotime("+15 min", strtotime($fixed_time->left_time));
+                    $left_time = strtotime($items['left_time'][$i]);
+                    if ($left_time >= $fixed_left_over) {
+                        $over_time = $left_time - $fixed_left_over;
+                        $over_time = gmdate("H:i", $over_time);
+                    } else {
+                        $over_time = '00:00:00';
+                    }
+
                     WorkTime::where('user_id', $items['user_id'])
                         ->where('date', $items['date'][$i])
                         ->update([
                             'work_type_id' => $items['work_type'][$i],
                             'start_time' => $items['start_time'][$i],
                             'left_time' => $items['left_time'][$i],
+                            'rest_time' => $rest_time,
+                            'over_time' => $over_time,
                     ]);
                 } else {
                     $work_time = new WorkTime;
@@ -160,6 +196,42 @@ class PersonalMgmtController extends Controller
                     $work_time->work_type_id = $items['work_type'][$i];
                     $work_time->start_time = $items['start_time'][$i];
                     $work_time->left_time = $items['left_time'][$i];
+
+                    // 勤務時間から差し引く既定の休憩時間を取得
+                    $calculate_rest = $this->getRestTime($fixed_time->rest_time);
+                    
+                    // 実労働時間(勤務時間 - 休憩時間)を分で取得
+                    // 規定時刻より早く出社した場合
+                    if ($work_time->start_time < $fixed_time->start_time) {
+                        $worked_time = $this->getWorkedTime($work_time->left_time, $fixed_time->start_time, $calculate_rest);
+                    // 規定時刻より後に出社した場合
+                    } else {
+                        $worked_time = (strtotime($work_time->left_time) - strtotime($work_time->start_time));
+                        $worked_time = $this->getWorkedTime($work_time->left_time, $work_time->start_time, $calculate_rest);
+                    }
+
+                    // 休憩時間の処理
+                    // 実労働時間が６時間に満たない場合は、休憩時間に「00:00:00」を追加
+                    if ($worked_time < 360) {
+                        $work_time->rest_time = '00:00:00';
+                    // 実労働時間が８時間を超える場合で、かつ既定の休憩時間が１時間未満の場合、休憩時間を「01:00:00」にする
+                    } elseif ($worked_time >= 480 && $fixed_time->rest_time < '01:00:00') {
+                        $work_time->rest_time = '01:00:00';
+                    } else {
+                        $work_time->rest_time = $fixed_time->rest_time;
+                    }
+
+                    // 時間外労働の処理
+                    $fixed_left_over = strtotime("+15 min", strtotime($fixed_time->left_time));
+                    $left_time = strtotime($items['left_time'][$i]);
+                    if ($left_time >= $fixed_left_over) {
+                        $over_time = $left_time - $fixed_left_over;
+                        $over_time = gmdate("H:i", $over_time);
+                        $work_time->over_time = $over_time;
+                    } else {
+                        $work_time->over_time = '00:00:00';
+                    }
+
                     $work_time->save();
                 }
             }
@@ -167,4 +239,19 @@ class PersonalMgmtController extends Controller
         return back()
             ->with('message', '勤務表を更新しました');
     }
+
+    public function getRestTime($rest) {
+        $from = strtotime('00:00:00');
+        $end = strtotime($rest);
+        $minutes = ($end - $from) / 60;
+        $calculate_rest = "-" . $minutes . "min";
+        return $calculate_rest;
+    }
+
+    public function getWorkedTime($left, $start, $calculate_rest) {
+        $worked_time = (strtotime($left) - strtotime($start));
+        $worked_time = strtotime($calculate_rest, $worked_time) / 60;
+        return $worked_time;
+    }
+
 }
