@@ -341,5 +341,6 @@
             </form>
         </div>
     </div>
+    <script> const fixed_work_time = @json($fixed_work_time); </script>
     <script src="{{ asset('js/personal_mgmt.js') }}"></script>
 @endsection
