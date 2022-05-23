@@ -48,7 +48,7 @@ class PersonalMgmtController extends Controller
         $daysInMonth = $dt->daysInMonth; //今月は何日まであるか
 
         $user = User::find($request->user_id);
-        $work_types = WorkType::all();
+        $work_types = WorkType::whereNull('deleted_at')->get();
         $work_times = WorkTime::where('user_id', $user->id)->where('date', 'like', $current_month . '%')->get();
         $fixed_time = FixedTime::first();
 
