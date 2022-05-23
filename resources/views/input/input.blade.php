@@ -244,5 +244,6 @@
                 </div>
             </div>
         </div>
+        <script> const fixed_work_time = @json($fixed_work_time); </script>
         <script src="{{ asset('js/input.js') }}"></script>
     @endsection
