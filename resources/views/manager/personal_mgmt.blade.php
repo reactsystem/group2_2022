@@ -238,12 +238,12 @@
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td><input type="text" name="start_time[]" size="5"
+                                        <td><input type="time" name="start_time[]" size="5"
                                             @isset ($work_time->start_time)
                                                 value={{date('H:i', $start_time)}}
                                             @endisset>
                                         </td>
-                                        <td><input type="text" name="left_time[]" size="5"
+                                        <td><input type="time" name="left_time[]" size="5"
                                             @isset ($work_time->left_time)
                                                 value={{date('H:i', $left_time)}}
                                             @endisset>
@@ -307,8 +307,8 @@
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td><input type="text" name="start_time[]" size="5"></td>
-                                        <td><input type="text" name="left_time[]" size="5"></td>
+                                        <td><input type="time" name="start_time[]" size="5"></td>
+                                        <td><input type="time" name="left_time[]" size="5"></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
