@@ -19,12 +19,11 @@ use Illuminate\Support\Facades\Mail;
 
 class ApplicationFormController extends Controller
 {
-    // 申請一覧フォーム
+	/* 申請一覧フォーム ------------------------------------------*/
     public function index(Request $request){
-
         $loginUser = Auth::user()->department_id;
         $loginUserDepartment = Department::where('id', $loginUser)->first()->name;
-        $departments = Department::get();
+        $departments = Department::whereNull('deleted_at')->get();
         $applications = '';
         
         // 部署ごとに表示、statusが0のデータのみ表示
@@ -75,22 +74,39 @@ class ApplicationFormController extends Controller
 
         return view('application.index', compact('loginUser', 'loginUserDepartment', 'departments', 'applications', 'limit_disp'));
     }
+	/*============================================ end function ==*/
 
-    // 申請フォーム
+	/* 申請フォーム ----------------------------------------------*/
     public function show(){
         $user = Auth::user();
-        $types = ApplicationType::get();
+        $types = ApplicationType::whereNull('deleted_at')->get();
         $time = FixedTime::first();
+
+		// 有給残り日数
+		$paid = PaidLeave::where('user_id', $user->id)
+			->where('expire_date', '>=', date('Y-m-d'))
+			->get();
+		$app_paid = Application::where('user_id', $user->id)
+			->where('application_type_id', 1)
+			->where('date', '>', date('Y-m-d'))
+			->count();
+		$left_days = 0;
+		foreach($paid as $days)
+		{
+			$left_days += $days->left_days;
+		}
+		$left_days -= $app_paid;
 
         // 開始時間
         $left_time = new Carbon($time->left_time);
         $left_time->addMinutes(15);
         $left_time = $left_time->toTimeString('minute');
 
-        return view('application.form', compact('user', 'types', 'left_time'));
+        return view('application.form', compact('user', 'types', 'left_time', 'left_days'));
     }
+	/*============================================ end function ==*/
 
-    // 申請フォームの内容をApplicationテーブルに格納
+	/* 申請フォームの内容をApplicationテーブルに格納 -------------*/
     public function create(ApplicationFormRequest $request, $user){
 
         Application::insert([
@@ -105,17 +121,11 @@ class ApplicationFormController extends Controller
 
         return redirect('/')->with('sent_form', '申請書が送信されました');
     }
+	/*============================================ end function ==*/
 
-    public function approve(Request $request){
-        $user = Auth::user();
-        $application = Application::find($request->application);
-
-        return view('application.approval_form', compact('user', 'application'));
-    }
-
+	/* 申請承認 --------------------------------------------------*/
     public function send(Request $request) {
         $user = Auth::user();
-        $fixed_time = FixedTime::first();
 
         // 申請承認フォームのコメントに対するバリデーション
         $rules = ['comment' => 'max:60',];
@@ -149,15 +159,19 @@ class ApplicationFormController extends Controller
             }
 
             // 有給休暇の場合、申請者の残り有給数を減らす
-            if ($application->application_type_id == 1) {
-                $paid_leave = PaidLeave::where('user_id', $application->user_id)->first();
-                $paid_leave->left_days = (int)$paid_leave->left_days - 1;
-                $paid_leave->save();
-            }
+			// 有給休暇消費処理はexpend_paid_leaves.phpで実行
 
             // 申請種別が打刻時間修正の場合、work_timeテーブルの申請対象日の開始時間、終了時間を更新
             if ($application->application_type_id == 5) {
                 $work_time = WorkTime::where('user_id', $application->user_id)->where('date', $application->date)->first();
+
+                if(isset($application->start_time))	{ $work_time->start_time = $application->start_time; }
+                if(isset($application->end_time))	{ $work_time->left_time = $application->end_time; }
+                $work_time->save();
+            }
+
+        } else if ($request->result === '却下') {
+
                 $work_time->start_time = $application->start_time;
                 $work_time->left_time = $application->end_time;
 
@@ -201,7 +215,9 @@ class ApplicationFormController extends Controller
 
         } elseif ($request->result === '差し戻し') {
             $application->status = 2;
-        }
+        } else if ($request->result === '取り下げ') {
+            $application->status = 3;
+		}
         $application->save();
 
         // 申請結果通知メールの送信処理
@@ -220,5 +236,5 @@ class ApplicationFormController extends Controller
 
         return redirect('application/')->with('message', '申請結果を通知しました');
     }
-
+	/*============================================ end function ==*/
 }

@@ -1,5 +1,10 @@
 $(document).ready(function ()
 {
+	/* add class -----------------------------------------------*/
+	$('th').addClass('align-middle');
+	$('td').addClass('align-middle');
+	/*==========================================================*/
+
 	/* TimePicker ----------------------------------------------*/
 	// 始業時間
 	$('#start-time-picker').datetimepicker(

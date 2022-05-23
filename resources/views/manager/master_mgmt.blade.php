@@ -16,15 +16,15 @@
 				<table class="table table-striped">
 					<tr><th>開始</th><th>終了</th><th>休憩時間</th><th></th></tr>
 					<tr>
-						<td>{{substr($fixed_time->start_time, 0, 5)}}</td>
-						<td>{{substr($fixed_time->left_time, 0, 5)}}</td>
-						<td>{{substr($fixed_time->rest_time, 0, 5)}}</td>
+						<td>{{date('H:i', strtotime($fixed_time->start_time))}}</td>
+						<td>{{date('H:i', strtotime($fixed_time->left_time))}}</td>
+						<td>{{date('H:i', strtotime($fixed_time->rest_time))}}</td>
 						<td><button type="button" class="btn btn-outline-secondary"
 								data-toggle="modal" data-target="#modal-edit-fixed"
 								data-id="{{$fixed_time->id}}"
-								data-start="{{substr($fixed_time->start_time, 0, 5)}}"
-								data-left="{{substr($fixed_time->left_time, 0, 5)}}"
-								data-rest="{{substr($fixed_time->rest_time, 0, 5)}}">
+								data-start="{{date('H:i', strtotime($fixed_time->start_time))}}"
+								data-left="{{date('H:i', strtotime($fixed_time->left_time))}}"
+								data-rest="{{date('H:i', strtotime($fixed_time->rest_time))}}">
 								変更
 							</button>
 						</td>
@@ -42,7 +42,7 @@
 
 			<div class="card-body">
 				<table class="table table-striped">
-					<tr class="align-middle">
+					<tr>
 						<th>ID</th><th>部署名</th><th></th>
 						<th><button type="button" class="btn btn-outline-primary"
 								data-toggle="modal" data-target="#modal-add"
@@ -84,7 +84,7 @@
 
 			<div class="card-body">
 				<table class="table table-striped">
-					<tr class="align-middle">
+					<tr>
 						<th>ID</th><th>区分名</th><th></th>
 						<th><button type="button" class="btn btn-outline-primary"
 								data-toggle="modal" data-target="#modal-add"
@@ -133,7 +133,7 @@
 
 			<div class="card-body">
 				<table class="table table-striped">
-					<tr class="align-middle">
+					<tr>
 						<th>ID</th><th>申請項目</th><th></th>
 						<th><button type="button" class="btn btn-outline-primary"
 								data-toggle="modal" data-target="#modal-add-app">

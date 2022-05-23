@@ -19,7 +19,7 @@ class WorkTimesTableSeeder extends Seeder
         $params =
         [
             [
-                'user_id' => '202204010001',
+                'user_id' => '202104010001',
                 'work_type_id' => 1,
                 'date' => '2022-05-02',
                 'start_time' => '09:30',
@@ -28,7 +28,7 @@ class WorkTimesTableSeeder extends Seeder
                 'over_time' => '00:00',
             ],
             [
-                'user_id' => '202204010001',
+                'user_id' => '202104010001',
                 'work_type_id' => 1,
                 'date' => '2022-05-03',
                 'start_time' => '09:30',
@@ -37,7 +37,7 @@ class WorkTimesTableSeeder extends Seeder
                 'over_time' => '00:00',
             ],
             [
-                'user_id' => '202204010001',
+                'user_id' => '202104010001',
                 'work_type_id' => 1,
                 'date' => '2022-05-04',
                 'start_time' => '09:30',
@@ -46,7 +46,7 @@ class WorkTimesTableSeeder extends Seeder
                 'over_time' => '00:00',
             ],
             [
-                'user_id' => '202204010001',
+                'user_id' => '202104010001',
                 'work_type_id' => 1,
                 'date' => '2022-05-05',
                 'start_time' => '09:30',
@@ -55,7 +55,7 @@ class WorkTimesTableSeeder extends Seeder
                 'over_time' => '00:00',
             ],
             [
-                'user_id' => '202204010001',
+                'user_id' => '202104010001',
                 'work_type_id' => 1,
                 'date' => '2022-05-06',
                 'start_time' => '09:30',
