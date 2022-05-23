@@ -61,8 +61,8 @@
 			</div>
 
 			<div class="card-body">
+				<!-- ページ表示条件 ----------------------------------------------->
 				<ul class="list-group list-group-flush">
-					<!-- ページ表示条件 ----------------------------------------------->
 					<li class="list-group-item">
 						<form action="{{route('mgmt.dept.post')}}" method="POST" class="form-inline">
 							@csrf
@@ -71,7 +71,7 @@
 							<input type="hidden" name="date" value="{{$date->copy()->toDateString()}}">
 							
 							<!-- ページネーション -->
-							{{$work_times->appends([
+							{{$users->appends([
 									'date' => $date->copy()->toDateString(),
 									'department' => $dept->id,
 									'disp_limit' => $disp_limit,
@@ -95,7 +95,7 @@
 								</button>
 								<div class="dropdown-menu" aria-labelledby="dpdn-limit">
 									<button type="submit" name="disp_limit" value="" class="dropdown-item">全て</button>
-									<button type="submit" name="disp_limit" value="5" class="dropdown-item">5件</button>
+									<button type="submit" name="disp_limit" value="2" class="dropdown-item">2件</button>
 									<button type="submit" name="disp_limit" value="10" class="dropdown-item">10件</button>
 									<button type="submit" name="disp_limit" value="20" class="dropdown-item">20件</button>
 									<button type="submit" name="disp_limit" value="50" class="dropdown-item">50件</button>
@@ -104,7 +104,8 @@
 							</div>
 						</form>
 					</li>
-					<!----------------------------------------end 表示ページ条件 -->
+				</ul>
+				<!----------------------------------------end 表示ページ条件 -->
 
 					<!-- 部署別勤務表 --------------------------------------------->
 					@php
@@ -124,7 +125,6 @@
 						}
 					@endphp
 					
-					<li class="list-group-item">
 						<table class="table table-striped table-bordered">
 							<thead class="thead-light">
 								<tr><th></th><th>名前</th><th>勤務区分</th>
@@ -238,15 +238,13 @@
 						</table>
 
 						<!-- ページネーション -->
-						{{$work_times->appends([
+						{{$users->appends([
 								'date' => $date->copy()->toDateString(),
 								'department' => $dept->id,
 								'disp_limit' => $disp_limit,
 							])
 							->links()}}
-					</li>
 					<!------------------------------------------end 部署別勤務表 -->
-				</ul>
 			</div>
 		</div>
 	</div>
