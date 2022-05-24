@@ -95,12 +95,8 @@
 						<div class="row mb-4 mt-2 datetime">
 							<label for="startTimePicker" class="col-md-4 col-form-label text-md-end"><span class="startTimePicker float-left"></span>開始時間</label>
 							<div class="col-md-12">
-								<div id="startTimePicker" class="input-group date date-width" data-target-input="nearest">
-                                    @if(isset($work_time->start_time))
-									    <input type="text" id="startTimePicker" name="start_time" value="{{$work_time->start_time}}" data-name="{{$work_time->start_time}}" class="form-control datetimepicker-input @error('start_time') is-invalid @enderror" data-target="#startTimePicker" data-toggle="datetimepicker"/>
-                                    @else
-									    <input type="text" id="startTimePicker" name="start_time" value="{{old('start_time')}}" data-name="{{old('start_time')}}" class="form-control datetimepicker-input @error('start_time') is-invalid @enderror" data-target="#startTimePicker" data-toggle="datetimepicker"/>
-                                    @endif
+								<div id="startTimePicker" class="input-group date date-width" data-target-input="nearest">                                
+									<input type="text" id="startTimePicker" name="start_time" value="{{old('start_time')}}" data-name="{{old('start_time')}}" class="form-control datetimepicker-input @error('start_time') is-invalid @enderror" data-target="#startTimePicker" data-toggle="datetimepicker"/>                              
 									<div class="input-group-append date-text" data-target="#startTimePicker" data-toggle="datetimepicker">
 										<div class="input-group-text"><i class="fa fa-clock"></i></div>
 									</div>
@@ -122,11 +118,7 @@
 							<label for="endTimePicker" class="col-md-4 col-form-label text-md-end"><span class="endTimePicker float-left"></span>終了時間</label>
 							<div class="col-md-12">
 								<div id="endTimePicker" class="input-group date date-width" data-target-input="nearest">
-                                    @if(isset($work_time->left_time))
-									    <input type="text" name="end_time" value="{{$work_time->left_time}}" data-name="{{$work_time->left_time}}" class="form-control datetimepicker-input @error('end_time') is-invalid @enderror" data-target="#endTimePicker" data-toggle="datetimepicker"/>
-                                    @else
-									    <input type="text" name="end_time" value="{{old('end_time')}}" data-name="{{old('end_time')}}" class="form-control datetimepicker-input @error('end_time') is-invalid @enderror" data-target="#endTimePicker" data-toggle="datetimepicker"/>
-                                    @endif
+									<input type="text" name="end_time" value="{{old('end_time')}}" data-name="{{old('end_time')}}" class="form-control datetimepicker-input @error('end_time') is-invalid @enderror" data-target="#endTimePicker" data-toggle="datetimepicker"/>
 									<div class="input-group-append date-text" data-target="#endTimePicker" data-toggle="datetimepicker">
 										<div class="input-group-text"><i class="fa fa-clock"></i></div>
 									</div>

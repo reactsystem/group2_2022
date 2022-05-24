@@ -37,8 +37,8 @@ Route::group(['prefix' => 'employees', 'as' => 'employees.', 'middleware' => 'au
 });
 
 // 個人勤怠管理フォーム
-Route::get('/personal_management', [PersonalMgmtController::class, 'index'])->name('mgmt.personal');
-Route::post('/personal_management', [PersonalMgmtController::class, 'update'])->name('update');
+Route::get('/personal_management', [PersonalMgmtController::class, 'index'])->name('mgmt.personal')->middleware('auth');
+Route::post('/personal_management', [PersonalMgmtController::class, 'update'])->name('update')->middleware('auth');
 
 //申請フォーム
 Route::group(['prefix' => 'application', 'as' => 'application.', 'middleware' => 'auth'], function(){
@@ -49,14 +49,14 @@ Route::group(['prefix' => 'application', 'as' => 'application.', 'middleware' =>
 });
 
 // 部署勤怠管理フォーム
-Route::group(['prefix' => 'management', 'as' => 'mgmt.'], function(){
+Route::group(['prefix' => 'management', 'as' => 'mgmt.', 'middleware' => 'auth'], function(){
 	Route::get('/', [DepartmentMgmtController::class, 'index'])->name('dept');
 	Route::post('/', [DepartmentMgmtController::class, 'index'])->name('dept.post');
 	Route::post('/export', [DepartmentMgmtController::class, 'export'])->name('export');
 });
 
 // マスタ管理フォーム
-Route::group(['prefix' => 'master', 'as' => 'master.'], function(){
+Route::group(['prefix' => 'master', 'as' => 'master.', 'middleware' => 'auth'], function(){
 	Route::get('/', [MasterController::class, 'show'])->name('show');
 	Route::post('/add', [MasterController::class, 'create'])->name('create');
 	Route::post('/edit', [MasterController::class, 'update'])->name('update');

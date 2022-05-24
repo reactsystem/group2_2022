@@ -217,8 +217,8 @@ $(document).ready(function()
         // 申請日の打刻した開始時間と終了時間を初期値として設定
         let start_time = $('#start_time').data();
         let end_time = $('#end_time').data();
-        $('[name=start_time]').val(start_time.start.slice(0,5));
-        $('[name=end_time]').val(end_time.end.slice(0,5));
+        $('[name=start_time]').datetimepicker({ defaultDate: moment({ hour: start_time.start.slice(0,2), minute: start_time.start.slice(3,5) }), format: 'HH:mm'});
+        $('[name=end_time]').datetimepicker({ defaultDate: moment({ hour: end_time.end.slice(0,2), minute: end_time.end.slice(3,5) }), format: 'HH:mm'});
     }
 
 
