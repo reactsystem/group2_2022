@@ -161,10 +161,81 @@ $(document).ready(function()
         $('[name=end_time]').val(end_time.name);
     }
 
+    // 打刻時間修正、申請日を選択後、申請日をget送信 sessionを使う
+    function sendDay(){
+        if(window.sessionStorage.getItem(['appliedContent']) === '5'){
+
+            // 申請日を選んだら      
+            $('[name=date]').on('blur', e=>{
+
+                //申請日のセッションをリセット
+                window.sessionStorage.removeItem(['appliedDate']);
+                 // 申請内容のセッション削除
+                window.sessionStorage.removeItem(['appliedContent']);
+                // 申請内容と申請日をセッションに
+                window.sessionStorage.setItem(['appliedContent'], $('#applied-content').val());
+                window.sessionStorage.setItem(['appliedDate'], e.target.value);
+
+                // 申請日をget送信
+                let setParam = `?date=${e.target.value.replaceAll('/', '-')}`;
+                location.search = setParam;       
+            });
+        }
+    }
+
+    // 申請内容のセッションに打刻時間修正が入っていたら
+    if(window.sessionStorage.getItem(['appliedContent']) === '5'){
+        // 申請内容を打刻時間修正に
+        const select = document.getElementById('applied-content');
+        select.options[5].selected = true;
+        $('[name=date]').on('blur', e=>{
+            //申請日のセッションをリセット
+            window.sessionStorage.removeItem(['appliedDate']);
+            // 申請内容のセッション削除
+            window.sessionStorage.removeItem(['appliedContent']);
+            // 申請内容と申請日をセッションに
+            window.sessionStorage.setItem(['appliedContent'], $('#applied-content').val());
+            window.sessionStorage.setItem(['appliedDate'], e.target.value);
+
+            // 申請日をget送信
+            let setParam = `?date=${e.target.value.replaceAll('/', '-')}`;
+            location.search = setParam;
+        })
+        // 申請日をget送信した日に
+        $('[name=date]').val(window.sessionStorage.getItem(['appliedDate']));
+
+        // 開始時間を必須化
+        $('[name=start_time]').prop({'disabled': false, 'required': true});
+        $('.startTimePicker').addClass('badge badge-danger ml-1');
+        $('.startTimePicker').text('必須');
+
+        //終了時間のボックスを有効化
+        $('[name=end_time]').prop({'disabled': false});
+
+        iniTime();
+        
+        // 申請日の打刻した開始時間と終了時間を初期値として設定
+        let start_time = $('#start_time').data();
+        let end_time = $('#end_time').data();
+        $('[name=start_time]').datetimepicker({ defaultDate: moment({ hour: start_time.start.slice(0,2), minute: start_time.start.slice(3,5) }), format: 'HH:mm'});
+        $('[name=end_time]').datetimepicker({ defaultDate: moment({ hour: end_time.end.slice(0,2), minute: end_time.end.slice(3,5) }), format: 'HH:mm'});
+    }
+
 
     //開始時間、終了時間を記入できるかどうか
     $('#applied-content').change(function() {
-        
+        //申請日のセッションをリセット
+        window.sessionStorage.removeItem(['appliedDate']);
+        // 申請内容のセッション削除
+        window.sessionStorage.removeItem(['appliedContent']);
+
+        // 申請内容をセッションに
+        window.sessionStorage.setItem(['appliedContent'], $('#applied-content').val());
+
+        console.log(window.sessionStorage.getItem(['appliedContent']))
+
+        sendDay();
+
         // 開始時間、終了時間のエラーメッセージを無しに
         $('.endTimeError').addClass('d-none');
         $('.startTimeError').addClass('d-none');
@@ -180,6 +251,14 @@ $(document).ready(function()
 		// 申請項目が変更されたら有給のエラーメッセージを無しに
         $('.appTypeError').addClass('d-none');
     });
+
+    // 申請ボタンをクリックした際にセッション削除
+    $('#application-button').on('click', ()=>{
+        //申請日のセッションをリセット
+        window.sessionStorage.removeItem(['appliedDate']);
+        // 申請内容のセッション削除
+        window.sessionStorage.removeItem(['appliedContent']);  
+    })
 
 	// 有給申請されたときに有給がなかったらメッセージを表示する
 	$('#form-app').submit(function() {

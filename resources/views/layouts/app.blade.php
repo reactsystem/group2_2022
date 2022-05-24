@@ -43,7 +43,7 @@
 					<!-- Left Side Of Navbar -->
 					<ul class="navbar-nav">
 						<li><a href="{{ route('input') }}" class="nav-link">勤怠入力</a></li>
-						<li><a href="{{ route('application.show') }}" class="nav-link">各種申請</a></li>
+						<li><a href="{{ route('application.show', array_merge(Request::query(), ['date' => ''])) }}" class="nav-link">各種申請</a></li>
 						<li><a href="{{ route('mgmt.dept') }}" class="nav-link">勤怠管理</a></li>
 						<li><a href="{{ route('application.index', array_merge(Request::query(), ['department' => auth()->user()->department_id])) }}" class="nav-link">申請一覧</a></li>
 						<li><a href="{{ route('employees.show', array_merge(Request::query(), ['department' => auth()->user()->department_id])) }}" class="nav-link">社員管理</a></li>

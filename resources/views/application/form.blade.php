@@ -22,6 +22,7 @@
                                 <input id="name" type="text" class="form-control" name="name" value="{{$user->name}}" disabled>
                             </div>
                         </div>
+                        <hr>
 
                         <!-- 申請者の部署名 -->
                         <div class="row mb-3">
@@ -30,10 +31,11 @@
                                 <input type="text" id="department" class="form-control" name="department" value="{{$user->department->name}}" disabled>
                             </div>
                         </div>
+                        <hr>
 
                         <!-- 申請種類 -->
                         <div class="row mb-3">
-                            <label for="applied-content" class="col-md-4 col-form-label text-md-end required">申請内容<span class="badge badge-danger ml-1">必須</span></label>
+                            <label for="applied-content" class="col-md-4 col-form-label text-md-end required"><span class="badge badge-danger float-left">必須</span>申請内容</label>
                             <div class="col-md-6">
                                 <select name="appliedContent" id="applied-content" class="form-select @error('appliedContent') is-invalid @enderror" required autocomplete="applied-content" autofocus>
                                     <option hidden value="">選択してください</option>
@@ -53,6 +55,7 @@
 								</div>
                             </div>
                         </div>
+                        <hr>
 
                         <!-- 申請理由 -->
                         <div class="row mb-3">
@@ -67,10 +70,11 @@
                                 @enderror
                             </div>
                         </div>
-
+                        
                         <!-- 申請したい日 -->
+                        <hr>
                         <div class="row mb-3 datetime">
-                            <label for="datePicker" class="col-md-4 col-form-label text-md-end required">申請日<span class="badge badge-danger ml-1">必須</span></label>
+                            <label for="datePicker" class="col-md-4 col-form-label text-md-end required"><span class="badge badge-danger float-left">必須</span>申請日</label>
                             <div class="col-md-12">
 								<div id="datePicker" class="input-group date date-width" data-target-input="nearest">
 									<input type="text" id="datePicker" name="date" value="{{old('date')}}" data-name="{{old('date')}}" class="form-control datetimepicker-input @error('date') is-invalid @enderror" data-target="#datePicker" data-toggle="datetimepicker"/>
@@ -85,15 +89,14 @@
 								</div>
 							</div>
                         </div>
+                        <hr>
 
-                        <!-- 申請したい時間 -->
-
-						<!-- 開始時間 -->
+                        <!-- 開始時間 -->
 						<div class="row mb-4 mt-2 datetime">
-							<label for="startTimePicker" class="col-md-4 col-form-label text-md-end">開始時間<span class="startTimePicker"></span></label>
+							<label for="startTimePicker" class="col-md-4 col-form-label text-md-end"><span class="startTimePicker float-left"></span>開始時間</label>
 							<div class="col-md-12">
-								<div id="startTimePicker" class="input-group date date-width" data-target-input="nearest">
-									<input type="text" id="startTimePicker" name="start_time" value="{{old('start_time')}}" data-name="{{old('start_time')}}" class="form-control datetimepicker-input @error('start_time') is-invalid @enderror" data-target="#startTimePicker" data-toggle="datetimepicker"/>
+								<div id="startTimePicker" class="input-group date date-width" data-target-input="nearest">                                
+									<input type="text" id="startTimePicker" name="start_time" value="{{old('start_time')}}" data-name="{{old('start_time')}}" class="form-control datetimepicker-input @error('start_time') is-invalid @enderror" data-target="#startTimePicker" data-toggle="datetimepicker"/>                              
 									<div class="input-group-append date-text" data-target="#startTimePicker" data-toggle="datetimepicker">
 										<div class="input-group-text"><i class="fa fa-clock"></i></div>
 									</div>
@@ -108,10 +111,11 @@
 								</div>
 							</div>
 						</div>
+                        <hr>
 
 						<!-- 終了時間 -->
 						<div class="row mb-5 mt-2 datetime">
-							<label for="endTimePicker" class="col-md-4 col-form-label text-md-end">終了時間<span class="endTimePicker"></span></label>
+							<label for="endTimePicker" class="col-md-4 col-form-label text-md-end"><span class="endTimePicker float-left"></span>終了時間</label>
 							<div class="col-md-12">
 								<div id="endTimePicker" class="input-group date date-width" data-target-input="nearest">
 									<input type="text" name="end_time" value="{{old('end_time')}}" data-name="{{old('end_time')}}" class="form-control datetimepicker-input @error('end_time') is-invalid @enderror" data-target="#endTimePicker" data-toggle="datetimepicker"/>
@@ -129,6 +133,9 @@
 								</div>
 							</div>
 						</div>
+                        <hr>
+
+                        
 
                         <!-- 申請ボタン -->
                         <div class="row mb-0">
@@ -145,6 +152,16 @@
     </div>
 </div>
 <span id="left_time" class="d-none" data-name="{{$left_time}}"></span>
+@if(!empty($work_time->start_time))
+<span id="start_time" class="d-none" data-start="{{$work_time->start_time}}"></span>
+@endif
+@if(!empty($work_time->left_time))
+<span id="end_time" class="d-none" data-end="{{$work_time->left_time}}"></span>
+@endif
+
+
+
+
 @endsection
 
 @section('js')
