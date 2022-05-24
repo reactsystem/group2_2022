@@ -20,11 +20,6 @@
     height: 23px;
 }
 
-.leaving-day,
-.datetime{
-    flex-wrap: nowrap;
-}
-
 .leaving-width,
 .date-width{
     width: 51%;
