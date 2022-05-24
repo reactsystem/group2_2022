@@ -165,11 +165,6 @@
 						<div class="col-md-6">
 							<textarea class="form-control" name="comment" id="comment" autocomplete="comment" autofocus>{{ old('comment') }}</textarea>
 							<p class="help-block">※60文字以内で書いてください</p>
-							{{-- @if ($errors->has('comment'))
-							<div class="alert alert-danger" role="alert">
-								{{ $errors->first('comment') }}
-							</div>
-							@endif --}}
 							<div class="commentError d-none" role="alert">
 								<strong class="commentErrorMsg text-danger"></strong>
 							</div>
@@ -180,13 +175,16 @@
 				<div class="modal-footer">
 					<!-- 承認/却下/取り下げボタン -->
 					<div class="col-md-8 offset-md-4">
-						<button type="button" name="result" value="承認" class="btn btn-primary ml-2 mr-4" id="btn-approve">
+						<input type="hidden" name="result" value="承認" id="value-approve" disabled>
+						<input type="hidden" name="result" value="却下" id="value-reject" disabled>
+						<input type="hidden" name="result" value="取り下げ" id="value-stop" disabled>
+						<button type="button" class="btn btn-primary ml-2 mr-4" id="btn-approve">
 							承認
 						</button>
-						<button type="button" name="result" value="却下" class="btn btn-danger ml-4 mr-3" id="btn-reject">
+						<button type="button" class="btn btn-danger ml-4 mr-3" id="btn-reject">
 							却下
 						</button>
-						<button type="button" name="result" value="取り下げ" class="btn btn-secondary ml-4 mr-3" id="btn-stop">
+						<button type="button" class="btn btn-secondary ml-4 mr-3" id="btn-stop">
 							取り下げ
 						</button>
 					</div>

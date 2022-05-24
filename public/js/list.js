@@ -70,11 +70,14 @@ function checkComment() {
 }
 
 $('#btn-approve').click(function() {
+	$('#value-approve').prop('disabled', false);
 	checkComment();
 });
 $('#btn-reject').click(function() {
+	$('#value-reject').prop('disabled', false);
 	checkComment();
 });
 $('#btn-stop').click(function() {
+	$('#value-stop').prop('disabled', false);
 	checkComment();
 });
