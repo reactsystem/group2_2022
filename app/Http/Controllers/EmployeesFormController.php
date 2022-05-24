@@ -55,9 +55,9 @@ class employeesFormController extends Controller
 
         //退職していない人のみ表示
         $users = $query->whereNull('leaving')->orderBy('joining', 'DESC')->paginate(100);
-    
+
         //表示件数
-        if($request->query('disp_limit') && $request->query('department')){
+        if($request->query('disp_limit')){
             if($request->query('disp_limit')==='0'){
                 $users = $query->whereNull('leaving')->orderBy('joining', 'DESC')->paginate();
             }elseif($request->query('disp_limit')==='1'){

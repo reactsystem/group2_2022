@@ -161,10 +161,79 @@ $(document).ready(function()
         $('[name=end_time]').val(end_time.name);
     }
 
+    // 打刻時間修正、申請日を選択後、申請日をget送信 sessionを使う
+    function sendDay(){
+        if(window.sessionStorage.getItem(['appliedContent']) === '5'){
+            
+            // 申請日を選んだら      
+            $('[name=date]').on('blur', e=>{
+
+                //申請日のセッションをリセット
+                window.sessionStorage.removeItem(['appliedDate']);
+                 // 申請内容のセッション削除
+                window.sessionStorage.removeItem(['appliedContent']);
+                // 申請内容と申請日をセッションに
+                window.sessionStorage.setItem(['appliedContent'], $('#applied-content').val());
+                window.sessionStorage.setItem(['appliedDate'], e.target.value);
+
+                // 申請日をget送信
+                let setParam = `?date=${e.target.value.replaceAll('/', '-')}`;
+                location.search = setParam;       
+            });
+        }
+    }
+
+    // 申請内容のセッションに打刻時間修正が入っていたら
+    if(window.sessionStorage.getItem(['appliedContent']) === '5'){
+        // 申請内容を打刻時間修正に
+        const select = document.getElementById('applied-content');
+        select.options[5].selected = true;
+        $('[name=date]').on('blur', e=>{
+            //申請日のセッションをリセット
+            window.sessionStorage.removeItem(['appliedDate']);
+            // 申請内容のセッション削除
+            window.sessionStorage.removeItem(['appliedContent']);
+            // 申請内容と申請日をセッションに
+            window.sessionStorage.setItem(['appliedContent'], $('#applied-content').val());
+            window.sessionStorage.setItem(['appliedDate'], e.target.value);
+
+            // 申請日をget送信
+            let setParam = `?date=${e.target.value.replaceAll('/', '-')}`;
+            location.search = setParam;
+        })
+        // 申請日をget送信した日に
+        $('[name=date]').val(window.sessionStorage.getItem(['appliedDate']));
+
+        // 開始時間を必須化
+        $('[name=start_time]').prop({'disabled': false, 'required': true});
+        $('.startTimePicker').addClass('badge badge-danger ml-1');
+        $('.startTimePicker').text('必須');
+
+        //終了時間のボックスを有効化
+        $('[name=end_time]').prop({'disabled': false});
+        
+        // 申請日の打刻した開始時間と終了時間を初期値として設定
+        let start_time = $('#start_time').data();
+        let end_time = $('#end_time').data();
+        $('[name=start_time]').val(start_time.start.slice(0,5));
+        $('[name=end_time]').val(end_time.end.slice(0,5));
+    }
+
 
     //開始時間、終了時間を記入できるかどうか
     $('#applied-content').change(function() {
-        
+        //申請日のセッションをリセット
+        window.sessionStorage.removeItem(['appliedDate']);
+        // 申請内容のセッション削除
+        window.sessionStorage.removeItem(['appliedContent']);
+
+        // 申請内容をセッションに
+        window.sessionStorage.setItem(['appliedContent'], $('#applied-content').val());
+
+        console.log(window.sessionStorage.getItem(['appliedContent']))
+
+        sendDay();
+
         // 開始時間、終了時間のエラーメッセージを無しに
         $('.endTimeError').addClass('d-none');
         $('.startTimeError').addClass('d-none');

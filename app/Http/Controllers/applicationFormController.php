@@ -77,7 +77,7 @@ class ApplicationFormController extends Controller
 	/*============================================ end function ==*/
 
 	/* 申請フォーム ----------------------------------------------*/
-    public function show(){
+    public function show(Request $request){
         $user = Auth::user();
         $types = ApplicationType::whereNull('deleted_at')->get();
         $time = FixedTime::first();
@@ -102,7 +102,13 @@ class ApplicationFormController extends Controller
         $left_time->addMinutes(15);
         $left_time = $left_time->toTimeString('minute');
 
-        return view('application.form', compact('user', 'types', 'left_time', 'left_days'));
+        // getパラメータ(申請日)
+        $param = $request->query('date');
+        
+        // 申請者の打刻時間
+        $work_time = WorkTime::where('user_id', $user->id)->where('work_type_id', 1)->where('date', $param)->first();
+        
+        return view('application.form', compact('user', 'types', 'left_time', 'left_days', 'work_time', 'param' ));
     }
 	/*============================================ end function ==*/
 
