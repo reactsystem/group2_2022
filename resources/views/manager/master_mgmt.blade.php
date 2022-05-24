@@ -183,6 +183,9 @@
 							<tr>
 								<td>{{$app_type->id}}</td>
 								<td>{{$app_type->name}}</td>
+
+								<!-- app_type->id の 1-5 は変更、削除不可 -->
+								@if ($app_type->id > 5)
 								<td><button type="button" class="btn btn-outline-secondary"
 										data-toggle="modal" data-target="#modal-edit-app"
 										data-id="{{$app_type->id}}"
@@ -200,6 +203,10 @@
 										削除
 									</button>
 								</td>
+								@else
+									<td></td>
+									<td></td>
+								@endif
 							</tr>
 						@endforeach
 					</table>
