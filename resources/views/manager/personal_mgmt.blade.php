@@ -238,12 +238,12 @@
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td><input type="text" name="start_time[]" size="5"
+                                        <td><input type="time" name="start_time[]" size="5"
                                             @isset ($work_time->start_time)
                                                 value={{date('H:i', $start_time)}}
                                             @endisset>
                                         </td>
-                                        <td><input type="text" name="left_time[]" size="5"
+                                        <td><input type="time" name="left_time[]" size="5"
                                             @isset ($work_time->left_time)
                                                 value={{date('H:i', $left_time)}}
                                             @endisset>
@@ -283,8 +283,7 @@
 
                                             {{-- 「有給休暇」「特別休暇」は有給扱いのため、定時の勤務時間を表示する --}}
                                             @if ($work_time->workType->name == '有給休暇' || $work_time->workType->name == '特別休暇')
-                                                @php $worked_time = strtotime($calculate_rest, $fixed_left) - $fixed_start; @endphp
-                                                {{gmdate("H:i", $worked_time)}}
+                                                {{$fixed_work_time}}
                                             @endif
                                         </td>
                                         <td>
@@ -307,8 +306,8 @@
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td><input type="text" name="start_time[]" size="5"></td>
-                                        <td><input type="text" name="left_time[]" size="5"></td>
+                                        <td><input type="time" name="start_time[]" size="5"></td>
+                                        <td><input type="time" name="left_time[]" size="5"></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>

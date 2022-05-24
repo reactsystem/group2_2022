@@ -111,13 +111,14 @@ class PersonalMgmtController extends Controller
                         $check = ['start_time' => $items['start_time'][$i], 'left_time' => $items['left_time'][$i],];
                         $rules = [
                             'start_time' => 'required|date_format:H:i',
-                            'left_time' => 'required|date_format:H:i',
+                            'left_time' => 'required|date_format:H:i|after:start_time',
                         ];
                         $messages = [
                             'start_time.required' => $items['date'][$i] .' :開始時刻を入力してください',
                             'left_time.required' => $items['date'][$i] .' :終了時刻を入力してください',
                             'start_time.date_format' => $items['date'][$i] .' :開始時刻は「00:00」～「23:59」の範囲で入力してください',
                             'left_time.date_format' => $items['date'][$i] .' :終了時刻は「00:00」～「23:59」の範囲で入力してください',
+                            'left_time.after' => $items['date'][$i] .' :終了時刻は開始時刻より後の時刻を入力してください',
                         ];
                         $validator = Validator::make($check, $rules, $messages);
                     }
