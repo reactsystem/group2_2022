@@ -61,7 +61,7 @@
                         <div class="row mb-3">
                             <label for="reason" class="col-md-4 col-form-label text-md-end">申請理由</label>
                             <div class="col-md-6">
-                                <textarea class="form-control @error('reason') is-invalid @enderror" name="reason" id="reason" autocomplete="reason" autofocus>{{old('reason')}}</textarea>
+                                <textarea class="form-control @error('reason') is-invalid @enderror" name="reason" id="reason" autocomplete="reason" data-reason="{{old('reason')}}" autofocus>{{old('reason')}}</textarea>
                                 <p class="help-block">※60文字以内で書いてください</p>
                                 @error('reason')
                                     <span class="invalid-feedback d-block" role="alert">
@@ -158,6 +158,7 @@
 @if(!empty($work_time->left_time))
 <span id="end_time" class="d-none" data-end="{{$work_time->left_time}}"></span>
 @endif
+<span id="oldReason" class="d-none" data-reason="{{old('reason')}}"></span>
 
 
 
