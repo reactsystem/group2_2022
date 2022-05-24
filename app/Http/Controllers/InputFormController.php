@@ -126,11 +126,13 @@ class InputFormController extends Controller
             
             // 実労働時間(勤務時間 - 既定の休憩時間)を分で取得
             // 規定時刻より早く出社した場合
-            if ($work_time->start_time < $fixed_time->start_time) {
-                $worked_time = $this->getWorkedTime($time, $fixed_time->start_time, $calculate_fixed_rest);
-            // 規定時刻より後に出社した場合
-            } else {
-                $worked_time = $this->getWorkedTime($time, $work_time->start_time, $calculate_fixed_rest);
+            if (isset($work_time->start_time)) {
+                if ($work_time->start_time < $fixed_time->start_time) {
+                    $worked_time = $this->getWorkedTime($time, $fixed_time->start_time, $calculate_fixed_rest);
+                // 規定時刻より後に出社した場合
+                } else {
+                    $worked_time = $this->getWorkedTime($time, $work_time->start_time, $calculate_fixed_rest);
+                }
             }
             
             // ログインユーザーの当日のレコードが存在しないかチェック
