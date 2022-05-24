@@ -48,7 +48,7 @@ class PersonalMgmtController extends Controller
         $daysInMonth = $dt->daysInMonth; //今月は何日まであるか
 
         $user = User::find($request->user_id);
-        $work_types = WorkType::all();
+        $work_types = WorkType::whereNull('deleted_at')->get();
         $work_times = WorkTime::where('user_id', $user->id)->where('date', 'like', $current_month . '%')->get();
         $fixed_time = FixedTime::first();
 
@@ -58,6 +58,12 @@ class PersonalMgmtController extends Controller
         foreach ($paid_leaves as $paid_leave) {
             $paid_leave_sum += $paid_leave->left_days;
         }
+
+        // 既定の労働時間を取得する
+        $fixed_rest_time = $this->getRestTime($fixed_time->rest_time);
+        $fixed_work_time = strtotime($fixed_time->left_time) - strtotime($fixed_time->start_time);
+        $fixed_work_time = strtotime($fixed_rest_time, $fixed_work_time);
+        $fixed_work_time = gmdate('H:i', $fixed_work_time);
 
         return view('manager.personal_mgmt', compact(
             'today',
@@ -71,6 +77,7 @@ class PersonalMgmtController extends Controller
             'description',
             'holidays',
             'work_types',
+            'fixed_work_time',
         ));
     }
 
@@ -104,13 +111,14 @@ class PersonalMgmtController extends Controller
                         $check = ['start_time' => $items['start_time'][$i], 'left_time' => $items['left_time'][$i],];
                         $rules = [
                             'start_time' => 'required|date_format:H:i',
-                            'left_time' => 'required|date_format:H:i',
+                            'left_time' => 'required|date_format:H:i|after:start_time',
                         ];
                         $messages = [
                             'start_time.required' => $items['date'][$i] .' :開始時刻を入力してください',
                             'left_time.required' => $items['date'][$i] .' :終了時刻を入力してください',
                             'start_time.date_format' => $items['date'][$i] .' :開始時刻は「00:00」～「23:59」の範囲で入力してください',
                             'left_time.date_format' => $items['date'][$i] .' :終了時刻は「00:00」～「23:59」の範囲で入力してください',
+                            'left_time.after' => $items['date'][$i] .' :終了時刻は開始時刻より後の時刻を入力してください',
                         ];
                         $validator = Validator::make($check, $rules, $messages);
                     }

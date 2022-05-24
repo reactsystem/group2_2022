@@ -55,6 +55,12 @@ class InputFormController extends Controller
             $paid_leave_sum += $paid_leave->left_days;
         }
 
+        // 既定の労働時間を取得する
+        $fixed_rest_time = $this->getRestTime($fixed_time->rest_time);
+        $fixed_work_time = strtotime($fixed_time->left_time) - strtotime($fixed_time->start_time);
+        $fixed_work_time = strtotime($fixed_rest_time, $fixed_work_time);
+        $fixed_work_time = gmdate('H:i', $fixed_work_time);
+
         return view('input.input', compact(
             'today',
             'month',
@@ -66,6 +72,7 @@ class InputFormController extends Controller
             'user',
             'description',
             'holidays',
+            'fixed_work_time'
         ));
     }
 

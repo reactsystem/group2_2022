@@ -51,7 +51,7 @@ window.addEventListener = calculate(6, 'over');
 // 所定時間(既定の労働時間×平日の日数)を計算し、テーブル下部に表示する
 window.addEventListener = function () {
 	var num = document.querySelectorAll('#weekday').length;
-	var result = "07:45";
+	var result = fixed_work_time;
 	Arr = result.split(":");
 	var hh1 = parseInt(Arr[0])*num;
 	var mm1 = parseInt(Arr[1])*num;

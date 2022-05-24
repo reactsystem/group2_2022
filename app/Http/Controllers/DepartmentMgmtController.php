@@ -9,6 +9,7 @@ use App\Models\Department;
 use App\Models\FixedTime;
 use App\Models\User;
 use App\Models\WorkTime;
+use Yasumi\Yasumi;
 
 class DepartmentMgmtController extends Controller
 {
@@ -34,12 +35,16 @@ class DepartmentMgmtController extends Controller
 		$disp_limit = $request->disp_limit;
 
 		// 各種テーブルの取得
-		$departments = Department::all();
+		$departments = Department::whereNull('deleted_at')->get();
 		$fixed_time = FixedTime::first();
+		$users = User::where('department_id', $dept->id)->whereNull('leaving')->paginate($disp_limit);
 		$work_times = WorkTime::where('date', $date->copy()->toDateString())
 			->whereHas('user', function($query) use($dept)
 				{ $query->where('department_id', $dept->id); })
-			->paginate($disp_limit);
+			->get();
+
+		// 祝日の取得
+		$holidays = Yasumi::create('Japan', $date->year, 'ja_JP');
 
 		// csv プレビュー用
 		$csv = $this->getExportData($dept->id, $date);
@@ -49,6 +54,8 @@ class DepartmentMgmtController extends Controller
 			'dept',
 			'departments',
 			'fixed_time',
+			'holidays',
+			'users',
 			'work_times',
 			'disp_limit',
 			'csv',

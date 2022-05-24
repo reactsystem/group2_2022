@@ -6,165 +6,214 @@
 
 @section('content')
 	<div class="container-fluid row justify-content-center">
-		<!-- 就業時間 ------------------------------------------------->
-		<div class="col-lg-3 card">
-			<div class="card-header">
-				就業時間
-			</div>
-
-			<div class="card-body">
-				<table class="table table-striped">
-					<tr><th>開始</th><th>終了</th><th>休憩時間</th><th></th></tr>
-					<tr>
-						<td>{{date('H:i', strtotime($fixed_time->start_time))}}</td>
-						<td>{{date('H:i', strtotime($fixed_time->left_time))}}</td>
-						<td>{{date('H:i', strtotime($fixed_time->rest_time))}}</td>
-						<td><button type="button" class="btn btn-outline-secondary"
-								data-toggle="modal" data-target="#modal-edit-fixed"
-								data-id="{{$fixed_time->id}}"
-								data-start="{{date('H:i', strtotime($fixed_time->start_time))}}"
-								data-left="{{date('H:i', strtotime($fixed_time->left_time))}}"
-								data-rest="{{date('H:i', strtotime($fixed_time->rest_time))}}">
-								変更
-							</button>
-						</td>
-					</tr>
-				</table>
-			</div>
+		<!-- scrollspy ------------------------------------------------>
+		<div id="scrollspy" class="list-group col-lg-2">
+			<a href="#fixed" class="list-group-item list-group-item-action">就業時間</a>
+			<a href="#department" class="list-group-item list-group-item-action">部署一覧</a>
+			<a href="#work-type" class="list-group-item list-group-item-action">勤務区分一覧</a>
+			<a href="#app-type" class="list-group-item list-group-item-action">申請項目一覧</a>
 		</div>
-		<!----------------------------------------------end 就業時間 -->
+		<!---------------------------------------------end scrollspy -->
+		
+		<div data-bs-spy="scroll" data-bs-target="#scrollspy" data-bs-offset="0" class="scrollspy-example col-lg-4" tabindex="0">
+			<!-- 就業時間 ------------------------------------------------->
+			<div class="row card" id="fixed">
+				<div class="card-header">
+					就業時間
+				</div>
 
-		<!-- 部署一覧 ------------------------------------------------->
-		<div class="col-lg-3 card">
-			<div class="card-header">
-				部署一覧
-			</div>
-
-			<div class="card-body">
-				<table class="table table-striped">
-					<tr>
-						<th>ID</th><th>部署名</th><th></th>
-						<th><button type="button" class="btn btn-outline-primary"
-								data-toggle="modal" data-target="#modal-add"
-								data-title="部署" data-label="部署名" data-table="department">
-								登録
-							</button>
-						</th>
-					</tr>
-					@foreach ($departments as $department)
+				<div class="card-body">
+					<table class="table table-striped">
 						<tr>
-							<td>{{$department->id}}</td>
-							<td>{{$department->name}}</td>
+							<th class="col-sm-3">開始</th>
+							<th class="col-sm-3">終了</th>
+							<th class="col-sm-3">休憩時間</th>
+							<th class="col-sm-3"></th>
+						</tr>
+						<tr>
+							<td>{{date('H:i', strtotime($fixed_time->start_time))}}</td>
+							<td>{{date('H:i', strtotime($fixed_time->left_time))}}</td>
+							<td>{{date('H:i', strtotime($fixed_time->rest_time))}}</td>
 							<td><button type="button" class="btn btn-outline-secondary"
-									data-toggle="modal" data-target="#modal-edit"
-									data-title="部署" data-label="部署名"
-									data-table="department" data-id="{{$department->id}}" data-name="{{$department->name}}">
+									data-toggle="modal" data-target="#modal-edit-fixed"
+									data-id="{{$fixed_time->id}}"
+									data-start="{{date('H:i', strtotime($fixed_time->start_time))}}"
+									data-left="{{date('H:i', strtotime($fixed_time->left_time))}}"
+									data-rest="{{date('H:i', strtotime($fixed_time->rest_time))}}">
 									変更
-								</button>
-							</td>
-							<td><button type="button" class="btn btn-outline-danger"
-									data-toggle="modal" data-target="#modal-del"
-									data-label="部署"
-									data-table="department" data-id="{{$department->id}}" data-name="{{$department->name}}">
-									削除
 								</button>
 							</td>
 						</tr>
-					@endforeach
-				</table>
+					</table>
+				</div>
 			</div>
-		</div>
-		<!----------------------------------------------end 部署一覧 -->
+			<!----------------------------------------------end 就業時間 -->
 
-		<!-- 勤務区分一覧 --------------------------------------------->
-		<div class="col-lg-3 card">
-			<div class="card-header">
-				勤務区分一覧
-			</div>
+			<!-- 部署一覧 ------------------------------------------------->
+			<div class="row card" id="department">
+				<div class="card-header">
+					部署一覧
+				</div>
 
-			<div class="card-body">
-				<table class="table table-striped">
-					<tr>
-						<th>ID</th><th>区分名</th><th></th>
-						<th><button type="button" class="btn btn-outline-primary"
-								data-toggle="modal" data-target="#modal-add"
-								data-title="勤務区分" data-label="区分名" data-table="work_type">
-								登録
-							</button>
-						</th>
-					</tr>
-					@foreach ($work_types as $work_type)
-					<tr>
-						<td>{{$work_type->id}}</td>
-						<td>{{$work_type->name}}</td>
-
-						<!-- work_type->id の 1-7 は変更、削除不可 -->
-						@if ($work_type->id > 7)
-							<td><button type="button" class="btn btn-outline-secondary"
-									data-toggle="modal" data-target="#modal-edit"
-									data-title="勤務区分" data-label="区分名"
-									data-table="work_type" data-id="{{$work_type->id}}" data-name="{{$work_type->name}}">
-									変更
-								</button>
-							</td>
-							<td><button type="button" class="btn btn-outline-danger"
-									data-toggle="modal" data-target="#modal-del"
-									data-label="勤務区分"
-									data-table="work_type" data-id="{{$work_type->id}}" data-name="{{$work_type->name}}">
-									削除
-								</button>
-							</td>
-						@else
-							<td></td>
-							<td></td>
-						@endif
-					</tr>
-				@endforeach
-				</table>
-			</div>
-		</div>
-		<!------------------------------------------end 勤務区分一覧 -->
-
-		<!-- 申請項目一覧 --------------------------------------------->
-		<div class="col-lg-3 card">
-			<div class="card-header">
-				申請項目一覧
-			</div>
-
-			<div class="card-body">
-				<table class="table table-striped">
-					<tr>
-						<th>ID</th><th>申請項目</th><th></th>
-						<th><button type="button" class="btn btn-outline-primary"
-								data-toggle="modal" data-target="#modal-add-app">
-								登録
-							</button>
-						</th>
-					</tr>
-					@foreach ($app_types as $app_type)
+				<div class="card-body">
+					<table class="table table-striped">
 						<tr>
-							<td>{{$app_type->id}}</td>
-							<td>{{$app_type->name}}</td>
-							<td><button type="button" class="btn btn-outline-secondary"
-									data-toggle="modal" data-target="#modal-edit-app"
-									data-id="{{$app_type->id}}" data-name="{{$app_type->name}}"
-									data-work-type="{{$app_type->work_type_id}}">
-									変更
+							<th class="col-sm-1">ID</th>
+							<th class="col-sm-5">部署名</th>
+							<th class="col-sm-3"></th>
+							<th class="col-sm-3">
+								<button type="button" class="btn btn-outline-primary"
+									data-toggle="modal" data-target="#modal-add"
+									data-title="部署"
+									data-label="部署名"
+									data-table="department">
+									登録
 								</button>
-							</td>
-							<td><button type="button" class="btn btn-outline-danger"
-									data-toggle="modal" data-target="#modal-del"
-									data-label="申請項目"
-									data-table="application" data-id="{{$app_type->id}}" data-name="{{$app_type->name}}">
-									削除
+							</th>
+						</tr>
+						@foreach ($departments as $department)
+							<tr>
+								<td>{{$department->id}}</td>
+								<td>{{$department->name}}</td>
+								<td><button type="button" class="btn btn-outline-secondary"
+										data-toggle="modal" data-target="#modal-edit"
+										data-title="部署"
+										data-label="部署名"
+										data-table="department"
+										data-id="{{$department->id}}"
+										data-name="{{$department->name}}">
+										変更
+									</button>
+								</td>
+								<td><button type="button" class="btn btn-outline-danger"
+										data-toggle="modal" data-target="#modal-del"
+										data-label="部署"
+										data-table="department"
+										data-id="{{$department->id}}"
+										data-name="{{$department->name}}">
+										削除
+									</button>
+								</td>
+							</tr>
+						@endforeach
+					</table>
+				</div>
+			</div>
+			<!----------------------------------------------end 部署一覧 -->
+
+			<!-- 勤務区分一覧 --------------------------------------------->
+			<div class="row card" id="work-type">
+				<div class="card-header">
+					勤務区分一覧
+				</div>
+
+				<div class="card-body">
+					<table class="table table-striped">
+						<tr>
+							<th class="col-sm-1">ID</th>
+							<th class="col-sm-5">区分名</th>
+							<th class="col-sm-3"></th>
+							<th class="col-sm-3">
+								<button type="button" class="btn btn-outline-primary"
+									data-toggle="modal" data-target="#modal-add"
+									data-title="勤務区分"
+									data-label="区分名"
+									data-table="work_type">
+									登録
 								</button>
-							</td>
+							</th>
+						</tr>
+						@foreach ($work_types as $work_type)
+						<tr>
+							<td>{{$work_type->id}}</td>
+							<td>{{$work_type->name}}</td>
+
+							<!-- work_type->id の 1-7 は変更、削除不可 -->
+							@if ($work_type->id > 7)
+								<td><button type="button" class="btn btn-outline-secondary"
+										data-toggle="modal" data-target="#modal-edit"
+										data-title="勤務区分"
+										data-label="区分名"
+										data-table="work_type"
+										data-id="{{$work_type->id}}"
+										data-name="{{$work_type->name}}">
+										変更
+									</button>
+								</td>
+								<td><button type="button" class="btn btn-outline-danger"
+										data-toggle="modal" data-target="#modal-del"
+										data-label="勤務区分"
+										data-table="work_type"
+										data-id="{{$work_type->id}}"
+										data-name="{{$work_type->name}}">
+										削除
+									</button>
+								</td>
+							@else
+								<td></td>
+								<td></td>
+							@endif
 						</tr>
 					@endforeach
-				</table>
+					</table>
+				</div>
 			</div>
+			<!------------------------------------------end 勤務区分一覧 -->
+
+			<!-- 申請項目一覧 --------------------------------------------->
+			<div class="row card" id="app-type">
+				<div class="card-header">
+					申請項目一覧
+				</div>
+
+				<div class="card-body">
+					<table class="table table-striped">
+						<tr>
+							<th class="col-sm-1">ID</th>
+							<th class="col-sm-5">申請項目</th>
+							<th class="col-sm-3"></th>
+							<th class="col-sm-3">
+								<button type="button" class="btn btn-outline-primary"
+									data-toggle="modal" data-target="#modal-add-app">
+									登録
+								</button>
+							</th>
+						</tr>
+						@foreach ($app_types as $app_type)
+							<tr>
+								<td>{{$app_type->id}}</td>
+								<td>{{$app_type->name}}</td>
+
+								<!-- app_type->id の 1-5 は変更、削除不可 -->
+								@if ($app_type->id > 5)
+								<td><button type="button" class="btn btn-outline-secondary"
+										data-toggle="modal" data-target="#modal-edit-app"
+										data-id="{{$app_type->id}}"
+										data-name="{{$app_type->name}}"
+										data-work-type="{{$app_type->work_type_id}}">
+										変更
+									</button>
+								</td>
+								<td><button type="button" class="btn btn-outline-danger"
+										data-toggle="modal" data-target="#modal-del"
+										data-label="申請項目"
+										data-table="application"
+										data-id="{{$app_type->id}}"
+										data-name="{{$app_type->name}}">
+										削除
+									</button>
+								</td>
+								@else
+									<td></td>
+									<td></td>
+								@endif
+							</tr>
+						@endforeach
+					</table>
+				</div>
+			</div>
+			<!------------------------------------------end 申請項目一覧 -->
 		</div>
-		<!------------------------------------------end 申請項目一覧 -->
 	</div>
 
 	<!-- Modal ---------------------------------------------------->

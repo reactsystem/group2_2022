@@ -28,7 +28,7 @@ class employeesFormController extends Controller
     {
         $loginUser = Auth::user()->department_id;
         $loginUserDepartment = Department::where('id', $loginUser)->first()->name;
-        $departments = Department::get();
+        $departments = Department::whereNull('deleted_at')->get();
 
         $query = User::query();
         
@@ -79,7 +79,7 @@ class employeesFormController extends Controller
     //社員追加ページ
     public function add()
     {
-        $departments = Department::get();
+        $departments = Department::whereNull('deleted_at')->get();
 
         return view('employees.add', compact('departments'));
     }
@@ -105,7 +105,7 @@ class employeesFormController extends Controller
     public function edit($user)
     {
         $editUser = User::find($user);
-        $departments = Department::get();
+        $departments = Department::whereNull('deleted_at')->get();
 
         return view('employees.edit', compact('editUser', 'departments'));
     }

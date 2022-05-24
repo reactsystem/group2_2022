@@ -193,10 +193,9 @@
                                                     @endif
                                                 @endisset
 
-                                                {{-- 「有給休暇」「特別休暇」は有給扱いのため、定時の勤務時間を表示する --}}
+                                                {{-- 「有給休暇」「特別休暇」は有給扱いのため、既定の労働時間を表示する --}}
                                                 @if ($work_time->workType->name == '有給休暇' || $work_time->workType->name == '特別休暇')
-                                                    @php $worked_time = strtotime($calculate_rest, $fixed_left) - $fixed_start; @endphp
-                                                    {{gmdate("H:i", $worked_time)}}
+                                                    {{$fixed_work_time}}
                                                 @endif
                                             </td>
                                             <td>
@@ -244,5 +243,6 @@
                 </div>
             </div>
         </div>
+        <script> const fixed_work_time = @json($fixed_work_time); </script>
         <script src="{{ asset('js/input.js') }}"></script>
     @endsection
