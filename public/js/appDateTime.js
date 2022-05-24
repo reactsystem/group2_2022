@@ -164,7 +164,7 @@ $(document).ready(function()
     // 打刻時間修正、申請日を選択後、申請日をget送信 sessionを使う
     function sendDay(){
         if(window.sessionStorage.getItem(['appliedContent']) === '5'){
-            
+
             // 申請日を選んだら      
             $('[name=date]').on('blur', e=>{
 
@@ -211,6 +211,8 @@ $(document).ready(function()
 
         //終了時間のボックスを有効化
         $('[name=end_time]').prop({'disabled': false});
+
+        iniTime();
         
         // 申請日の打刻した開始時間と終了時間を初期値として設定
         let start_time = $('#start_time').data();
