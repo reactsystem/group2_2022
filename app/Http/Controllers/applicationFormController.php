@@ -134,15 +134,6 @@ class ApplicationFormController extends Controller
         $user = Auth::user();
         $fixed_time = FixedTime::first();
 
-        // 申請承認フォームのコメントに対するバリデーション
-        $rules = ['comment' => 'max:60',];
-        $messages = ['comment.max' => 'コメントは60文字以下で入力してください。',];
-        $validator = Validator::make($request->all(), $rules, $messages);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
         // 承認結果によってApplicationテーブルのstatusカラムを更新
         $application = Application::find($request->id);
         if ($request->result === '承認') {

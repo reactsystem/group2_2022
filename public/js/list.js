@@ -28,6 +28,7 @@ $(document).ready(function() {
     });
 });
 
+
 $(document).ready(function() {
 	$('#modal-approval').on('show.bs.modal', function(event){
 		var data = $(event.relatedTarget);
@@ -50,4 +51,33 @@ $(document).ready(function() {
 		modal.find('.modal-body input#app-start').val(data_start);
 		modal.find('.modal-body input#app-end').val(data_end);
 	});
+});
+
+// コメントが６０文字を超えた場合にエラーメッセージを表示する
+function checkComment() {
+	const comment = document.getElementById('comment').value;
+
+	// コメントが６０文字を超えた場合
+	if(comment.length > 60)
+	{
+		// error message
+		$('.commentError').removeClass('d-none');
+		$('.commentErrorMsg').text('コメントは６０文字以内で入力してください。');
+
+	} else {
+		$('#approval').submit();
+	}
+}
+
+$('#btn-approve').click(function() {
+	$('#value-approve').prop('disabled', false);
+	checkComment();
+});
+$('#btn-reject').click(function() {
+	$('#value-reject').prop('disabled', false);
+	checkComment();
+});
+$('#btn-stop').click(function() {
+	$('#value-stop').prop('disabled', false);
+	checkComment();
 });
