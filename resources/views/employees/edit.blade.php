@@ -70,7 +70,7 @@
                         </div>
 
                         <!-- 退社日 -->
-                        <div class="row mb-3 leaving-day">         
+                        <div class="row mb-3">         
                             <label for="datePicker" class="col-md-4 col-form-label text-md-end">退社日</label>
                             <div class="col-md-6 input-group date leaving-width"  data-target-input="nearest">
                                 <input type="text" name="leaving" id="datePicker" value="{{old('leaving')}}" data-name="{{old('leaving')}}" class="form-control datetimepicker-input @error('leaving') is-invalid @enderror" data-target="#datePicker" data-toggle="datetimepicker"/>    
