@@ -252,6 +252,14 @@ $(document).ready(function()
         $('.appTypeError').addClass('d-none');
     });
 
+    // 申請ボタンをクリックした際にセッション削除
+    $('#application-button').on('click', ()=>{
+        //申請日のセッションをリセット
+        window.sessionStorage.removeItem(['appliedDate']);
+        // 申請内容のセッション削除
+        window.sessionStorage.removeItem(['appliedContent']);  
+    })
+
 	// 有給申請されたときに有給がなかったらメッセージを表示する
 	$('#form-app').submit(function() {
 		var app_type = $('[name=appliedContent] option:selected').text().trim();
