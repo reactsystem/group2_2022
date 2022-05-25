@@ -105,9 +105,9 @@ class ApplicationFormController extends Controller
         // getパラメータ(申請日)
         $param = $request->query('date');
         
-        // 申請者の打刻時間
-        $work_time = WorkTime::where('user_id', $user->id)->where('work_type_id', 1)->where('date', $param)->first();
-        
+        // 申請者の打刻時間(区分が出勤、遅刻、早退、遅刻/早退のみ)
+        $work_time = WorkTime::whereIn('work_type_id', [1,3,4,5])->where('user_id', $user->id)->where('date', $param)->first();
+
         return view('application.form', compact('user', 'types', 'left_time', 'left_days', 'work_time', 'param' ));
     }
 	/*============================================ end function ==*/
