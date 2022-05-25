@@ -141,8 +141,8 @@
                     <tr>
                         <td>
                             <div class="collapse collapse2">
-                                済：{{$work_times->where('date', '<', $today->isoFormat('YYYY-MM-DD'))->where('work_type_id', 6)->count()}}
-                                /予定：{{$work_times->where('date', '>=', $today->isoFormat('YYYY-MM-DD'))->where('work_type_id', 6)->count()}}
+                                済：{{$work_times->where('date', '<=', $today->isoFormat('YYYY-MM-DD'))->where('work_type_id', 6)->count()}}
+                                /予定：{{$work_times->where('date', '>', $today->isoFormat('YYYY-MM-DD'))->where('work_type_id', 6)->count()}}
                             </div>
                         </td>
                     </td>
@@ -219,7 +219,7 @@
 
                                         <td>
                                             {{-- 過去の有給休暇は変更不可にする --}}
-                                            @if ($work_time->date < $today->isoFormat('YYYY-MM-DD') && $work_time->work_type_id == 6)
+                                            @if ($work_time->date <= $today->isoFormat('YYYY-MM-DD') && $work_time->work_type_id == 6)
                                             <select name="work_type[]" style="pointer-events: none; background: gray;" tabindex="-1">
                                             @else
 
