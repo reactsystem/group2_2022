@@ -7,6 +7,19 @@ $(document).ready(function ()
 	$('.card').addClass('mb-3');
 	/*==========================================================*/
 
+	/* ScrollSpy -----------------------------------------------*/
+	// bodyにScrollSpyの属性を追加
+	$('body').attr(
+	{
+		'data-bs-spy': 'scroll',
+		'data-bs-target': '#scroll-menu',
+		'data-bs-offset': '100',
+	});
+
+	// ScrollSpyの実行
+	$('body').scrollspy({target:'#scroll-menu'});
+	/*==========================================================*/
+
 	/* TimePicker ----------------------------------------------*/
 	// 始業時間
 	$('#start-time-picker').datetimepicker(
@@ -32,7 +45,6 @@ $(document).ready(function ()
 		maxDate: moment({h:24}),
 	});
 	/*==========================================================*/
-
 
 	/* モーダル自動入力 ----------------------------------------*/
 	// 就業時間編集フォーム
@@ -140,5 +152,25 @@ $(document).ready(function ()
 		const start = $('.modal-body input#fixed-start').data();
 		$('.modal-body input#fixed-start').val(start);
 	}
+	/*==========================================================*/
+
+	/* 文字数制限のバリデーション ------------------------------*/
+	$('.modal input[name="name"]').change(function()
+	{
+        $('.nameError').addClass('d-none');
+	});
+
+	$('.modal form').submit(function()
+	{
+		if ($('.modal input#add-name').val().length > 20 ||
+			$('.modal input#edit-name').val().length > 20 ||
+			$('.modal input#add-app-name').val().length > 20 ||
+			$('.modal input#edit-app-name').val().length > 20)
+		{
+			$('.nameError').removeClass('d-none');
+			$('.nameErrorMsg').text('20文字以下で入力してください。');
+			return false;
+		}
+	});
 	/*==========================================================*/
 });

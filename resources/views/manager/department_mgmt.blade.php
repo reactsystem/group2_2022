@@ -8,7 +8,6 @@
 	<div class="container-fluid row justify-content-center">
 		<div class="col-lg-12 card">
 			<div class="card-header bg-light">
-				{{$dept->old}}
 				<!-- 絞り込み条件選択フォーム --------------------------------->
 				<form action="{{route('mgmt.dept.post')}}" method="POST" id="form-cond" class="form-inline">
 					@csrf
@@ -23,12 +22,15 @@
 							{{$dept->name}}
 						</button>
 						<div class="dropdown-menu" aria-labelledby="dpdn-dept">
+							<button type="submit" name="department" value="0" class="dropdown-item"
+									@if (0 === $dept->id) active @endif>
+								全て
+							</button>
 							@foreach ($departments as $department)
-								@if ($department->id === $dept->id)
-									<button type="submit" name="department" value="{{$department->id}}" class="dropdown-item active">{{$department->name}}</button>
-								@else
-									<button type="submit" name="department" value="{{$department->id}}" class="dropdown-item">{{$department->name}}</button>
-								@endif
+								<button type="submit" name="department" value="{{$department->id}}" class="dropdown-item"
+										@if ($department->id === $dept->id) active @endif>
+									{{$department->name}}
+								</button>
 							@endforeach
 						</div>
 					</div>
@@ -232,7 +234,7 @@
 									<td>@isset($work_time->over_time) {{date('H:i', strtotime($work_time->over_time))}} @endisset</td>
 
 									<!-- メモ -->
-									<td>@isset($work_time->discription) {{$work_time->discription}} @endisset</td>
+									<td>@isset($work_time->description) {{$work_time->description}} @endisset</td>
 								</tr>
 							@endforeach
 						</table>
@@ -274,7 +276,13 @@
 							<!-- ファイル名 -->
 							<div class="col-md-6 right">
 								<div class="input-group">
-									<input type="text" name="file_name" value="{{$date->format('Ym')}}_{{$dept->name}}_月次集計" class="form-control text-right">
+									<input type="text" name="file_name"
+										@if ($dept->id === 0)
+											value="{{$date->format('Ym')}}_全部署_月次集計"
+										@else
+											value="{{$date->format('Ym')}}_{{$dept->name}}_月次集計"
+										@endif
+										 class="form-control text-right">
 									<div class="input-group-append">
 										<span class="input-group-text">.csv</span>
 									</div>
