@@ -65,6 +65,13 @@ class PersonalMgmtController extends Controller
         $fixed_work_time = strtotime($fixed_rest_time, $fixed_work_time);
         $fixed_work_time = gmdate('H:i', $fixed_work_time);
 
+        // 要修正
+        // 退勤時刻を丸める範囲を取得する
+        if (strtotime('01:00:00') > strtotime($fixed_time->rest_time)) {
+            $round_time = strtotime('01:00:00') - strtotime($fixed_time->rest_time);
+            $round_time = gmdate('H:i:s', $round_time);
+        
+
         return view('manager.personal_mgmt', compact(
             'today',
             'month',
