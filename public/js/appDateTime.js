@@ -49,11 +49,18 @@ $(document).ready(function()
         });
     }
 
+    // HTMLで直接設定したエラーメッセージを削除
+    function DelErrMsg(){
+        $('.startTimeErrorMsg').text('');
+        $('.startTimeError').addClass('d-none');
+        $('.endTimeErrorMsg').text('');
+        $('.endTimeError').addClass('d-none');
+    }
+
     //時間外勤務と打刻時間修正を選ばれている時のみ開始時間、終了時間を記入可
     function ableSelectTime(){
         let text = $('[name=appliedContent] option:selected').text().trim();
         if(text === '時間外勤務'){
-
             // 開始時間、終了時間ともに必須
             timeToRequire();
 
@@ -63,29 +70,9 @@ $(document).ready(function()
             //開始時間、終了時間(終業時間より後のみ選択可)
             $('#startTimePicker').datetimepicker('minDate', moment({h:left_time.name.slice(0, 2), m:left_time.name.slice(3, 5)}));  
             $('#endTimePicker').datetimepicker('minDate', moment({h:left_time.name.slice(0, 2), m:left_time.name.slice(3, 5)}));
-        }else if(text === '打刻時間修正'){
 
-            // 開始時間、終了時間ともに必須ではない
-            $('[name=start_time]').prop({'disabled': false, 'required': false});
-            $('[name=end_time]').prop({'disabled': false, 'required': false});
-            $('.startTimePicker').text('');
-            $('.endTimePicker').text('');
-            
-            //初期設定
-            iniTime();
-            
-            //開始時間、終了時間(何時でも選択可)
-            $('#startTimePicker').datetimepicker('minDate', false);
-            $('#endTimePicker').datetimepicker('minDate', false);
-        }else{
-            
-            //時間入力させない
-            timeToDisable()
-        }
-        
-        //開始時間、終了時間のバリデーション
-        let limitStartTime = left_time.name
-        if(text === '時間外勤務'){
+            //開始時間、終了時間のバリデーション
+            let limitStartTime = left_time.name
             $('[name=start_time]').on('blur', function(e){
                 // 始業時間と終業時間のエラーメッセージが空なら申請ボタンを押せないように
                 if($('.endTimeErrorMsg').text('') && $('.startTimeErrorMsg').text('') || $('.endTimeErrorMsg').is(':empty') && $('.startTimeErrorMsg').is(':empty')){
@@ -146,6 +133,47 @@ $(document).ready(function()
                     }
                 })
             })
+        }else if(text === '打刻時間修正'){
+
+            // 申請日を空にする
+            $('[name=date]').val('');
+
+            // 開始時間は必須、終了時間は必須ではない
+            $('[name=start_time]').prop({'disabled': false, 'required': true});
+            $('.startTimePicker').addClass('badge badge-danger ml-1');
+            $('.startTimePicker').text('必須');
+            $('[name=end_time]').prop({'disabled': false, 'required': false});
+            $('.endTimePicker').text('');
+
+            // 申請するボタンを有効化
+            $('#application-button').prop("disabled", false);
+            
+            //初期設定(DateTimePickerをTime型に)
+            iniTime();
+
+            // HTMLで直接設定したエラーメッセージを削除
+            DelErrMsg();
+
+            // 開始時間を入力した際にHTMLで直接設定したエラーメッセージを削除
+            $('[name=start_time]').on('blur', function(){
+                DelErrMsg();
+            })
+
+            // 終了時間を入力した際にHTMLで直接設定したエラーメッセージを削除
+            $('[name=end_time]').on('blur', function(){
+                DelErrMsg();
+            })
+       
+        }else{
+            
+            //時間入力させない
+            timeToDisable();
+
+            // HTMLで直接設定したエラーメッセージを削除
+            DelErrMsg();
+
+             // 申請するボタンを有効化
+             $('#application-button').prop("disabled", false);
         }
     }
 
@@ -200,13 +228,13 @@ $(document).ready(function()
 
         useSession();
 
-        // 申請日をget送信した日に
-        $('[name=date]').val(window.sessionStorage.getItem(['appliedDate']));
-
         // 開始時間を必須化
         $('[name=start_time]').prop({'disabled': false, 'required': true});
         $('.startTimePicker').addClass('badge badge-danger ml-1');
         $('.startTimePicker').text('必須');
+
+        // 申請日をget送信した日に
+        $('[name=date]').val(window.sessionStorage.getItem(['appliedDate']));
 
         //終了時間のボックスを有効化
         $('[name=end_time]').prop({'disabled': false});
