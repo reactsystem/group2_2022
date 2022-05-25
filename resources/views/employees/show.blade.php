@@ -38,7 +38,7 @@
                 </div>
                 <div class="d-flex search-column flex-grow-2">
                     <!-- 名前＆ID検索 -->
-                    <input id="search-input" type="search" id="form1" class="form-control" name="keyword" placeholder="社員番号または名前検索" value="{{ $params['keyword'] ?? null }}" />
+                    <input id="search-input" type="search" id="form1" class="form-control" name="keyword" placeholder="社員番号または名前検索" value="{{ old('keyword') }}" />
                     <button id="search-button" type="submit" class="btn btn-secondary">
                         <i class="fas fa-search"></i>
                     </button>

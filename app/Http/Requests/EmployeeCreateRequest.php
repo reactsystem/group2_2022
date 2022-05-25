@@ -27,7 +27,7 @@ class EmployeeCreateRequest extends FormRequest
             'id' => 'numeric|required|unique:users',
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
-            'department' => 'required',
+            'department_id' => 'required',
             'joining' => 'required|date|date_format:Y/m/d',
             'password' => 'required|min:8|confirmed',
             'manager' => 'boolean'
@@ -37,7 +37,7 @@ class EmployeeCreateRequest extends FormRequest
     {
         return[
             'id' => '社員番号',
-            'department' => '部署名',
+            'department_id' => '部署名',
             'joining' => '入社日',
         ];
     }

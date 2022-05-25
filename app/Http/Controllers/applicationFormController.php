@@ -43,14 +43,37 @@ class ApplicationFormController extends Controller
         // 表示件数
         $limit_disp = ['全て', '5件', '10件', '20件'];
 
+        // 部署が全て、表示件数で絞る
+        if(!$request->query('disp_limit')){
+            $applications = Application::whereIn('user_id', function ($query) use ($request){
+                $query->from('users')
+                ->select('id');
+            })->where('status', 0)->paginate(100);
+        }elseif($request->query('disp_limit')==='1'){
+            $applications = Application::whereIn('user_id', function ($query) use ($request){
+                $query->from('users')
+                ->select('id');
+            })->where('status', 0)->paginate(5);
+        }elseif($request->query('disp_limit')==='2'){
+            $applications = Application::whereIn('user_id', function ($query) use ($request){
+                $query->from('users')
+                ->select('id');
+            })->where('status', 0)->paginate(10);
+        }elseif($request->query('disp_limit')==='3'){
+            $applications = Application::whereIn('user_id', function ($query) use ($request){
+                $query->from('users')
+                ->select('id');
+            })->where('status', 0)->paginate(20);
+        }
+        
         //部署ごとに表示＋表示件数、statusが0のデータのみ表示
-        if($request->query('disp_limit') && $request->query('department')){
-            if($request->query('disp_limit')==='0'){
+        if($request->query('department')){
+            if(!$request->query('disp_limit')){
                 $applications = Application::whereIn('user_id', function ($query) use ($request){
                     $query->from('users')
                     ->select('id')
                     ->where('department_id', $request->department);
-                })->where('status', 0)->paginate();
+                })->where('status', 0)->paginate(100);
             }elseif($request->query('disp_limit')==='1'){
                 $applications = Application::whereIn('user_id', function ($query) use ($request){
                     $query->from('users')
@@ -245,7 +268,7 @@ class ApplicationFormController extends Controller
         ];
         Mail::to('admin@hoge.co.jp')->send(new SendMail($data));
 
-        return redirect('application/')->with('message', '申請結果を通知しました');
+        return redirect()->route('application.index', ['department' => $request->department_id])->with('message', '申請結果を通知しました');
     }
 	/*============================================ end function ==*/
 }

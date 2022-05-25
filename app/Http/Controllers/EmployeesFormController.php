@@ -57,20 +57,18 @@ class employeesFormController extends Controller
         $users = $query->whereNull('leaving')->orderBy('joining', 'DESC')->paginate(100);
 
         //表示件数
-        if($request->query('disp_limit')){
-            if($request->query('disp_limit')==='0'){
-                $users = $query->whereNull('leaving')->orderBy('joining', 'DESC')->paginate();
-            }elseif($request->query('disp_limit')==='1'){
-                $users = $query->whereNull('leaving')->orderBy('joining', 'DESC')->paginate(5);
-            }elseif($request->query('disp_limit')==='2'){
-                $users = $query->whereNull('leaving')->orderBy('joining', 'DESC')->paginate(10);
-            }elseif($request->query('disp_limit')==='3'){
-                $users = $query->whereNull('leaving')->orderBy('joining', 'DESC')->paginate(20);
-            }elseif($request->query('disp_limit')==='4'){
-                $users = $query->whereNull('leaving')->orderBy('joining', 'DESC')->paginate(50);
-            }elseif($request->query('disp_limit')==='5'){
-                $users = $query->whereNull('leaving')->orderBy('joining', 'DESC')->paginate(100);
-            }
+        if(!$request->query('disp_limit')){
+            $users = $query->whereNull('leaving')->orderBy('joining', 'DESC')->paginate(100);
+        }elseif($request->query('disp_limit')==='1'){
+            $users = $query->whereNull('leaving')->orderBy('joining', 'DESC')->paginate(5);
+        }elseif($request->query('disp_limit')==='2'){
+            $users = $query->whereNull('leaving')->orderBy('joining', 'DESC')->paginate(10);
+        }elseif($request->query('disp_limit')==='3'){
+            $users = $query->whereNull('leaving')->orderBy('joining', 'DESC')->paginate(20);
+        }elseif($request->query('disp_limit')==='4'){
+            $users = $query->whereNull('leaving')->orderBy('joining', 'DESC')->paginate(50);
+        }elseif($request->query('disp_limit')==='5'){
+            $users = $query->whereNull('leaving')->orderBy('joining', 'DESC')->paginate(100);
         }
 
         return view('employees.show', compact('loginUser', 'loginUserDepartment', 'departments', 'limit_disp', 'users'));
@@ -90,7 +88,7 @@ class employeesFormController extends Controller
         User::insert([
             'id' => $request->id,
             'name' => $request->name,
-            'department_id' => $request->department,
+            'department_id' => $request->department_id,
             'email' => $request->email,
             'joining' => $request->joining,
             'password' => $request->password,

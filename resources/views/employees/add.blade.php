@@ -45,15 +45,15 @@
                         <div class="row mb-3">
                             <label for="department" class="col-md-4 col-form-label text-md-end">部署名</label>
                             <div class="col-md-6">
-                                <select name="department" id="department" class="form-select" required autocomplete="department" autofocus>
-                                    <option hidden>選択してください</option>
+                                <select name="department_id" id="department" class="form-select @error('department_id') is-invalid @enderror" required autocomplete="department" autofocus>
+                                    <option hidden value="">選択してください</option>
                                     @foreach($departments as $department)
-                                        <option value="{{$department->id}}" @if(old('department') == $department->id) selected @endif>
+                                        <option value="{{$department->id}}" @if(old('department_id') == $department->id) selected @endif>
                                             {{$department->name}}
                                         </option>
                                     @endforeach
                                 </select>
-                                @error('department')
+                                @error('department_id')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

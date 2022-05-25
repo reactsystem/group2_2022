@@ -35,6 +35,7 @@ $(document).ready(function() {
 		var data_id = data.data('id');
 		var data_name = data.data('name');
 		var data_dept = data.data('dept');
+		var data_dept_id = data.data('dept_id');
 		var data_type = data.data('type');
 		var data_reason = data.data('reason');
 		var data_date = data.data('date');
@@ -45,6 +46,7 @@ $(document).ready(function() {
 		modal.find('.modal-body input#app-id').val(data_id);
 		modal.find('.modal-body input#app-name').val(data_name);
 		modal.find('.modal-body input#app-dept').val(data_dept);
+		modal.find('.modal-body input#app-dept-id').val(data_dept_id);
 		modal.find('.modal-body input#app-type').val(data_type);
 		modal.find('.modal-body textarea#app-reason').text(data_reason);
 		modal.find('.modal-body input#app-date').val(data_date);
