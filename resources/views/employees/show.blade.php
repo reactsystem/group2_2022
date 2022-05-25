@@ -24,12 +24,12 @@
                         <option value="{{$loginUser}}" selected>{{$loginUserDepartment}}</option>
                         @foreach($departments as $department)
                             @if($loop->first)
-                                <option value="0" @if(\Request::get('department') === '0') selected @endif>全て</option>
+                                <option value="0" @if($department->id === (int)old('department')) selected @endif>全て</option>
                             @endif
                             @if($loginUser === $department->id)
                                 @continue
                             @else
-                                <option value="{{$department->id}}" @if(\Request::get('department') == $department->id) selected @endif>
+                                <option value="{{$department->id}}" @if( $department->id === (int)old('department') ) selected @endif>
                                     {{$department->name}}
                                 </option>
                             @endif
@@ -49,7 +49,7 @@
         表示件数：
         <select id="limit" name="disp_limit">
             @foreach($limit_disp as $limit)
-                <option value="{{$loop->index}}" @if(\Request::get('disp_limit') == $loop->index) selected @endif>{{$limit}}</option>
+                <option id="limit_disp" value="{{$loop->index}}" @if(\Request::get('disp_limit') == $loop->index) selected @endif>{{$limit}}</option>
             @endforeach
         </select>   
     </form>
