@@ -144,6 +144,8 @@ class ApplicationFormController extends Controller
                 if (WorkTime::where('user_id', $application->user_id)->where('date', $application->date)->exists()) {
                     $work_time = WorkTime::where('user_id', $application->user_id)->where('date', $application->date)->first();
                     $work_time->work_type_id = $application->applicationType->work_type_id;
+                    $work_time->start_time = NULL;
+                    $work_time->left_time = NULL;
                     $work_time->rest_time = $fixed_time->rest_time;
                     $work_time->save();
                 } else {
@@ -157,7 +159,14 @@ class ApplicationFormController extends Controller
             }
 
             // 有給休暇の場合、申請者の残り有給数を減らす
-			// 有給休暇消費処理はexpend_paid_leaves.phpで実行
+			// 未来の日付の有給休暇消費処理はexpend_paid_leaves.phpで実行
+            // 過去の日付(当日含む)の有休申請は以下で残り有給数を減らす
+            if ($application->application_type_id == 1 && $application->date <= date('Y-m-d')) {
+                $paid_leave = PaidLeave::where('user_id', $application->user_id)->where('left_days', '>', '0')->oldest('expire_date')->first();
+                $paid_leave->left_days --;
+                $paid_leave->updated_at = date('Y-m-d H:i:s');
+                $paid_leave->save();
+            }
 
             // 申請種別が打刻時間修正の場合、work_timeテーブルの申請対象日の開始時間、終了時間を更新
             if ($application->application_type_id == 5) {
