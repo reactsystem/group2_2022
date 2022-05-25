@@ -72,6 +72,7 @@
 						data-id="{{$application->id}}"
 						data-name="{{$application->user->name}}"
 						data-dept="{{$application->user->department->name}}"
+						data-dept_id="{{$application->user->department->id}}"
 						data-type="{{$application->applicationType->name}}"
 						data-reason="{{$application->reason}}"
 						data-date="{{date('Y/m/d', strtotime($application->date))}}" 
@@ -102,6 +103,7 @@
 
 				<div class="modal-body">
 					<input type="hidden" name="id" id="app-id">
+					<input type="hidden" name="department_id" id="app-dept-id">
 
 					<!-- 申請者の名前 -->
 					<div class="row mb-3">
