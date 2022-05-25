@@ -16,6 +16,7 @@ use Yasumi\Yasumi;
 class InputFormController extends Controller
 {
     public function show(Request $request){
+        $user = Auth::user();
 
         // 当日の日付表示と月表示を取得する
         Carbon::setLocale('ja');
@@ -38,13 +39,12 @@ class InputFormController extends Controller
 
         // 当日の打刻メモが存在すれば取得する
         $date = date("Y-m-d");
-        $description = DB::table('work_times')->select('description')->where('date', $date)->first();
+        $description = DB::table('work_times')->select('description')->where('user_id', $user->id)->where('date', $date)->first();
         
         $dt = $month->copy()->startOfMonth(); //今月の最初の日
         $dt->timezone = 'Asia/Tokyo'; //日本時刻で表示
         $daysInMonth = $dt->daysInMonth; //今月は何日まであるか
 
-        $user = Auth::user();
         $work_times = WorkTime::where('user_id', $user->id)->where('date', 'like', $current_month . '%')->get();
         $fixed_time = FixedTime::first();
 

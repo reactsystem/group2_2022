@@ -299,10 +299,10 @@
                                             <select name="work_type[]">
                                                 <option></option>
                                                 @foreach ($work_types as $work_type)
+                                                @if ($work_type->name == '有給休暇' || $work_type->name == '特別休暇')
+                                                @continue
+                                                @endif
                                                 <option value={{$work_type->id}}>{{$work_type->name}}</option>
-                                                    @if ($loop->iteration == 5)
-                                                    @break
-                                                    @endif
                                                 @endforeach
                                             </select>
                                         </td>
