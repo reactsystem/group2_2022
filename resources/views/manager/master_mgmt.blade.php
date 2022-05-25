@@ -6,16 +6,18 @@
 
 @section('content')
 	<div class="container-fluid row justify-content-center">
-		<!-- scrollspy ------------------------------------------------>
-		<div id="scrollspy" class="list-group col-lg-2">
-			<a href="#fixed" class="list-group-item list-group-item-action">就業時間</a>
-			<a href="#department" class="list-group-item list-group-item-action">部署一覧</a>
-			<a href="#work-type" class="list-group-item list-group-item-action">勤務区分一覧</a>
-			<a href="#app-type" class="list-group-item list-group-item-action">申請項目一覧</a>
+		<div class="col-lg-2">
+			<!-- scrollspy ------------------------------------------------>
+			<div id="scroll-menu" class="list-group sticky-top">
+				<a href="#fixed" class="list-group-item list-group-item-action">就業時間</a>
+				<a href="#department" class="list-group-item list-group-item-action">部署一覧</a>
+				<a href="#work-type" class="list-group-item list-group-item-action">勤務区分一覧</a>
+				<a href="#app-type" class="list-group-item list-group-item-action">申請項目一覧</a>
+			</div>
+			<!---------------------------------------------end scrollspy -->
 		</div>
-		<!---------------------------------------------end scrollspy -->
-		
-		<div data-bs-spy="scroll" data-bs-target="#scrollspy" data-bs-offset="0" class="scrollspy-example col-lg-4" tabindex="0">
+
+		<div class="col-lg-4">
 			<!-- 就業時間 ------------------------------------------------->
 			<div class="row card" id="fixed">
 				<div class="card-header">
@@ -281,16 +283,19 @@
 				<form action="{{route('master.create')}}" method="POST">
 					@csrf
 					<div class="modal-header">
-						<h5 class="modal-title" id="label-add">申請項目追加</h5>
+						<h5 class="modal-title">申請項目追加</h5>
 					</div>
 
 					<div class="modal-body">
 						<div class="row">
 							<input type="hidden" name="table" value="application">
 
-							<label for="add-name" class="col-md-4 col-form-label text-md-end">申請項目</label>
+							<label for="add-app-name" class="col-md-4 col-form-label text-md-end">申請項目</label>
 							<div class="col-md-6">
-								<input type="text" name="name" id="add-name" class="form-control" required autofocus>
+								<input type="text" name="name" id="add-app-name" class="form-control" required autofocus>
+								<div class="nameError d-none" role="alert">
+									<strong class="nameErrorMsg text-danger"></strong>
+								</div>
 							</div>
 
 							<label for="select-work-type" class="col-md-4 col-form-label text-md-end">勤務区分</label>
@@ -329,9 +334,12 @@
 							<input type="hidden" name="table" value="application">
 							<input type="hidden" name="id" id="edit-app-id">
 
-							<label for="edit-name" id="edit-label" class="col-md-4 col-form-label text-md-end">申請項目</label>
+							<label for="edit-app-name" id="edit-label" class="col-md-4 col-form-label text-md-end">申請項目</label>
 							<div class="col-md-6">
 								<input type="text" name="name" id="edit-app-name" class="form-control" required>
+								<div class="nameError d-none" role="alert">
+									<strong class="nameErrorMsg text-danger"></strong>
+								</div>
 							</div>
 
 							<label for="select-work-type" class="col-md-4 col-form-label text-md-end">勤務区分</label>
@@ -370,6 +378,9 @@
 							<div class="col-md-6">
 								<input type="hidden" name="table" id="add-table">
 								<input type="text" name="name" id="add-name" class="form-control" required autofocus>
+								<div class="nameError d-none" role="alert">
+									<strong class="nameErrorMsg text-danger"></strong>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -400,6 +411,9 @@
 								<input type="hidden" name="table" id="edit-table">
 								<input type="hidden" name="id" id="edit-id">
 								<input type="text" name="name" id="edit-name" class="form-control" required>
+								<div class="nameError d-none" role="alert">
+									<strong class="nameErrorMsg text-danger"></strong>
+								</div>
 							</div>
 						</div>
 					</div>

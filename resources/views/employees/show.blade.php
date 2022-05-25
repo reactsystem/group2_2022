@@ -21,7 +21,7 @@
                 </div>
                 <div class="flex-grow-2 mr-3">
                     <select name="department" id="department" class="form-select">
-                        <option value="{{$loginUser}}" selected>{{$loginUserDepartment}}</option>
+						<option value="0" @if(\Request::get('department') === '0') selected @endif>全て</option>
                         @foreach($departments as $department)
                             @if($loop->first)
                                 <option value="0" @if($department->id === (int)old('department')) selected @endif>全て</option>
