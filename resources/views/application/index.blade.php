@@ -22,17 +22,12 @@
                 <select name="department" id="department" class="form-select">
 					@foreach($departments as $department)
 						@if($loop->first)
-							<option value="0" @if($department->id === (int)old('department')) selected @endif>全て</option>
-							<option value="{{$loginUser}}" selected>{{$loginUserDepartment}}</option>
-                        @endif
-                        @if($loginUser === $department->id)
-                            @continue
-                        @else
-                            <option value="{{$department->id}}" @if($department->id === (int)old('department')) selected @endif>
-                                {{$department->name}}
-                            </option>
-                        @endif
-                    @endforeach
+							<option value="0" @if(\Request::get('department') === '0') selected @endif>全て</option>
+						@endif
+							<option value="{{$department->id}}" @if(\Request::get('department') == $department->id) selected @endif>
+								{{$department->name}}
+							</option>
+					@endforeach
                 </select>
             </div>
         </div>
