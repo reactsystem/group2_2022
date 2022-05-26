@@ -97,7 +97,7 @@
 								</button>
 								<div class="dropdown-menu" aria-labelledby="dpdn-limit">
 									<button type="submit" name="disp_limit" value="" class="dropdown-item">全て</button>
-									<button type="submit" name="disp_limit" value="2" class="dropdown-item">2件</button>
+									<button type="submit" name="disp_limit" value="5" class="dropdown-item">5件</button>
 									<button type="submit" name="disp_limit" value="10" class="dropdown-item">10件</button>
 									<button type="submit" name="disp_limit" value="20" class="dropdown-item">20件</button>
 									<button type="submit" name="disp_limit" value="50" class="dropdown-item">50件</button>
@@ -205,20 +205,21 @@
 									<!-- 労働時間 -->
 									<td>@isset($work_time)
 											<!-- 有給休暇、特別休暇の場合 -->
-											@if($work_time->workType->id === 6 || $work_time->workType->id === 7)
+											@if ($work_time->workType->id === 6 || $work_time->workType->id === 7)
 												{{calcWorkTime($fixed_time->start_time, $fixed_time->left_time, $fixed_time->rest_time)}}
 
 											<!-- 出勤、遅刻、早退、遅刻/早退の場合 -->
-											@elseif(isset($work_time->start_time, $work_time->left_time))
+											@elseif (isset($work_time->start_time, $work_time->left_time))
 												@php
 													// 丸め誤差
 													$start = $work_time->start_time;
 													$left = $work_time->left_time;
-													if(strtotime($fixed_time->start_time) > strtotime($start))
+													if (strtotime($fixed_time->start_time) > strtotime($start))
 													{
 														$start = $fixed_time->start_time;
 													}
-													if(strtotime('00:00:00') < strtotime($work_time->over_time))
+													if (strtotime($fixed_time->left_time) < strtotime($left) &&
+														strtotime($work_time->rest_time) < strtotime('01:00:00'))
 													{
 														$left = $fixed_time->left_time;
 													}

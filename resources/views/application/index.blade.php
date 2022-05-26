@@ -20,11 +20,18 @@
             </div>
             <div>
                 <select name="department" id="department" class="form-select">
-					<option value="0" @if(\Request::get('department') === '0') selected @endif>全て</option>
-                    @foreach($departments as $department)
-						<option value="{{$department->id}}" @if(\Request::get('department') == $department->id) selected @endif>
-							{{$department->name}}
-						</option>
+					@foreach($departments as $department)
+						@if($loop->first)
+							<option value="0" @if($department->id === (int)old('department')) selected @endif>全て</option>
+							<option value="{{$loginUser}}" selected>{{$loginUserDepartment}}</option>
+                        @endif
+                        @if($loginUser === $department->id)
+                            @continue
+                        @else
+                            <option value="{{$department->id}}" @if($department->id === (int)old('department')) selected @endif>
+                                {{$department->name}}
+                            </option>
+                        @endif
                     @endforeach
                 </select>
             </div>
@@ -34,7 +41,7 @@
             表示件数：
             <select id="limit" name="disp_limit">
                 @foreach($limit_disp as $limit)
-                    <option value="{{$loop->index}}" @if(\Request::get('disp_limit') == $loop->index) selected @endif>{{$limit}}</option>
+                    <option id="limit_disp" value="{{$loop->index}}" @if(\Request::get('disp_limit') == $loop->index) selected @endif>{{$limit}}</option>
                 @endforeach
             </select>   
     </form>
@@ -92,6 +99,9 @@
 				@csrf
 				<div class="modal-header">
 					<h5 class="modal-title">申請承認フォーム</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
 				</div>
 
 				<div class="modal-body">

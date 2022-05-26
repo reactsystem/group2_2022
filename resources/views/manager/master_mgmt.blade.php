@@ -227,6 +227,9 @@
 					@csrf
 					<div class="modal-header">
 						<h5 class="modal-title">就業時間編集</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
 					</div>
 
 					<div class="modal-body">
@@ -284,6 +287,9 @@
 					@csrf
 					<div class="modal-header">
 						<h5 class="modal-title">申請項目追加</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
 					</div>
 
 					<div class="modal-body">
@@ -327,6 +333,9 @@
 					@csrf
 					<div class="modal-header">
 						<h5 class="modal-title" id="label-edit">申請項目編集</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
 					</div>
 
 					<div class="modal-body">
@@ -370,6 +379,9 @@
 					@csrf
 					<div class="modal-header">
 						<h5 class="modal-title" id="label-add">Title</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
 					</div>
 
 					<div class="modal-body">
@@ -402,6 +414,9 @@
 					@csrf
 					<div class="modal-header">
 						<h5 class="modal-title" id="label-edit">Title</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
 					</div>
 
 					<div class="modal-body">
@@ -438,6 +453,9 @@
 							<label id="del-label" class="text-center">Message</label>
 							<input type="hidden" name="table" id="del-table">
 							<input type="hidden" name="id" id="del-id">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
 						</div>
 					</div>
 

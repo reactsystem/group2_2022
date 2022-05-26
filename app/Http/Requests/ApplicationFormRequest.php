@@ -53,6 +53,7 @@ class ApplicationFormRequest extends FormRequest
     {
         // 終業時間の14分後を取得
         $left_time = new Carbon(FixedTime::first()->left_time);
+        $left_rest_time = FixedTime::first()->rest_time;
         $left_time->addMinutes(15);
         $left_time = $left_time->toTimeString('minute');
 
