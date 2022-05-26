@@ -208,7 +208,9 @@
                                             $over_time = strtotime($work_time->over_time);
                                             $fixed_start = strtotime($fixed_time->start_time);
                                             $fixed_left = strtotime($fixed_time->left_time);
-                                            $fixed_left_over = strtotime("+15 min", strtotime($fixed_time->left_time));
+                                            
+                                            // 退勤時刻を丸める範囲の時刻を取得
+                                            $fixed_left_over = strtotime($fixed_time->getRoundTime(), strtotime($fixed_time->left_time));
 
                                             // 勤務時間から差し引く休憩時間を取得
                                             $from = strtotime('00:00:00');

@@ -166,7 +166,7 @@ class InputFormController extends Controller
             }
 
             // 時間外労働の処理
-            $fixed_left_over = strtotime("+15 min", strtotime($fixed_time->left_time));
+            $fixed_left_over = strtotime($fixed_time->getRoundTime(), strtotime($fixed_time->left_time));
             $left_time = strtotime($time);
             if ($left_time >= $fixed_left_over) {
                 $over_time = $left_time - $fixed_left_over;
