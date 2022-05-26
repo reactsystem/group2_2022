@@ -169,14 +169,13 @@ class ApplicationFormController extends Controller
                     $work_time->work_type_id = $application->applicationType->work_type_id;
                     $work_time->start_time = NULL;
                     $work_time->left_time = NULL;
-                    $work_time->rest_time = $fixed_time->rest_time;
+                    $work_time->rest_time = NULL;
                     $work_time->save();
                 } else {
                     $work_time = new WorkTime;
                     $work_time->user_id = $application->user_id;
                     $work_time->work_type_id = $application->applicationType->work_type_id;
                     $work_time->date = $application->date;
-                    $work_time->rest_time = $fixed_time->rest_time;
                     $work_time->save();
                 }
             }

@@ -30,7 +30,7 @@ $(document).ready(function() {
 
 
 $(document).ready(function() {
-	$('#modal-approval').on('show.bs.modal', function(event){
+	$('#modal-approval').on('show.bs.modal', function(event) {
 		var data = $(event.relatedTarget);
 		var data_id = data.data('id');
 		var data_name = data.data('name');
@@ -82,4 +82,10 @@ $('#btn-reject').click(function() {
 $('#btn-stop').click(function() {
 	$('#value-stop').prop('disabled', false);
 	checkComment();
+});
+
+$(document).ready(function() {
+	$('#comment').change(function() {
+		$('.commentError').addClass('d-none');
+	});
 });
