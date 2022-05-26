@@ -197,15 +197,32 @@ class ApplicationFormController extends Controller
                 } else {
                     $work_time = new WorkTime;
                     $work_time->user_id = $application->user_id;
-                    $work_time->work_type_id = 1;
                     $work_time->date = $application->date;
                 }
 
-                $work_time->start_time = $application->start_time; 
+                $work_time->start_time = $application->start_time;
+
+                // 「出勤」か「遅刻」かを判定して勤務区分を更新
+                if ($application->start_time <= $fixed_time->start_time) {
+                    $work_time->work_type_id = 1;
+                } else {
+                    $work_time->work_type_id = 3;
+                }
 
                 // 終了時間が入力されていた場合、終了時間、休憩時間、時間外勤務の処理を実行
                 if(isset($application->end_time)) {
                     $work_time->left_time = $application->end_time;
+
+                    // 「早退」か「遅刻/早退」可を判定して勤務区分を更新
+                    if ($application->end_time < $fixed_time->left_time) {
+                        // 既に「遅刻」だった場合は「遅刻/早退」
+                        if ($work_time->work_type_id == 3) {
+                            $work_time->work_type_id = 5;
+                        // そうでない場合は「早退」
+                        } else {
+                            $work_time->work_type_id = 4;
+                        }
+                    }
 
                     // 勤務時間から差し引く既定の休憩時間を取得
                     $from = strtotime('00:00:00');
@@ -241,7 +258,11 @@ class ApplicationFormController extends Controller
                         $over_time = $left_time - $fixed_left_over;
                         $over_time = gmdate("H:i", $over_time);
                         $work_time->over_time = $over_time;
+                    } else {
+                        $work_time->over_time = '00:00:00';
                     }
+                } else {
+                    $work_time->left_time = NULL;
                 }
                 $work_time->save();
             }
