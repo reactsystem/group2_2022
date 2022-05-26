@@ -73,6 +73,7 @@ $(document).ready(function()
 
             //開始時間、終了時間のバリデーション
             let limitStartTime = left_time.name
+
             $('[name=start_time]').on('blur', function(e){
                 // 始業時間と終業時間のエラーメッセージが空なら申請ボタンを押せないように
                 if($('.endTimeErrorMsg').text('') && $('.startTimeErrorMsg').text('') || $('.endTimeErrorMsg').is(':empty') && $('.startTimeErrorMsg').is(':empty')){
@@ -281,6 +282,11 @@ $(document).ready(function()
         // 開始時間、終了時間を初期化
         $('[name=start_time]').val('');
         $('[name=end_time]').val('');
+
+        if(window.sessionStorage.getItem(['appliedContent']) === '4'){
+            let limitStartTime = left_time.name;
+            $('[name=start_time]').val(limitStartTime);
+        }
 
 		// 申請項目が変更されたら有給のエラーメッセージを無しに
         $('.appTypeError').addClass('d-none');

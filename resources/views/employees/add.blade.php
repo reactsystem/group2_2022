@@ -77,7 +77,7 @@
                         <!-- 入社日 -->
                         <div class="row mb-3">
                             <label for="datePicker" class="col-md-4 col-form-label text-md-end">入社日</label>
-                            <div class="col-md-6 input-group date date-width" data-target-input="nearest">
+                            <div id="datePicker" class="col-md-6 input-group date date-width" data-target-input="nearest">
                                 <input type="text" id="datePicker" name="joining" value="{{old('joining')}}" data-name="{{old('joining')}}" class="form-control datetimepicker-input @error('joining') is-invalid @enderror" data-target="#datePicker" data-toggle="datetimepicker"/>
                                 <div class="input-group-append" data-target="#datePicker" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>

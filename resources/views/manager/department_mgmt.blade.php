@@ -97,7 +97,7 @@
 								</button>
 								<div class="dropdown-menu" aria-labelledby="dpdn-limit">
 									<button type="submit" name="disp_limit" value="" class="dropdown-item">全て</button>
-									<button type="submit" name="disp_limit" value="2" class="dropdown-item">2件</button>
+									<button type="submit" name="disp_limit" value="5" class="dropdown-item">5件</button>
 									<button type="submit" name="disp_limit" value="10" class="dropdown-item">10件</button>
 									<button type="submit" name="disp_limit" value="20" class="dropdown-item">20件</button>
 									<button type="submit" name="disp_limit" value="50" class="dropdown-item">50件</button>
