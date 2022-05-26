@@ -20,10 +20,10 @@
             </div>
             <div>
                 <select name="department" id="department" class="form-select">
-                    <option value="{{$loginUser}}" selected>{{$loginUserDepartment}}</option>
-                    @foreach($departments as $department)
-                        @if($loop->first)
-                            <option value="0" @if($department->id === (int)old('department')) selected @endif>全て</option>
+					@foreach($departments as $department)
+						@if($loop->first)
+							<option value="0" @if($department->id === (int)old('department')) selected @endif>全て</option>
+							<option value="{{$loginUser}}" selected>{{$loginUserDepartment}}</option>
                         @endif
                         @if($loginUser === $department->id)
                             @continue
