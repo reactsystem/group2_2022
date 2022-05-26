@@ -65,16 +65,6 @@ class PersonalMgmtController extends Controller
         $fixed_work_time = strtotime($fixed_rest_time, $fixed_work_time);
         $fixed_work_time = gmdate('H:i', $fixed_work_time);
 
-        // 退勤時刻を丸める範囲を取得する
-        if (strtotime('01:00:00') > strtotime($fixed_time->rest_time)) {
-            $round_time = strtotime('01:00:00') - strtotime($fixed_time->rest_time);
-            $round_time = gmdate('H:i:s', $round_time);
-            $round_time = $this->getRoundTime($round_time);
-        } else {
-            $round_time = '+0 min';
-        }
-        
-
         return view('manager.personal_mgmt', compact(
             'today',
             'month',
@@ -88,7 +78,6 @@ class PersonalMgmtController extends Controller
             'holidays',
             'work_types',
             'fixed_work_time',
-            'round_time',
         ));
     }
 
@@ -190,7 +179,7 @@ class PersonalMgmtController extends Controller
                     }
 
                     // 時間外労働の処理
-                    $fixed_left_over = strtotime("+15 min", strtotime($fixed_time->left_time));
+                    $fixed_left_over = strtotime($fixed_time->getRoundTime(), strtotime($fixed_time->left_time));
                     $left_time = strtotime($items['left_time'][$i]);
                     if ($left_time >= $fixed_left_over) {
                         $over_time = $left_time - $fixed_left_over;
@@ -241,7 +230,7 @@ class PersonalMgmtController extends Controller
                     }
 
                     // 時間外労働の処理
-                    $fixed_left_over = strtotime("+15 min", strtotime($fixed_time->left_time));
+                    $fixed_left_over = strtotime($fixed_time->getRoundTime(), strtotime($fixed_time->left_time));
                     $left_time = strtotime($items['left_time'][$i]);
                     if ($left_time >= $fixed_left_over) {
                         $over_time = $left_time - $fixed_left_over;
@@ -265,14 +254,6 @@ class PersonalMgmtController extends Controller
         $minutes = ($end - $from) / 60;
         $calculate_rest = "-" . $minutes . "min";
         return $calculate_rest;
-    }
-
-    public function getRoundTime($round) {
-        $from = strtotime('00:00:00');
-        $end = strtotime($round);
-        $minutes = ($end - $from) / 60;
-        $round_time = "+" . $minutes . "min";
-        return $round_time;
     }
 
     public function getWorkedTime($left, $start, $calculate_rest) {
