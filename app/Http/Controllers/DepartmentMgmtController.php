@@ -28,7 +28,16 @@ class DepartmentMgmtController extends Controller
 		$dept = Department::where('id', $user->department_id)->first();
 		if(isset($request->department))
 		{
-			$dept = Department::where('id', $request->department)->first();
+			// 部署選択で全てを選択されている場合
+			if($request->department === '0')
+			{
+				$dept->id = 0;
+				$dept->name = '全て';
+			}
+			else
+			{
+				$dept = Department::where('id', $request->department)->first();
+			}
 		}
 
 		// 表示する件数の取得
@@ -37,11 +46,23 @@ class DepartmentMgmtController extends Controller
 		// 各種テーブルの取得
 		$departments = Department::whereNull('deleted_at')->get();
 		$fixed_time = FixedTime::first();
-		$users = User::where('department_id', $dept->id)->whereNull('leaving')->paginate($disp_limit);
-		$work_times = WorkTime::where('date', $date->copy()->toDateString())
-			->whereHas('user', function($query) use($dept)
-				{ $query->where('department_id', $dept->id); })
-			->get();
+
+		// 部署選択で全てを選択されている場合
+		if($dept->id === 0)
+		{
+			$users = User::whereNull('leaving')->paginate($disp_limit);
+			$work_times = WorkTime::where('date', $date->copy()->toDateString())->get();
+		}
+		else
+		{
+			$users = User::where('department_id', $dept->id)->whereNull('leaving')->paginate($disp_limit);
+			$work_times = WorkTime::where('date', $date->copy()->toDateString())
+				->whereHas('user', function($query) use($dept)
+					{
+						$query->where('department_id', $dept->id);
+					})
+				->get();
+		}
 
 		// 祝日の取得
 		$holidays = Yasumi::create('Japan', $date->year, 'ja_JP');
@@ -170,7 +191,15 @@ class DepartmentMgmtController extends Controller
 	private function getExportData($department_id, $date)
 	{
 		$month = new Carbon($date);
-		$users = User::where('department_id', $department_id)->get();
+		// 部署選択で全てを選択されている場合
+		if($department_id === 0)
+		{
+			$users = User::whereNull('leaving')->get();
+		}
+		else
+		{
+			$users = User::where('department_id', $department_id)->whereNull('leaving')->get();
+		}
 		$data = [];
 
 		foreach($users as $user)
