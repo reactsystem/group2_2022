@@ -41,10 +41,10 @@
                                 <button type="submit" name="description_submit" value="#" class="btn btn-secondary btn-sm mt-3">打刻メモを送信</button>
                         </form>
                 </div>
-                <div class="info_form table-sm">
-                    <table class="table table-info table-striped" style="font-size: 10px;">
+                <div class="info_form">
+                    <table class="table" style="font-size: 10px;" id="info_table">
                         <thead>
-                        <tr>
+                        <tr class="table-info">
                             <th scope="col" style="width: 50%">当月の有給取得日数</th>
                             <th scope="col">有給残り日数</th>
                         </tr>
