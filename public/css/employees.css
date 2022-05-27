@@ -12,6 +12,11 @@
     font-size: 1.5em;
 }
 
+.tablesorter-headerRow th{
+	background-color: #cff4fc!important;
+	border-color: #badce3!important;
+}
+
 /* .pagination{
     justify-content: flex-end;
 } */

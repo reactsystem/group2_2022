@@ -30,8 +30,8 @@
 		@yield('css')
 	</head>
 
-	<body>
-		<nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+	<body style="padding-top: 56px">
+		<nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm fixed-top">
 			<div class="container-fluid">
 				<a href="{{ route('input') }}" class="navbar-brand">ロゴ</a>
 

@@ -7,3 +7,8 @@ body
 {
 	position: relative;
 }
+
+.sticky-top
+{
+	top: 56px!important;
+}

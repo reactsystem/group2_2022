@@ -120,12 +120,15 @@ $(document).ready(function ()
 	$('#modal-del').on('show.bs.modal', function(event)
 	{
 		var data = $(event.relatedTarget);
+		var data_title = data.data('title');
 		var data_label = data.data('label');
 		var data_table = data.data('table');
 		var data_id = data.data('id');
 		var data_name = data.data('name');
 
 		var modal = $(this);
+		// Title
+		modal.find('.modal-title').text(data_title + '削除');
 		// Message
 		modal.find('.modal-body label#del-label').text(data_label + '『' + data_name + '』を削除しますか？');
 		modal.find('.modal-body input#del-table').val(data_table);

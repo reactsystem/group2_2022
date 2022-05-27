@@ -14,3 +14,10 @@
 .datepicker-days td:last-child {
     color: #00f;
 }
+
+.btn-outline-default
+{
+	background: none;
+	border: 1px solid rgba(0, 0, 0, 0.125);
+	color: black;
+}
