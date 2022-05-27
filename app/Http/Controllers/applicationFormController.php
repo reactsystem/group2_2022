@@ -105,6 +105,38 @@ class ApplicationFormController extends Controller
         $types = ApplicationType::whereNull('deleted_at')->get();
         $time = FixedTime::first();
 
+        // 休憩時間から時間外勤務した際の休憩時間を算出
+        $rest_time = $time->rest_time;
+        $rest_time = new Carbon($rest_time);
+
+        // 時間を分に変換
+        $rest_time_hour = $rest_time->copy()->hour;
+        if($rest_time_hour){
+            $i = 0;
+            while($i<=24){
+                if($rest_time_hour === $i){
+                    $rest_time = $rest_time->copy()->minute + $i * 60;
+                }
+                $i++;
+            }
+        }else{
+            $rest_time = $rest_time->copy()->minute;
+        }
+
+        // 1時間
+        $over_time_rest_time = 60;
+        
+        $left_time = new Carbon($time->left_time);
+
+        if($rest_time < $over_time_rest_time){
+            $left_time->addMinutes($over_time_rest_time - $rest_time);
+            $left_time = $left_time->toTimeString('minute');
+        }else{
+            $left_time = new Carbon($time->left_time);
+            $left_time = $left_time->toTimeString('minute');
+        }
+        //////////////////////////////////////////////
+
 		// 有給残り日数
 		$paid = PaidLeave::where('user_id', $user->id)
 			->where('expire_date', '>=', date('Y-m-d'))
@@ -119,11 +151,6 @@ class ApplicationFormController extends Controller
 			$left_days += $days->left_days;
 		}
 		$left_days -= $app_paid;
-
-        // 開始時間
-        $left_time = new Carbon($time->left_time);
-        $left_time->addMinutes(15);
-        $left_time = $left_time->toTimeString('minute');
 
         // getパラメータ(申請日)
         $param = $request->query('date');
