@@ -106,36 +106,21 @@ class ApplicationFormController extends Controller
         $time = FixedTime::first();
 
         // 休憩時間から時間外勤務した際の休憩時間を算出
+
         $rest_time = $time->rest_time;
         $rest_time = new Carbon($rest_time);
 
-        // 時間を分に変換
-        $rest_time_hour = $rest_time->copy()->hour;
-        if($rest_time_hour){
-            $i = 0;
-            while($i<=24){
-                if($rest_time_hour === $i){
-                    $rest_time = $rest_time->copy()->minute + $i * 60;
-                }
-                $i++;
-            }
-        }else{
-            $rest_time = $rest_time->copy()->minute;
-        }
-
         // 1時間
-        $over_time_rest_time = 60;
+        $over_rest_time = new Carbon("01:00:00");
+        $lefted_time = new Carbon($time->left_time);
+        $left_time = $lefted_time->copy()->toTimeString('minute');
         
-        $left_time = new Carbon($time->left_time);
-
-        if($rest_time < $over_time_rest_time){
-            $left_time->addMinutes($over_time_rest_time - $rest_time);
-            $left_time = $left_time->toTimeString('minute');
-        }else{
-            $left_time = new Carbon($time->left_time);
-            $left_time = $left_time->toTimeString('minute');
+        if($rest_time < $over_rest_time){
+            $diff_rest_minute = $over_rest_time->diffInMinutes($rest_time);
+            $lefted_time->addMinutes($diff_rest_minute);
+            $left_time = $lefted_time->toTimeString('minute');
         }
-        //////////////////////////////////////////////
+        //////////////////////////////////////////////////////
 
 		// 有給残り日数
 		$paid = PaidLeave::where('user_id', $user->id)
