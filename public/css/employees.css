@@ -37,3 +37,7 @@
 .datepicker-days td:last-child {
     color: #00f;
 }
+
+input[type="search"]::-webkit-search-cancel-button{
+    cursor: pointer;
+}

@@ -1,13 +1,28 @@
 const searchForm = document.getElementById('search')
 const department = document.getElementById('department');
 const limit = document.getElementById('limit');
-department.addEventListener('change', (e)=>{
-    searchForm.submit();
-})
-limit.addEventListener('change', (e)=>{
+const keyword = document.getElementById('search-input');
+
+//検索ボタンの✕ボタンをクリックすると、検索クリア
+keyword.addEventListener('search', ()=>{
+
+	let url = new URL(window.location.href);
+
+	url.searchParams.delete('keyword');
+	location.href = url;
+});
+
+//部署名変更時にget送信
+department.addEventListener('change', ()=>{
     searchForm.submit();
 })
 
+//表示件数変更時にget送信
+limit.addEventListener('change', ()=>{
+    searchForm.submit();
+})
+
+//テーブルの並び替え設定
 $(document).ready(function() {
     $('#employees').tablesorter({
         headers:{
