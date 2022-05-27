@@ -57,7 +57,7 @@
                     </form>
                 </div>
 
-                <table class="table col-7 table-sm">
+                <table class="table col-7 table-sm" id="info_table">
                     <thead>
                     <tr class="table-success">
                         <th colspan="4" scope="col">
@@ -83,7 +83,7 @@
                     </tbody>
                 </table>
 
-                <table class="table col-7 table-sm">
+                <table class="table col-7 table-sm"  id="info_table">
                     <thead>
                         <tr class="table-success">
                             <th colspan="5" scope="col">
@@ -121,7 +121,7 @@
                     </tbody>
                 </table>
 
-                <table class="table col-7 table-sm">
+                <table class="table col-7 table-sm"  id="info_table">
                     <thead>
                         <tr class="table-success">
                             <th colspan="4" scope="col">
