@@ -121,7 +121,16 @@ class ApplicationFormController extends Controller
         return view('application.show_self', compact('applications', 'limit_disp'));
     }
     /*============================================ end function ==*/
-    
+
+    /* 申請取り消し ----------------------------------------------*/
+    public function stop(Request $request) {
+        $application = Application::find($request->id);
+        $application->status = 3;
+        $application->save();
+
+        return redirect('/application/index')->with('application', '申請を取り消しました');
+    }
+    /*============================================ end function ==*/
 
 	/* 申請フォーム ----------------------------------------------*/
     public function show(Request $request){
@@ -172,7 +181,7 @@ class ApplicationFormController extends Controller
             'status' => 0
         ]);
 
-        return redirect('/')->with('sent_form', '申請書が送信されました');
+        return redirect('/application/index')->with('application', '申請書が送信されました');
     }
 	/*============================================ end function ==*/
 

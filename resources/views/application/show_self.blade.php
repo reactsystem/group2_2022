@@ -6,9 +6,9 @@
 
 @section('content')
 <div class="container">
-    @if (session()->has('message'))
+    @if (session()->has('application'))
     <div class="alert alert-primary" role="alert">
-        {{session('message')}}
+        {{session('application')}}
     </div>
     @endif
 
@@ -47,7 +47,21 @@
         @foreach($applications as $application)
             <tr>
                 <td>{{$loop->iteration}}</td>
-                <td>{{$application->date}}</td>
+                <td>
+                    <a	href=""
+						data-toggle="modal" data-target="#modal-application"
+						data-id="{{$application->id}}"
+						data-name="{{$application->user->name}}"
+						data-dept="{{$application->user->department->name}}"
+						data-dept_id="{{$application->user->department->id}}"
+						data-type="{{$application->applicationType->name}}"
+						data-reason="{{$application->reason}}"
+						data-date="{{date('Y/m/d', strtotime($application->date))}}" 
+						data-start="{{isset($application->start_time) ? date('H:i', strtotime($application->start_time)):''}}"
+						data-end="{{isset($application->end_time) ? date('H:i', strtotime($application->end_time)):''}}">
+						{{$application->date}}
+				    </a>
+                </td>
                 <td>{{$application->applicationType->name}}</td>
                 <td>{{$application->start_time}}</td>
                 <td>{{$application->end_time}}</td>
@@ -68,14 +82,14 @@
     </table>
 </div>
 <!-- Modal ---------------------------------------------------->
-<!-- 申請承認フォーム -->
-<div class="modal fade" id="modal-approval" tabindex="-1" aria-labelledby="label-fixed" aria-hidden="true">
+<!-- 申請確認フォーム -->
+<div class="modal fade" id="modal-application" tabindex="-1" aria-labelledby="label-fixed" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered">
 		<div class="modal-content">
-			<form action="{{route('application.approve')}}" method="POST" id="approval">
+			<form action="" method="POST">
 				@csrf
 				<div class="modal-header">
-					<h5 class="modal-title">申請承認フォーム</h5>
+					<h5 class="modal-title">申請確認フォーム</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -141,32 +155,10 @@
 						</div>
 					</div>
 
-					<!-- 承認/差し戻しコメント -->
-					<div class="row mb-3">
-						<label for="comment" class="col-md-4 col-form-label text-md-end">コメント</label>
-						<div class="col-md-6">
-							<textarea class="form-control" name="comment" id="comment" autocomplete="comment" autofocus>{{ old('comment') }}</textarea>
-							<p class="help-block">※60文字以内で書いてください</p>
-							<div class="commentError d-none" role="alert">
-								<strong class="commentErrorMsg text-danger"></strong>
-							</div>
-						</div>
-					</div>
-				</div>
-
 				<div class="modal-footer">
-					<!-- 承認/却下/取り下げボタン -->
+					<!-- 取り下げボタン -->
 					<div class="col-md-8 offset-md-4">
-						<input type="hidden" name="result" value="承認" id="value-approve" disabled>
-						<input type="hidden" name="result" value="却下" id="value-reject" disabled>
-						<input type="hidden" name="result" value="取り下げ" id="value-stop" disabled>
-						<button type="button" class="btn btn-primary ml-2 mr-4" id="btn-approve">
-							承認
-						</button>
-						<button type="button" class="btn btn-danger ml-4 mr-3" id="btn-reject">
-							却下
-						</button>
-						<button type="button" class="btn btn-secondary ml-4 mr-3" id="btn-stop">
+						<button type="submit" name="stop" value="3" class="btn btn-secondary" id="btn-stop">
 							取り下げ
 						</button>
 					</div>
