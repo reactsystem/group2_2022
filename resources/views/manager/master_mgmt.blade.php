@@ -25,8 +25,8 @@
 				</div>
 
 				<div class="card-body">
-					<table class="table table-striped">
-						<tr>
+					<table class="table text-center">
+						<tr class="table-info">
 							<th class="col-sm-3">開始</th>
 							<th class="col-sm-3">終了</th>
 							<th class="col-sm-3">休憩時間</th>
@@ -58,8 +58,8 @@
 				</div>
 
 				<div class="card-body">
-					<table class="table table-striped">
-						<tr>
+					<table class="table">
+						<tr class="table-info">
 							<th class="col-sm-1">ID</th>
 							<th class="col-sm-5">部署名</th>
 							<th class="col-sm-3"></th>
@@ -89,6 +89,7 @@
 								</td>
 								<td><button type="button" class="btn btn-outline-danger"
 										data-toggle="modal" data-target="#modal-del"
+										data-title="部署"
 										data-label="部署"
 										data-table="department"
 										data-id="{{$department->id}}"
@@ -110,8 +111,8 @@
 				</div>
 
 				<div class="card-body">
-					<table class="table table-striped">
-						<tr>
+					<table class="table">
+						<tr class="table-info">
 							<th class="col-sm-1">ID</th>
 							<th class="col-sm-5">区分名</th>
 							<th class="col-sm-3"></th>
@@ -144,6 +145,7 @@
 								</td>
 								<td><button type="button" class="btn btn-outline-danger"
 										data-toggle="modal" data-target="#modal-del"
+										data-title="勤務区分"
 										data-label="勤務区分"
 										data-table="work_type"
 										data-id="{{$work_type->id}}"
@@ -169,8 +171,8 @@
 				</div>
 
 				<div class="card-body">
-					<table class="table table-striped">
-						<tr>
+					<table class="table">
+						<tr class="table-info">
 							<th class="col-sm-1">ID</th>
 							<th class="col-sm-5">申請項目</th>
 							<th class="col-sm-3"></th>
@@ -198,6 +200,7 @@
 								</td>
 								<td><button type="button" class="btn btn-outline-danger"
 										data-toggle="modal" data-target="#modal-del"
+										data-title="申請項目"
 										data-label="申請項目"
 										data-table="application"
 										data-id="{{$app_type->id}}"
@@ -448,14 +451,18 @@
 			<div class="modal-content">
 				<form action="{{route('master.delete')}}" method="POST">
 					@csrf
+					<div class="modal-header">
+						<h5 class="modal-title" id="label-edit">Title</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+
 					<div class="modal-body">
 						<div class="row">
 							<label id="del-label" class="text-center">Message</label>
 							<input type="hidden" name="table" id="del-table">
 							<input type="hidden" name="id" id="del-id">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
 						</div>
 					</div>
 
