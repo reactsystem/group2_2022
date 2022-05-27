@@ -40,33 +40,18 @@
             <th scope="col">#</th>
             <th scope="col">対象日</th>
             <th scope="col">申請内容</th>
-            <th scope="col">開始時間</th>
-            <th scope="col">終了時間</th>
+            <th scope="col">申請理由</th>
             <th scope="col">ステータス</th>
+            <th scope="col"></th>
         </tr>
     </thead>
     <tbody>
         @foreach($applications as $application)
             <tr>
                 <td>{{$loop->iteration}}</td>
-                <td>
-                    <a	href=""
-						data-toggle="modal" data-target="#modal-application"
-						data-id="{{$application->id}}"
-						data-name="{{$application->user->name}}"
-						data-dept="{{$application->user->department->name}}"
-						data-dept_id="{{$application->user->department->id}}"
-						data-type="{{$application->applicationType->name}}"
-						data-reason="{{$application->reason}}"
-						data-date="{{date('Y/m/d', strtotime($application->date))}}" 
-						data-start="{{isset($application->start_time) ? date('H:i', strtotime($application->start_time)):''}}"
-						data-end="{{isset($application->end_time) ? date('H:i', strtotime($application->end_time)):''}}">
-						{{$application->date}}
-				    </a>
-                </td>
+                <td>{{$application->date}}</td>
                 <td>{{$application->applicationType->name}}</td>
-                <td>{{$application->start_time}}</td>
-                <td>{{$application->end_time}}</td>
+                <td>{{Str::limit($application->reason, 40)}}</td>
                 <td>
                     @if ($application->status == 0)
                     申請中
@@ -78,17 +63,45 @@
                     取り下げ済み
                     @endif
                 </td>
+                <td>
+                    <a	class="btn btn-primary btn-sm"
+                        href=""
+						data-toggle="modal" data-target="#modal-check"
+						data-id="{{$application->id}}"
+						data-name="{{$application->user->name}}"
+						data-dept="{{$application->user->department->name}}"
+						data-dept_id="{{$application->user->department->id}}"
+						data-type="{{$application->applicationType->name}}"
+						data-reason="{{$application->reason}}"
+						data-date="{{date('Y/m/d', strtotime($application->date))}}" 
+						data-start="{{isset($application->start_time) ? date('H:i', strtotime($application->start_time)):''}}"
+						data-end="{{isset($application->end_time) ? date('H:i', strtotime($application->end_time)):''}}">
+                    確認</a>
+                    <a	class="btn btn-primary btn-sm"
+                        href=""
+                        data-toggle="modal" data-target="#modal-edit"
+                        data-id="{{$application->id}}"
+                        data-name="{{$application->user->name}}"
+                        data-dept="{{$application->user->department->name}}"
+                        data-dept_id="{{$application->user->department->id}}"
+                        data-type="{{$application->applicationType->name}}"
+                        data-reason="{{$application->reason}}"
+                        data-date="{{date('Y/m/d', strtotime($application->date))}}" 
+                        data-start="{{isset($application->start_time) ? date('H:i', strtotime($application->start_time)):''}}"
+                        data-end="{{isset($application->end_time) ? date('H:i', strtotime($application->end_time)):''}}">
+                    編集</a>
+                </td>
             </tr>
         @endforeach
     </tbody>
     </table>
 </div>
 <!-- Modal ---------------------------------------------------->
-<!-- 申請確認フォーム -->
-<div class="modal fade" id="modal-application" tabindex="-1" aria-labelledby="label-fixed" aria-hidden="true">
+<!-- 申請確認(取り下げ)フォーム -->
+<div class="modal fade" id="modal-check" tabindex="-1" aria-labelledby="label-fixed" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered">
 		<div class="modal-content">
-			<form action="" method="POST">
+			<form action="index/stop" method="POST">
 				@csrf
 				<div class="modal-header">
 					<h5 class="modal-title">申請確認フォーム</h5>
@@ -170,6 +183,110 @@
 	</div>
 </div>
 <!-------------------------------------------------end Modal -->
+
+<!-- Modal ---------------------------------------------------->
+<!-- 申請編集フォーム -->
+<div class="modal fade" id="modal-edit" tabindex="-1" aria-labelledby="label-fixed" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered">
+		<div class="modal-content">
+			<form action="index/edit" method="POST">
+				@csrf
+				<div class="modal-header">
+					<h5 class="modal-title">申請確認フォーム</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+
+				<div class="modal-body">
+					<input type="hidden" name="id" id="app-id">
+					<input type="hidden" name="department_id" id="app-dept-id">
+
+					<!-- 申請者の名前 -->
+					<div class="row mb-3">
+						<label for="name" class="col-md-4 col-form-label text-md-end">申請者</label>
+						<div class="col-md-6">
+							<input type="text" name="name" id="app-name" class="form-control" readonly>
+						</div>
+					</div>
+
+					<!-- 申請者の部署名 -->
+					<div class="row mb-3">
+						<label for="department" class="col-md-4 col-form-label text-md-end">部署名</label>
+						<div class="col-md-6">
+							<input type="text" name="department" id="app-dept" class="form-control" readonly>
+						</div>
+					</div>
+
+					<!-- 申請種類 -->
+					<div class="row mb-3">
+						<label for="applied_content" class="col-md-4 col-form-label text-md-end">申請内容</label>
+						<div class="col-md-6">
+                            <select name="appliedContent" id="app-type" class="form-select @error('appliedContent') is-invalid @enderror" required autocomplete="app-type" autofocus>
+                                <option hidden value="">選択してください</option>
+                                @foreach($types as $type)
+                                    <option value="{{$type->id}}" @if(old('appliedContent') == $type->id) selected @endif>
+                                        {{$type->name}}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('appliedContent')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong id="appTypeError">{{ $message }}</strong>
+                                </span>
+                            @enderror
+                            <div class="appTypeError d-none" role="alert">
+                                <strong class="appTypeErrorMsg text-danger"></strong>
+                            </div>
+						</div>
+					</div>
+
+					<!-- 申請理由 -->
+					<div class="row mb-3">
+						<label for="reason" class="col-md-4 col-form-label text-md-end">申請理由</label>
+						<div class="col-md-6">
+							<textarea name="reason" id="app-reason" class="form-control"></textarea>
+						</div>
+					</div>
+
+					<!-- 申請したい日 -->
+					<div class="row mb-3">
+						<label for="date" class="col-md-4 col-form-label text-md-end">申請日</label>
+						<div class="col-md-6">
+							<input type="text" name="date" id="app-date" class="form-control" readonly>
+						</div>
+					</div>
+
+					<!-- 開始時間 -->
+					<div class="row mb-3">
+						<label for="start_time" class="col-md-4 col-form-label text-md-end">開始時間</label>
+						<div class="col-md-6">
+							<input type="text" name="start_time" id="app-start" class="form-control" readonly>
+						</div>
+					</div>
+
+					<!-- 終了時間 -->
+					<div class="row mb-3">
+						<label for="end_time" class="col-md-4 col-form-label text-md-end">終了時間</label>
+						<div class="col-md-6">
+							<input type="text" name="end_time" id="app-end" class="form-control" readonly>
+						</div>
+					</div>
+
+				<div class="modal-footer">
+					<!-- 取り下げボタン -->
+					<div class="col-md-8 offset-md-4">
+						<button type="submit" name="stop" value="3" class="btn btn-secondary" id="btn-stop">
+							取り下げ
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<!-------------------------------------------------end Modal -->
+
 
 @endsection
 

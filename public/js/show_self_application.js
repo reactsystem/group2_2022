@@ -9,13 +9,13 @@ $(document).ready(function() {
         headers:{
             0: { sorter: false },
             3: { sorter: false },
-            4: { sorter: false }
+            5: { sorter: false }
         }
     });
 });
 
-$(document).ready(function() {
-	$('#modal-application').on('show.bs.modal', function(event) {
+function modal($modal) {
+    $($modal).on('show.bs.modal', function(event) {
 		var data = $(event.relatedTarget);
 		var data_id = data.data('id');
 		var data_name = data.data('name');
@@ -38,4 +38,11 @@ $(document).ready(function() {
 		modal.find('.modal-body input#app-start').val(data_start);
 		modal.find('.modal-body input#app-end').val(data_end);
 	});
+}
+$modal_check = '#modal-check';
+$modal_edit = '#modal-edit';
+$(document).ready(function ()
+{
+    modal($modal_check);
+    modal($modal_edit);
 });

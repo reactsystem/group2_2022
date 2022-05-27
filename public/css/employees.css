@@ -42,3 +42,7 @@
 .datepicker-days td:last-child {
     color: #00f;
 }
+
+td, th {
+    vertical-align: middle !important;
+}

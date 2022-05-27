@@ -102,6 +102,7 @@ class ApplicationFormController extends Controller
     /* 申請一覧フォーム(申請者用) ------------------------------------------*/
     public function indexSelf(Request $request){
         $user = Auth::user();
+        $types = ApplicationType::whereNull('deleted_at')->get();
 
         // 表示する申請ステータス
         $status = [0];
@@ -124,7 +125,7 @@ class ApplicationFormController extends Controller
         }
         $applications = Application::where('user_id', $user->id)->whereIn('status', $status)->paginate($paginate);
 
-        return view('application.show_self', compact('applications', 'limit_disp'));
+        return view('application.show_self', compact('applications', 'limit_disp', 'types'));
     }
     /*============================================ end function ==*/
 
