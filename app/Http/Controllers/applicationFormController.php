@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Mail;
 
 class ApplicationFormController extends Controller
 {
-	/* 申請一覧フォーム ------------------------------------------*/
+	/* 申請一覧フォーム(管理用) ------------------------------------------*/
     public function index(Request $request){
         $loginUser = Auth::user()->department_id;
         $loginUserDepartment = Department::where('id', $loginUser)->first()->name;
@@ -98,6 +98,30 @@ class ApplicationFormController extends Controller
         return view('application.index', compact('loginUser', 'loginUserDepartment', 'departments', 'applications', 'limit_disp'));
     }
 	/*============================================ end function ==*/
+
+    /* 申請一覧フォーム(申請者用) ------------------------------------------*/
+    public function indexSelf(Request $request){
+        $user = Auth::user();
+    
+        // 表示件数
+        $limit_disp = ['全て', '5件', '10件', '20件'];
+
+        // 表示件数で絞る
+        if(!$request->query('disp_limit')){
+            $paginate = 100;
+        }elseif($request->query('disp_limit')==='1'){
+            $paginate = 5;
+        }elseif($request->query('disp_limit')==='2'){
+            $paginate = 10;
+        }elseif($request->query('disp_limit')==='3'){
+            $paginate = 20;
+        }
+        $applications = Application::where('user_id', $user->id)->where('status', 0)->paginate($paginate);
+
+        return view('application.show_self', compact('applications', 'limit_disp'));
+    }
+    /*============================================ end function ==*/
+    
 
 	/* 申請フォーム ----------------------------------------------*/
     public function show(Request $request){
