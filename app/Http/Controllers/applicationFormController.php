@@ -102,6 +102,12 @@ class ApplicationFormController extends Controller
     /* 申請一覧フォーム(申請者用) ------------------------------------------*/
     public function indexSelf(Request $request){
         $user = Auth::user();
+
+        // 表示する申請ステータス
+        $status = [0];
+        if (isset($request->status)) {
+            $status = [0,1,2,3];
+        }
     
         // 表示件数
         $limit_disp = ['全て', '5件', '10件', '20件'];
@@ -116,7 +122,7 @@ class ApplicationFormController extends Controller
         }elseif($request->query('disp_limit')==='3'){
             $paginate = 20;
         }
-        $applications = Application::where('user_id', $user->id)->where('status', 0)->paginate($paginate);
+        $applications = Application::where('user_id', $user->id)->whereIn('status', $status)->paginate($paginate);
 
         return view('application.show_self', compact('applications', 'limit_disp'));
     }
