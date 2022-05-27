@@ -120,30 +120,30 @@ class InputFormController extends Controller
 
         // 退勤ボタンを打刻した時の処理
         if (isset($request->left_time)) {
-            $work_time = DB::table('work_times')->where('user_id', $request->user_id)->where('date', $date)->first();
-            // 勤務時間から差し引く既定の休憩時間を取得
-            $calculate_fixed_rest = $this->getRestTime($fixed_time->rest_time);
-            
-            // 実労働時間(勤務時間 - 既定の休憩時間)を分で取得
-            // 規定時刻より早く出社した場合
-            if (isset($work_time->start_time)) {
-                if ($work_time->start_time < $fixed_time->start_time) {
-                    $worked_time = $this->getWorkedTime($time, $fixed_time->start_time, $calculate_fixed_rest);
-                // 規定時刻より後に出社した場合
-                } else {
-                    $worked_time = $this->getWorkedTime($time, $work_time->start_time, $calculate_fixed_rest);
-                }
-            }
+            $work_time = WorkTime::where('user_id', $request->user_id)->where('date', $date)->first();
             
             // ログインユーザーの当日のレコードが存在しないかチェック
-            if (DB::table('work_times')->where('user_id', $request->user_id)->where('date', $date)->doesntExist()) {
+            if (WorkTime::where('user_id', $request->user_id)->where('date', $date)->doesntExist() || empty($work_time->start_time)) {
                 return redirect('/')->with('message', '出勤の打刻が完了していません');
             } elseif ($work_time->left_time !== NULL) {
                 return redirect('/')->with('message', '既に退勤の打刻が完了しています');
+            }
+
+            // 勤務時間から差し引く既定の休憩時間を取得
+            $calculate_fixed_rest = $this->getRestTime($fixed_time->rest_time);
+
+            // 実労働時間(勤務時間 - 既定の休憩時間)を分で取得
+            // 規定時刻より早く出社した場合
+            if ($work_time->start_time < $fixed_time->start_time) {
+                $worked_time = $this->getWorkedTime($time, $fixed_time->start_time, $calculate_fixed_rest);
+            // 規定時刻より後に出社した場合
+            } else {
+                $worked_time = $this->getWorkedTime($time, $work_time->start_time, $calculate_fixed_rest);
+            }
             
             //休憩時間の処理
             // 実労働時間が定時から６時間に満たない場合は、休憩時間を00:00:00にする
-            } elseif ($worked_time < 360) {
+            if ($worked_time < 360) {
                 WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([
                     'left_time' => $time,
                     'description' => $request->description,
