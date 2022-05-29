@@ -103,6 +103,7 @@ class ApplicationFormController extends Controller
     public function indexSelf(Request $request){
         $user = Auth::user();
         $types = ApplicationType::whereNull('deleted_at')->get();
+        $fixed_time = FixedTime::first();
 
         // 表示する申請ステータス
         $status = [0];
@@ -125,7 +126,12 @@ class ApplicationFormController extends Controller
         }
         $applications = Application::where('user_id', $user->id)->whereIn('status', $status)->paginate($paginate);
 
-        return view('application.show_self', compact('applications', 'limit_disp', 'types'));
+        // 時間外勤務発生の基準となる時間
+        $left_time = new Carbon($fixed_time->left_time);
+        $left_time->addMinutes(15);
+        $left_time = $left_time->toTimeString('minute');        
+
+        return view('application.show_self', compact('applications', 'limit_disp', 'types', 'left_time'));
     }
     /*============================================ end function ==*/
 

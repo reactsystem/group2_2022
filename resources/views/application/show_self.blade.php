@@ -200,7 +200,7 @@
 <div class="modal fade" id="modal-edit" tabindex="-1" aria-labelledby="label-fixed" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered">
 		<div class="modal-content">
-			<form action="index/edit" method="POST">
+			<form action="index/edit" method="POST" id="edit">
 				@csrf
 				<div class="modal-header">
 					<h5 class="modal-title">申請編集フォーム</h5>
@@ -231,9 +231,9 @@
 
 					<!-- 申請種類 -->
 					<div class="row mb-3">
-						<label for="applied_content" class="col-md-4 col-form-label text-md-end">申請内容</label>
+						<label for="applied-content" class="col-md-4 col-form-label text-md-end required"><span class="badge badge-danger float-left">必須</span>申請内容</label>
 						<div class="col-md-6">
-                            <select name="appliedContent" id="app-type-edit" class="form-select" required>
+                            <select name="appliedContent" id="app-type-edit" class="form-select @error('appliedContent') is-invalid @enderror" required autocomplete="applied-content" autofocus>
                                 @foreach($types as $type)
                                     <option value="{{$type->id}}">{{$type->name}}</option>
                                 @endforeach
@@ -253,16 +253,22 @@
 					<div class="row mb-3">
 						<label for="reason" class="col-md-4 col-form-label text-md-end">申請理由</label>
 						<div class="col-md-6">
-							<textarea name="reason" id="app-reason-edit" class="form-control"></textarea>
+							<textarea class="form-control @error('reason') is-invalid @enderror" name="reason" id="app-reason-edit" autocomplete="reason" data-reason="{{old('reason')}}" autofocus>{{old('reason')}}</textarea>
+							<p class="help-block">※60文字以内で書いてください</p>
+							@error('reason')
+								<span class="invalid-feedback d-block" role="alert">
+									<strong>{{ $message }}</strong>
+								</span>
+							@enderror
 						</div>
 					</div>
 
 					<!-- 申請したい日 -->
 					<div class="row mb-3">
-						<label for="date" class="col-md-4 col-form-label text-md-end">申請日</label>
+						<label for="date" class="col-md-4 col-form-label text-md-end required"><span class="badge badge-danger float-left">必須</span>申請日</label>
 						<div class="col-md-6">
 							<div id="datePicker" class="input-group date date-width" data-target-input="nearest">
-								<input type="text" id="app-date-edit" name="date" value="{{old('date')}}" data-name="{{old('date')}}" class="form-control datetimepicker-input" data-target="#datePicker" data-toggle="datetimepicker"/>
+								<input type="text" id="app-date-edit" name="date" value="{{old('date')}}" data-name="{{old('date')}}" class="form-control datetimepicker-input @error('date') is-invalid @enderror" data-target="#datePicker" data-toggle="datetimepicker"/>
 								<div class="input-group-append" data-target="#datePicker" data-toggle="datetimepicker">
 									<div class="input-group-text"><i class="fa fa-calendar"></i></div>
 								</div>
@@ -277,10 +283,10 @@
 
 					<!-- 開始時間 -->
 					<div class="row mb-3">
-						<label for="start_time" class="col-md-4 col-form-label text-md-end">開始時間</label>
+						<label for="startTimePicker" class="col-md-4 col-form-label text-md-end"><span class="startTimePicker float-left"></span>開始時間</label>
 						<div class="col-md-6">
 							<div id="startTimePicker" class="input-group date date-width" data-target-input="nearest">                                
-								<input type="text" id="app-start-edit" name="start_time" value="{{old('start_time')}}" data-name="{{old('start_time')}}" class="form-control datetimepicker-input @error('start_time') is-invalid @enderror" data-target="#startTimePicker" data-toggle="datetimepicker"/>                              
+								<input type="text" id="app-start-edit" name="start_time" value="{{old('start_time')}}" data-name="{{old('start_time')}}" class="form-control datetimepicker-input @error('start_time') is-invalid @enderror" data-target="#startTimePicker" data-toggle="datetimepicker" disabled>                              
 								<div class="input-group-append date-text" data-target="#startTimePicker" data-toggle="datetimepicker">
 									<div class="input-group-text"><i class="fa fa-clock"></i></div>
 								</div>
@@ -298,10 +304,10 @@
 
 					<!-- 終了時間 -->
 					<div class="row mb-3">
-						<label for="end_time" class="col-md-4 col-form-label text-md-end">終了時間</label>
+						<label for="endTimePicker" class="col-md-4 col-form-label text-md-end"><span class="endTimePicker float-left"></span>終了時間</label>
 						<div class="col-md-6">
 							<div id="endTimePicker" class="input-group date date-width" data-target-input="nearest">
-								<input type="text"  id="app-end-edit" name="end_time" value="{{old('end_time')}}" data-name="{{old('end_time')}}" class="form-control datetimepicker-input @error('end_time') is-invalid @enderror" data-target="#endTimePicker" data-toggle="datetimepicker"/>
+								<input type="text"  id="app-end-edit" name="end_time" value="{{old('end_time')}}" data-name="{{old('end_time')}}" class="form-control datetimepicker-input @error('end_time') is-invalid @enderror" data-target="#endTimePicker" data-toggle="datetimepicker" disabled>
 								<div class="input-group-append date-text" data-target="#endTimePicker" data-toggle="datetimepicker">
 									<div class="input-group-text"><i class="fa fa-clock"></i></div>
 								</div>
@@ -370,7 +376,7 @@
 					<div class="row mb-3">
 						<label for="applied_content" class="col-md-4 col-form-label text-md-end">申請内容</label>
 						<div class="col-md-6">
-                            <select name="appliedContent" id="app-type-reuse" class="form-select" required>
+                            <select name="appliedContent" id="app-type-edit" class="form-select @error('appliedContent') is-invalid @enderror" required autocomplete="applied-content" autofocus>
                                 @foreach($types as $type)
                                     <option value="{{$type->id}}">{{$type->name}}</option>
                                 @endforeach
@@ -390,7 +396,13 @@
 					<div class="row mb-3">
 						<label for="reason" class="col-md-4 col-form-label text-md-end">申請理由</label>
 						<div class="col-md-6">
-							<textarea name="reason" id="app-reason-reuse" class="form-control"></textarea>
+							<textarea class="form-control @error('reason') is-invalid @enderror" name="reason" id="app-reason-edit" autocomplete="reason" data-reason="{{old('reason')}}" autofocus>{{old('reason')}}</textarea>
+							<p class="help-block">※60文字以内で書いてください</p>
+							@error('reason')
+								<span class="invalid-feedback d-block" role="alert">
+									<strong>{{ $message }}</strong>
+								</span>
+							@enderror
 						</div>
 					</div>
 
@@ -399,7 +411,7 @@
 						<label for="date" class="col-md-4 col-form-label text-md-end">申請日</label>
 						<div class="col-md-6">
 							<div id="datePicker" class="input-group date date-width" data-target-input="nearest">
-								<input type="text" id="app-date-reuse" name="date" value="{{old('date')}}" data-name="{{old('date')}}" class="form-control datetimepicker-input" data-target="#datePicker" data-toggle="datetimepicker"/>
+								<input type="text" id="app-date-edit" name="date" value="{{old('date')}}" data-name="{{old('date')}}" class="form-control datetimepicker-input @error('date') is-invalid @enderror" data-target="#datePicker" data-toggle="datetimepicker"/>
 								<div class="input-group-append" data-target="#datePicker" data-toggle="datetimepicker">
 									<div class="input-group-text"><i class="fa fa-calendar"></i></div>
 								</div>
@@ -468,7 +480,7 @@
 	</div>
 </div>
 <!-------------------------------------------------end Modal -->
-
+<span id="left_time" class="d-none" data-name="{{$left_time}}"></span>
 
 @endsection
 
