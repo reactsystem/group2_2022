@@ -11,20 +11,6 @@ $('#datePicker').datetimepicker({
 	format: 'YYYY/MM/DD',
 });
 
-// 開始時間
-$('#startTimePicker').datetimepicker({
-	locale: 'ja',
-	format: 'HH:mm',
-	maxDate: moment({h:24}),
-});
-
-// 終了時間
-$('#endTimePicker').datetimepicker({
-	locale: 'ja',
-	format: 'HH:mm',
-	maxDate: moment({h:24}),
-});
-
 $(document).ready(function() {
     $('#application').tablesorter({
         headers:{
@@ -141,9 +127,38 @@ $(document).ready(function() {
 		$('.endTimePicker').text('');
 	}
 
+	    //開始時間、終了時間(初期設定)
+		function iniTime(){
+			$('#startTimePicker').datetimepicker({
+				locale: 'ja',
+				format: 'HH:mm',
+				maxDate: moment({h:24}),
+			});  
+			$('#endTimePicker').datetimepicker({
+				locale: 'ja',
+				format: 'HH:mm',
+				maxDate: moment({h:24}),
+			});
+		}
+	
+		// HTMLで直接設定したエラーメッセージを削除
+		function DelErrMsg(){
+			$('.startTimeErrorMsg').text('');
+			$('.startTimeError').addClass('d-none');
+			$('.endTimeErrorMsg').text('');
+			$('.endTimeError').addClass('d-none');
+		}	
+
 	const appTypeSelect = document.getElementById('app-type-edit');
 
 	appTypeSelect.addEventListener('change', (e)=>{
+
+		//初期設定(DateTimePickerをTime型に)
+        iniTime();
+
+        // HTMLで直接設定したエラーメッセージを削除
+        DelErrMsg();
+
 		if (appTypeSelect.value == 4) {
 			overTimeRequire();
 
@@ -159,14 +174,14 @@ $(document).ready(function() {
             $('[name=start_time]').on('blur', function(e){
                 // 始業時間と終業時間のエラーメッセージが空なら申請ボタンを押せないように
                 if($('.endTimeErrorMsg').text('') && $('.startTimeErrorMsg').text('') || $('.endTimeErrorMsg').is(':empty') && $('.startTimeErrorMsg').is(':empty')){
-                    $('#application-button').prop("disabled", false); 
+                    $('#btn-update').prop("disabled", false); 
                 }
                 
                 //開始時間が終業時間より早かったらエラーメッセージ
                 if(e.target.value.replace(':', '') < left_time.name.replace(':', '')){
                     $('.startTimeError').removeClass('d-none');
                     $('.startTimeErrorMsg').text(`${limitStartTime}分以降を選択してください。`);
-                    $('#application-button').prop("disabled", true); 
+                    $('#btn-update').prop("disabled", true); 
                 }else{
                     $('.startTimeErrorMsg').text('');
                     $('.startTimeError').addClass('d-none');
@@ -179,13 +194,13 @@ $(document).ready(function() {
                     if(endInputTime <= left_time.name.replace(':', '')){
                         $('.endTimeError').removeClass('d-none');
                         $('.endTimeErrorMsg').text(`${limitStartTime}分以降を選択してください。`);
-                        $('#application-button').prop("disabled", true);
+                        $('#btn-update').prop("disabled", true);
                     
                     //終了時間が開始時間より早かったらエラーメッセージ
                     }else if(endInputTime <= e.target.value.replace(':', '')){
                         $('.endTimeError').removeClass('d-none');
                         $('.endTimeErrorMsg').text(`開始時間よりも遅い時間を選択してください。`); 
-                        $('#application-button').prop("disabled", true); 
+                        $('#btn-update').prop("disabled", true); 
                     }else{
                         $('.endTimeErrorMsg').text('');
                         $('.endTimeError').addClass('d-none');
@@ -194,7 +209,7 @@ $(document).ready(function() {
                     if(e.target.value.replace(':', '') < left_time.name.replace(':', '')){
                         $('.startTimeError').removeClass('d-none');
                         $('.startTimeErrorMsg').text(`${limitStartTime}分以降を選択してください。`);
-                        $('#application-button').prop("disabled", true);
+                        $('#btn-update').prop("disabled", true);
                     }
                 })
             })
