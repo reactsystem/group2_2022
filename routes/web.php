@@ -43,6 +43,8 @@ Route::post('/personal_management', [PersonalMgmtController::class, 'update'])->
 
 //申請フォーム
 Route::group(['prefix' => 'application', 'as' => 'application.', 'middleware' => 'auth'], function(){
+    Route::get('/index', [ApplicationFormController::class, 'indexSelf'])->name('indexSelf');
+    Route::post('/index/stop', [ApplicationFormController::class, 'stop'])->name('stop');
     Route::get('/form', [ApplicationFormController::class, 'show'])->name('show');
     Route::post('/form/{user}', [ApplicationFormController::class, 'create'])->name('create');
 });
