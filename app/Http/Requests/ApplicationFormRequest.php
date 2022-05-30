@@ -51,12 +51,6 @@ class ApplicationFormRequest extends FormRequest
 
     public function messages()
     {
-        // 終業時間の14分後を取得
-        $left_time = new Carbon(FixedTime::first()->left_time);
-        $left_rest_time = FixedTime::first()->rest_time;
-        $left_time->addMinutes(15);
-        $left_time = $left_time->toTimeString('minute');
-
         return[
             'date.date_format' => '申請日は ○○○○/○○/○○ という形で指定してください。',
             'start_time.date_format' => '開始時間は ○○:○○ という形で指定してください',

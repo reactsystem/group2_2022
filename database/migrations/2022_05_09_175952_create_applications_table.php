@@ -23,6 +23,7 @@ return new class extends Migration
             $table->time('end_time')->nullable();
             $table->integer('status');
             $table->text('reason')->nullable();
+            $table->text('comment')->nullable();
             $table->timestamps();
         });
     }
