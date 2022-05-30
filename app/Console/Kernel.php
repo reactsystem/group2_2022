@@ -6,6 +6,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Models\User;
 use Carbon\Carbon;
+use App\Models\FixedTime;
 
 class Kernel extends ConsoleKernel
 {
@@ -17,12 +18,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // テスト用
-        // $schedule->command('command:addPaidLeave')->everyMinute();
-        // テスト用
-        // $schedule->command('command:addPaidLeave')->everyMinute();
+        // 発表用
+        $schedule->command('command:addPaidLeave')->everyMinute();
+        $schedule->command('command:getPaidLeave')->everyMinute();
+        
+        // 本番用
         $now = Carbon::now();
-
         $users = User::all();
         foreach($users as $user){
             $joining = $user->joining;
@@ -30,13 +31,17 @@ class Kernel extends ConsoleKernel
             $joining_day = $joining_date->day;
             $diff_months = $joining_date->diffInMonths($now);
             
+            
             // 月の入社日の日で更新(新入社員6ヶ月後、以降1年ごと)
             if($diff_months % 12 === 6){
-                $schedule->command('addPaidLeave')->monthlyOn($joining_day, '00:00');
+                // $schedule->command('command:addPaidLeave')->monthlyOn($joining_day, '00:00');
+                
+                // $schedule->command('command:addPaidLeave')->dailyAt('13:00');
+                // $schedule->command('command:addPaidLeave')->daily();
             }
             
             // 1日に一回有給休暇取得実行
-            $schedule->command('getPaidLeave')->daily();            
+            // $schedule->command('command:getPaidLeave')->dailyAt(FixedTime::first()->start_time);           
         }
     }
 

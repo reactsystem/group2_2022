@@ -27,7 +27,7 @@ class UsersTableSeeder extends Seeder
 				'manager' => true,
 				'email' => 'eigyoukannri@test.com',
 				'password' => Hash::make('hogehoge'),
-				'joining' => '2020-04-01',
+				'joining' => '2021-11-30',
 			],
 			[
 				'id' => '202004010002',
@@ -157,6 +157,16 @@ class UsersTableSeeder extends Seeder
 				'password' => Hash::make('hogehoge'),
 				'joining' => '2021-04-01',
 			],
+            //バッチ処理用
+			// [
+			// 	'id' => '202111300011',
+			// 	'department_id' => 5,
+			// 	'name' => '人事一郎',
+			// 	'manager' => false,
+			// 	'email' => 'jinnjiichirou@test.com',
+			// 	'password' => Hash::make('hogehoge'),
+			// 	'joining' => '2021-11-30',
+			// ],
 
 			// 2022年入社
 			[
