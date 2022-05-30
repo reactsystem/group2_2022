@@ -18,8 +18,23 @@ class PaidLeavesTableSeeder extends Seeder
     {
         $params =
         [
-            
+			[
+				'user_id' => '202004010001',
+				'left_days' => 0,
+				'expire_date' => '2022-10-01',
+				'created_at' => '2020-10-01',
+				'updated_at' => '2022-05-10',
+			],
+			[
+				'user_id' => '202004010001',
+				'left_days' => 3,
+				'expire_date' => '2023-10-01',
+				'created_at' => '2021-10-01',
+			],
         ];
-        DB::table('paid_leaves')->insert($params);   
+		
+        foreach ($params as $param) {
+            DB::table('paid_leaves')->insert($param);
+        }
     }
 }
