@@ -77,7 +77,7 @@
 				</a>
 				</td>
                 <td>{{$application->user->department->name}}</td>
-                <td>{{$application->date}}</td>
+                <td>{{str_replace('-', '/', $application->date)}}</td>
                 <td>{{$application->applicationType->name}}</td>
             </tr>
         @endforeach

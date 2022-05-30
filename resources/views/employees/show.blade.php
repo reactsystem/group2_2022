@@ -78,7 +78,7 @@
             <td>{{$user->id}}</td>
             <td>{{$user->department->name}}</td>
             <td>{{$user->email}}</td>
-            <td>{{$user->joining}}</td>
+            <td>{{str_replace('-', '/', $user->joining)}}</td>
             <td>
                 @if($user->manager === 1)
                     <i class="fa-solid fa-check text-success"><p class="d-none">{{$user->manager}}</p></i>
