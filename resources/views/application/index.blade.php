@@ -50,7 +50,7 @@
     
     <table id="application" class="table table-bordered text-center align-middle">
     <thead>
-        <tr>
+        <tr class="table-info">
             <th scope="col">#</th>
             <th scope="col">申請者</th>
             <th scope="col">部署名</th>
