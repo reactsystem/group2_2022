@@ -276,6 +276,8 @@ class DepartmentMgmtController extends Controller
 
 			// 早退の場合
 			if($work_time->work_type_id === 4) { break; }
+			// 出勤の場合
+			// break;
 
 //		case 1: // 出勤
 		case 3:	// 遅刻
