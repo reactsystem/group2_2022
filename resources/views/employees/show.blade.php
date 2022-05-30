@@ -33,8 +33,8 @@
                 </div>
                 <div class="d-flex search-column flex-grow-2">
                     <!-- 名前＆ID検索 -->
-                    <input id="search-input" type="search" id="form1" class="form-control" name="keyword" placeholder="社員番号または名前検索" value="{{ old('keyword') }}" />
-                    <button id="search-button" type="submit" class="btn btn-secondary">
+                    <input id="search-input" type="search" class="form-control" name="keyword" placeholder="社員番号または名前検索" @if(isset( $input_keyword )) value="{{ $input_keyword }}" @endif/>
+                    <button type="submit" id="search-button" class="btn btn-secondary">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
@@ -63,11 +63,11 @@
         <tr>
             <th scope="col">#</th>
             <th scope="col">社員名</th>
-            <th scope="col">社員番号</th>
+            <th scope="col">@sortablelink('id', '社員番号')</th>
             <th scope="col">部署名</th>
             <th scope="col">メールアドレス</th>
-            <th scope="col">入社日</th>
-            <th scope="col">管理権限</th>
+            <th scope="col">@sortablelink('joining', '入社日')</th>
+            <th scope="col">@sortablelink('manager', '管理者権限')</th>
         </tr>
     </thead>
     <tbody>

@@ -40,7 +40,7 @@ class InputFormController extends Controller
 
         // 当日の打刻メモが存在すれば取得する
         $date = date("Y-m-d");
-        $description = DB::table('work_times')->select('description')->where('user_id', $user->id)->where('date', $date)->first();
+        $description = WorkTime::select('description')->where('user_id', $user->id)->where('date', $date)->first();
         
         $dt = $month->copy()->startOfMonth(); //今月の最初の日
         $dt->timezone = 'Asia/Tokyo'; //日本時刻で表示
@@ -90,7 +90,7 @@ class InputFormController extends Controller
         $date = date("Y-m-d"); //打刻した時の日付を取得
         $time = date("H:i"); //打刻した時の時間を取得
 
-        // 申請承認フォームのコメントに対するバリデーション
+        // 打刻メモに対するバリデーション
         $rules = ['description' => 'max:60',];
         $messages = ['description.max' => '60文字以下で入力してください',];
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -160,14 +160,14 @@ class InputFormController extends Controller
                 ]);
             // 実労働時間が８時間を超える場合で、かつ既定の休憩時間が１時間未満の場合、休憩時間を「01:00:00」にする
             } elseif ($worked_time < 480 && $fixed_time->rest_time < '01:00:00') {
-                WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([
+                WorkTime::where('user_id', $request->user_id)->where('date', $date)->update([
                     'left_time' => $time,
                     'description' => $request->description,
                     'rest_time' => '01:00:00',
                 ]);
             // その他の場合は、既定の休憩時間を入れる
             } else {
-                WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([
+                WorkTime::where('user_id', $request->user_id)->where('date', $date)->update([
                     'left_time' => $time,
                     'description' => $request->description,
                     'rest_time' => $fixed_time->rest_time,
@@ -180,7 +180,7 @@ class InputFormController extends Controller
             if ($left_time >= $fixed_left_over) {
                 $over_time = $left_time - $fixed_left_over;
                 $over_time = gmdate("H:i", $over_time);
-                WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([
+                WorkTime::where('user_id', $request->user_id)->where('date', $date)->update([
                     'over_time' => $over_time,
                 ]);
             }
@@ -189,11 +189,11 @@ class InputFormController extends Controller
             // 定時よりも退勤打刻時間が早い場合、遅刻の時は「遅刻/早退」、そうでない場合は「早退」に更新する 
             if ((strtotime($time) < strtotime($fixed_time->left_time))) {
                 if ($work_time->work_type_id == 3) {
-                    WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([
+                    WorkTime::where('user_id', $request->user_id)->where('date', $date)->update([
                     'work_type_id' => 5,
                     ]);
                 } else {
-                    WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([
+                    WorkTime::where('user_id', $request->user_id)->where('date', $date)->update([
                     'work_type_id' => 4,
                     ]);
                 }
@@ -203,10 +203,10 @@ class InputFormController extends Controller
         // 打刻メモ編集処理
         if (isset($request->description_submit)) {
 
-            if (DB::table('work_times')->where('date', $date)->doesntExist()) {
+            if (WorkTime::where('user_id', $request->user_id)->where('date', $date)->doesntExist()) {
                 return redirect('/')->with('message', '出勤の打刻が完了していません');
             } else {
-                WorkTime::where('user_id', $request->user_id)->where('date', date("Y-m-d"))->update([
+                WorkTime::where('user_id', $request->user_id)->where('date', $date)->update([
                 'description' => $request->description,
                 ]);
             }

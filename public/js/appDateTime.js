@@ -117,9 +117,16 @@ $(document).ready(function()
                 })
             })
             $('[name = end_time]').on('blur', val=>{
-                // 始業時間と終業時間のエラーメッセージが空なら申請ボタンを押せないように
+                // 始業時間と終業時間のエラーメッセージが空なら申請ボタンを押せるように
                 if($('.endTimeErrorMsg').text('') && $('.startTimeErrorMsg').text('') || $('.endTimeErrorMsg').is(':empty') && $('.startTimeErrorMsg').is(':empty')){
                     $('#application-button').prop("disabled", false); 
+                }
+                //終了時間が終業時間より早かったらエラーメッセージ
+                const endInputTime = val.target.value.replace(':', '');
+                if(endInputTime <= left_time.name.replace(':', '')){
+                    $('.endTimeError').removeClass('d-none');
+                    $('.endTimeErrorMsg').text(`${limitStartTime}分以降を選択してください。`);
+                    $('#application-button').prop("disabled", true);
                 }
                 //終了時間が開始時間より早かったらエラーメッセージ
                 $('[name = start_time]').on('blur', e=>{
