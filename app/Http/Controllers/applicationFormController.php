@@ -32,12 +32,12 @@ class ApplicationFormController extends Controller
                 $query->from('users')
                 ->select('id')
                 ->where('department_id', $request->department);
-            })->where('status', 0)->paginate();
+            })->where('status', 0)->sortable()->paginate();
         }else{
             $applications = Application::whereIn('user_id', function ($query){
                 $query->from('users')
                 ->select('id');
-            })->where('status', 0)->paginate();
+            })->where('status', 0)->sortable()->paginate();
         }
 
         // 表示件数
@@ -48,22 +48,22 @@ class ApplicationFormController extends Controller
             $applications = Application::whereIn('user_id', function ($query) use ($request){
                 $query->from('users')
                 ->select('id');
-            })->where('status', 0)->paginate(100);
+            })->where('status', 0)->sortable()->paginate(100);
         }elseif($request->query('disp_limit')==='1'){
             $applications = Application::whereIn('user_id', function ($query) use ($request){
                 $query->from('users')
                 ->select('id');
-            })->where('status', 0)->paginate(5);
+            })->where('status', 0)->sortable()->paginate(5);
         }elseif($request->query('disp_limit')==='2'){
             $applications = Application::whereIn('user_id', function ($query) use ($request){
                 $query->from('users')
                 ->select('id');
-            })->where('status', 0)->paginate(10);
+            })->where('status', 0)->sortable()->paginate(10);
         }elseif($request->query('disp_limit')==='3'){
             $applications = Application::whereIn('user_id', function ($query) use ($request){
                 $query->from('users')
                 ->select('id');
-            })->where('status', 0)->paginate(20);
+            })->where('status', 0)->sortable()->paginate(20);
         }
         
         //部署ごとに表示＋表示件数、statusが0のデータのみ表示
@@ -73,25 +73,25 @@ class ApplicationFormController extends Controller
                     $query->from('users')
                     ->select('id')
                     ->where('department_id', $request->department);
-                })->where('status', 0)->paginate(100);
+                })->where('status', 0)->sortable()->paginate(100);
             }elseif($request->query('disp_limit')==='1'){
                 $applications = Application::whereIn('user_id', function ($query) use ($request){
                     $query->from('users')
                     ->select('id')
                     ->where('department_id', $request->department);
-                })->where('status', 0)->paginate(5);
+                })->where('status', 0)->sortable()->paginate(5);
             }elseif($request->query('disp_limit')==='2'){
                 $applications = Application::whereIn('user_id', function ($query) use ($request){
                     $query->from('users')
                     ->select('id')
                     ->where('department_id', $request->department);
-                })->where('status', 0)->paginate(10);
+                })->where('status', 0)->sortable()->paginate(10);
             }elseif($request->query('disp_limit')==='3'){
                 $applications = Application::whereIn('user_id', function ($query) use ($request){
                     $query->from('users')
                     ->select('id')
                     ->where('department_id', $request->department);
-                })->where('status', 0)->paginate(20);
+                })->where('status', 0)->sortable()->paginate(20);
             }
         }
 
@@ -104,6 +104,23 @@ class ApplicationFormController extends Controller
         $user = Auth::user();
         $types = ApplicationType::whereNull('deleted_at')->get();
         $time = FixedTime::first();
+
+        // 休憩時間から時間外勤務した際の休憩時間を算出
+
+        $rest_time = $time->rest_time;
+        $rest_time = new Carbon($rest_time);
+
+        // 1時間
+        $over_rest_time = new Carbon("01:00:00");
+        $lefted_time = new Carbon($time->left_time);
+        $left_time = $lefted_time->copy()->toTimeString('minute');
+        
+        if($rest_time < $over_rest_time){
+            $diff_rest_minute = $over_rest_time->diffInMinutes($rest_time);
+            $lefted_time->addMinutes($diff_rest_minute);
+            $left_time = $lefted_time->toTimeString('minute');
+        }
+        //////////////////////////////////////////////////////
 
 		// 有給残り日数
 		$paid = PaidLeave::where('user_id', $user->id)
@@ -119,11 +136,6 @@ class ApplicationFormController extends Controller
 			$left_days += $days->left_days;
 		}
 		$left_days -= $app_paid;
-
-        // 開始時間
-        $left_time = new Carbon($time->left_time);
-        $left_time->addMinutes(15);
-        $left_time = $left_time->toTimeString('minute');
 
         // getパラメータ(申請日)
         $param = $request->query('date');

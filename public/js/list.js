@@ -1,32 +1,49 @@
 const searchForm = document.getElementById('search')
 const department = document.getElementById('department');
 const limit = document.getElementById('limit');
-department.addEventListener('change', (e)=>{
-    searchForm.submit();
-})
-limit.addEventListener('change', (e)=>{
+const keyword = document.getElementById('search-input');
+
+//検索ボタンの✕ボタンをクリックすると、検索クリア
+if(keyword){
+	keyword.addEventListener('search', ()=>{
+	
+		let url = new URL(window.location.href);
+	
+		url.searchParams.delete('keyword');
+		location.href = url;
+	});
+}
+
+//部署名変更時にget送信
+department.addEventListener('change', ()=>{
     searchForm.submit();
 })
 
-$(document).ready(function() {
-    $('#employees').tablesorter({
-        headers:{
-            0: { sorter: false },
-            3: { sorter: false },
-            4: { sorter: false }
-        }
-    });
-});
+//表示件数変更時にget送信
+limit.addEventListener('change', ()=>{
+    searchForm.submit();
+})
 
-$(document).ready(function() {
-    $('#application').tablesorter({
-        headers:{
-            0: { sorter: false },
-            2: { sorter: false },
-            4: { sorter: false }
-        }
-    });
-});
+//テーブルの並び替え設定
+// $(document).ready(function() {
+//     $('#employees').tablesorter({
+//         headers:{
+//             0: { sorter: false },
+//             3: { sorter: false },
+//             4: { sorter: false }
+//         }
+//     });
+// });
+
+// $(document).ready(function() {
+//     $('#application').tablesorter({
+//         headers:{
+//             0: { sorter: false },
+//             2: { sorter: false },
+//             4: { sorter: false }
+//         }
+//     });
+// });
 
 
 $(document).ready(function() {

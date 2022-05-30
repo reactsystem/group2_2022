@@ -12,10 +12,11 @@ use App\Models\Application;
 use App\Models\PaidLeave;
 use App\Models\WorkTime;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Kyslik\ColumnSortable\Sortable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Sortable;
 
     /**
      * The attributes that are mass assignable.
@@ -27,6 +28,8 @@ class User extends Authenticatable
         'email',
         'password',
     ];
+
+    public $sortable = ['id','name','manager', 'joining'];
 
     /**
      * The attributes that should be hidden for serialization.

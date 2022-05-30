@@ -54,7 +54,7 @@
             <th scope="col">#</th>
             <th scope="col">申請者</th>
             <th scope="col">部署名</th>
-            <th scope="col">対象日</th>
+            <th scope="col">@sortablelink('date', '対象日')</th>
             <th scope="col">申請内容</th>
         </tr>
     </thead>

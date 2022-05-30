@@ -17,6 +17,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        // テスト用
+        // $schedule->command('command:addPaidLeave')->everyMinute();
+        // テスト用
+        // $schedule->command('command:addPaidLeave')->everyMinute();
         $now = Carbon::now();
 
         $users = User::all();
@@ -26,19 +30,13 @@ class Kernel extends ConsoleKernel
             $joining_day = $joining_date->day;
             $diff_months = $joining_date->diffInMonths($now);
             
-            //月の入社日の日で更新(新入社員6ヶ月後、以降1年ごと)
-            // if($diff_months % 12 === 6){
-            //     $schedule->command('addPaidLeave')->monthlyOn($joining_day, '00:00');
-            // }
+            // 月の入社日の日で更新(新入社員6ヶ月後、以降1年ごと)
+            if($diff_months % 12 === 6){
+                $schedule->command('addPaidLeave')->monthlyOn($joining_day, '00:00');
+            }
             
-            // テスト用
-            $schedule->command('addPaidLeave')->everyMinute();
-
-            //1日に一回有給休暇取得実行
-            // $schedule->command('getPaidLeave')->daily();
-
-            // テスト用
-            $schedule->command('getPaidLeave')->everyMinute();
+            // 1日に一回有給休暇取得実行
+            $schedule->command('getPaidLeave')->daily();            
         }
     }
 
