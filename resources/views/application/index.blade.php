@@ -177,15 +177,11 @@
 					<div class="col-md-8 offset-md-4">
 						<input type="hidden" name="result" value="承認" id="value-approve" disabled>
 						<input type="hidden" name="result" value="却下" id="value-reject" disabled>
-						<input type="hidden" name="result" value="取り下げ" id="value-stop" disabled>
 						<button type="button" class="btn btn-primary ml-2 mr-4" id="btn-approve">
 							承認
 						</button>
 						<button type="button" class="btn btn-danger ml-4 mr-3" id="btn-reject">
 							却下
-						</button>
-						<button type="button" class="btn btn-secondary ml-4 mr-3" id="btn-stop">
-							取り下げ
 						</button>
 					</div>
 				</div>

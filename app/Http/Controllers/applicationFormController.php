@@ -103,7 +103,6 @@ class ApplicationFormController extends Controller
     public function indexSelf(Request $request){
         $user = Auth::user();
         $types = ApplicationType::whereNull('deleted_at')->get();
-        $fixed_time = FixedTime::first();
 
         // 表示する申請ステータス
         $status = [0];
@@ -126,20 +125,22 @@ class ApplicationFormController extends Controller
         }
         $applications = Application::where('user_id', $user->id)->whereIn('status', $status)->paginate($paginate);
 
-        // 時間外勤務発生の基準となる時間
-        $left_time = new Carbon($fixed_time->left_time);
-        $left_time->addMinutes(15);
-        $left_time = $left_time->toTimeString('minute');        
-
-        return view('application.show_self', compact('applications', 'limit_disp', 'types', 'left_time'));
+        return view('application.show_self', compact('applications', 'limit_disp', 'types',));
     }
     /*============================================ end function ==*/
 
-    /* 申請取り消し ----------------------------------------------*/
+    /* 申請取り下げ ----------------------------------------------*/
     public function stop(Request $request) {
         $application = Application::find($request->id);
-        $application->status = 3;
-        $application->save();
+
+        // 申請ステータスが処理済みの場合、エラーメッセージを表示する
+        if ($application->status !== 0) {
+            return redirect('/application/index')->with('application', '既に申請の処理が実行されているため取り下げられません');
+        // 申請ステータスが申請中の場合、ステータスを取り下げに更新する
+        } else {
+            $application->status = 3;
+            $application->save();
+        }
 
         return redirect('/application/index')->with('application', '申請を取り消しました');
     }
@@ -207,6 +208,7 @@ class ApplicationFormController extends Controller
         $application = Application::find($request->id);
         if ($request->result === '承認') {
             $application->status = 1;
+            $application->comment = $request->comment;
 
             // 申請種別が有給休暇、特別休暇の場合、work_timeテーブルの申請対象日の勤務区分を更新
             if ($application->application_type_id == 1 or $application->application_type_id == 2) {
@@ -315,8 +317,7 @@ class ApplicationFormController extends Controller
 
         } elseif ($request->result === '却下') {
             $application->status = 2;
-        } elseif ($request->result === '取り下げ') {
-            $application->status = 3;
+            $application->comment = $request->comment;
 		}
         $application->save();
 
