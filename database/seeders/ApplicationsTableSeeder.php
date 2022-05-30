@@ -19,15 +19,6 @@ class ApplicationsTableSeeder extends Seeder
         $params =
         [
 			/* 承認済み ------------------*/
-			[	// 有給休暇
-				'user_id' => '202004010001',
-				'application_type_id' => 1,
-				'date' => '2022-05-10',
-				'status' => 1,
-				'reason' => '私用のため',
-				'created_at' => '2022-04-15 10:00:00',
-				'updated_at' => '2022-04-18 10:00:00',
-			],
 			// バッチ処理(リハ用)
 			[	// 有給休暇
 				'user_id' => '202004010000',
@@ -43,6 +34,15 @@ class ApplicationsTableSeeder extends Seeder
 				'user_id' => '202004010000',
 				'application_type_id' => 1,
 				'date' => '2022-05-31',
+				'status' => 1,
+				'reason' => '私用のため',
+				'created_at' => '2022-04-15 10:00:00',
+				'updated_at' => '2022-04-18 10:00:00',
+			],
+			[	// 有給休暇
+				'user_id' => '202004010001',
+				'application_type_id' => 1,
+				'date' => '2022-05-10',
 				'status' => 1,
 				'reason' => '私用のため',
 				'created_at' => '2022-04-15 10:00:00',
