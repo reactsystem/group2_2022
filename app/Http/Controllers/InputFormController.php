@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Application;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -61,6 +62,13 @@ class InputFormController extends Controller
         $fixed_work_time = strtotime($fixed_rest_time, $fixed_work_time);
         $fixed_work_time = gmdate('H:i', $fixed_work_time);
 
+        // 有給の取得予定数を表示する
+        $approved_paid_leaves = Application::where('user_id', $user->id)
+            ->where('status', 1)
+            ->where('application_type_id', 1)
+            ->where('date', '>', $today->isoFormat('YYYY-MM-DD'))
+            ->count();
+
         return view('input.input', compact(
             'today',
             'month',
@@ -72,7 +80,8 @@ class InputFormController extends Controller
             'user',
             'description',
             'holidays',
-            'fixed_work_time'
+            'fixed_work_time',
+            'approved_paid_leaves',
         ));
     }
 
