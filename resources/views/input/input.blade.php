@@ -45,15 +45,18 @@
                     <table class="table" style="font-size: 10px;" id="info_table">
                         <thead>
                         <tr class="table-info">
-                            <th scope="col" style="width: 50%">当月の有給取得日数</th>
-                            <th scope="col">有給残り日数</th>
+                            <th scope="col" style="width: 33%">当月有休取得日数</th>
+                            <th scope="col" style="width: 33%">有休取得予定日数</th>
+                            <th scope="col">有休残り日数</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
                             <td>
-                                済：{{$work_times->where('date', '<=', $today->isoFormat('YYYY-MM-DD'))->where('work_type_id', 6)->count()}}日
-                                /予定：{{$work_times->where('date', '>', $today->isoFormat('YYYY-MM-DD'))->where('work_type_id', 6)->count()}}日
+                                {{$work_times->where('date', '<=', $today->isoFormat('YYYY-MM-DD'))->where('work_type_id', 6)->count()}}日
+                            </td>
+                            <td>
+                                {{$approved_paid_leaves}}日
                             </td>
                             <td>
                                 @if(!empty($paid_leave_sum))
@@ -198,10 +201,8 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @isset ($work_time->over_time)
+                                        @isset ($work_time->left_time)
                                         {{date('H:i', $over_time)}}
-                                        @else
-                                        00:00
                                         @endisset
                                     </td>
                                     <td>{{$work_time->description}}</td>
