@@ -9,7 +9,6 @@ use App\Http\Controllers\InputFormController;
 use App\Http\Controllers\MasterController;
 use App\Http\Controllers\PersonalMgmtController;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Middleware\Manager;
 
 /*
 |--------------------------------------------------------------------------
