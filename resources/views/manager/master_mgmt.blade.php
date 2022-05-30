@@ -366,8 +366,7 @@
 					</div>
 
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
-						<button type="submit" class="btn btn-primary">変更</button>
+						<button type="submit" class="btn btn-secondary">変更</button>
 					</div>
 				</form>
 			</div>
@@ -401,7 +400,6 @@
 					</div>
 
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
 						<button type="submit" class="btn btn-primary">登録</button>
 					</div>
 				</form>
@@ -437,8 +435,7 @@
 					</div>
 
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
-						<button type="submit" class="btn btn-primary">変更</button>
+						<button type="submit" class="btn btn-secondary">変更</button>
 					</div>
 				</form>
 			</div>
@@ -467,8 +464,7 @@
 					</div>
 
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
-						<button type="submit" class="btn btn-primary">削除</button>
+						<button type="submit" class="btn btn-danger">削除</button>
 					</div>
 				</form>
 			</div>
