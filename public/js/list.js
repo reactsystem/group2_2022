@@ -4,13 +4,15 @@ const limit = document.getElementById('limit');
 const keyword = document.getElementById('search-input');
 
 //検索ボタンの✕ボタンをクリックすると、検索クリア
-keyword.addEventListener('search', ()=>{
-
-	let url = new URL(window.location.href);
-
-	url.searchParams.delete('keyword');
-	location.href = url;
-});
+if(keyword){
+	keyword.addEventListener('search', ()=>{
+	
+		let url = new URL(window.location.href);
+	
+		url.searchParams.delete('keyword');
+		location.href = url;
+	});
+}
 
 //部署名変更時にget送信
 department.addEventListener('change', ()=>{
@@ -23,25 +25,25 @@ limit.addEventListener('change', ()=>{
 })
 
 //テーブルの並び替え設定
-$(document).ready(function() {
-    $('#employees').tablesorter({
-        headers:{
-            0: { sorter: false },
-            3: { sorter: false },
-            4: { sorter: false }
-        }
-    });
-});
+// $(document).ready(function() {
+//     $('#employees').tablesorter({
+//         headers:{
+//             0: { sorter: false },
+//             3: { sorter: false },
+//             4: { sorter: false }
+//         }
+//     });
+// });
 
-$(document).ready(function() {
-    $('#application').tablesorter({
-        headers:{
-            0: { sorter: false },
-            2: { sorter: false },
-            4: { sorter: false }
-        }
-    });
-});
+// $(document).ready(function() {
+//     $('#application').tablesorter({
+//         headers:{
+//             0: { sorter: false },
+//             2: { sorter: false },
+//             4: { sorter: false }
+//         }
+//     });
+// });
 
 
 $(document).ready(function() {

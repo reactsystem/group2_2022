@@ -57,17 +57,17 @@ class employeesFormController extends Controller
 
         //表示件数
         if(!$request->query('disp_limit')){
-            $users = $query->whereNull('leaving')->orderBy('joining', 'ASC')->paginate(100);
+            $users = $query->whereNull('leaving')->sortable()->orderBy('joining', 'ASC')->paginate(100);
         }elseif($request->query('disp_limit')==='1'){
-            $users = $query->whereNull('leaving')->orderBy('joining', 'ASC')->paginate(5);
+            $users = $query->whereNull('leaving')->sortable()->orderBy('joining', 'ASC')->paginate(5);
         }elseif($request->query('disp_limit')==='2'){
-            $users = $query->whereNull('leaving')->orderBy('joining', 'ASC')->paginate(10);
+            $users = $query->whereNull('leaving')->sortable()->orderBy('joining', 'ASC')->paginate(10);
         }elseif($request->query('disp_limit')==='3'){
-            $users = $query->whereNull('leaving')->orderBy('joining', 'ASC')->paginate(20);
+            $users = $query->whereNull('leaving')->sortable()->orderBy('joining', 'ASC')->paginate(20);
         }elseif($request->query('disp_limit')==='4'){
-            $users = $query->whereNull('leaving')->orderBy('joining', 'ASC')->paginate(50);
+            $users = $query->whereNull('leaving')->sortable()->orderBy('joining', 'ASC')->paginate(50);
         }elseif($request->query('disp_limit')==='5'){
-            $users = $query->whereNull('leaving')->orderBy('joining', 'ASC')->paginate(100);
+            $users = $query->whereNull('leaving')->sortable()->orderBy('joining', 'ASC')->paginate(100);
         }
 
         return view('employees.show', compact('loginUser', 'loginUserDepartment', 'departments', 'limit_disp', 'users', 'input_keyword'));

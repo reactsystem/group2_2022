@@ -32,12 +32,12 @@ class ApplicationFormController extends Controller
                 $query->from('users')
                 ->select('id')
                 ->where('department_id', $request->department);
-            })->where('status', 0)->paginate();
+            })->where('status', 0)->sortable()->paginate();
         }else{
             $applications = Application::whereIn('user_id', function ($query){
                 $query->from('users')
                 ->select('id');
-            })->where('status', 0)->paginate();
+            })->where('status', 0)->sortable()->paginate();
         }
 
         // 表示件数
@@ -48,22 +48,22 @@ class ApplicationFormController extends Controller
             $applications = Application::whereIn('user_id', function ($query) use ($request){
                 $query->from('users')
                 ->select('id');
-            })->where('status', 0)->paginate(100);
+            })->where('status', 0)->sortable()->paginate(100);
         }elseif($request->query('disp_limit')==='1'){
             $applications = Application::whereIn('user_id', function ($query) use ($request){
                 $query->from('users')
                 ->select('id');
-            })->where('status', 0)->paginate(5);
+            })->where('status', 0)->sortable()->paginate(5);
         }elseif($request->query('disp_limit')==='2'){
             $applications = Application::whereIn('user_id', function ($query) use ($request){
                 $query->from('users')
                 ->select('id');
-            })->where('status', 0)->paginate(10);
+            })->where('status', 0)->sortable()->paginate(10);
         }elseif($request->query('disp_limit')==='3'){
             $applications = Application::whereIn('user_id', function ($query) use ($request){
                 $query->from('users')
                 ->select('id');
-            })->where('status', 0)->paginate(20);
+            })->where('status', 0)->sortable()->paginate(20);
         }
         
         //部署ごとに表示＋表示件数、statusが0のデータのみ表示
@@ -73,25 +73,25 @@ class ApplicationFormController extends Controller
                     $query->from('users')
                     ->select('id')
                     ->where('department_id', $request->department);
-                })->where('status', 0)->paginate(100);
+                })->where('status', 0)->sortable()->paginate(100);
             }elseif($request->query('disp_limit')==='1'){
                 $applications = Application::whereIn('user_id', function ($query) use ($request){
                     $query->from('users')
                     ->select('id')
                     ->where('department_id', $request->department);
-                })->where('status', 0)->paginate(5);
+                })->where('status', 0)->sortable()->paginate(5);
             }elseif($request->query('disp_limit')==='2'){
                 $applications = Application::whereIn('user_id', function ($query) use ($request){
                     $query->from('users')
                     ->select('id')
                     ->where('department_id', $request->department);
-                })->where('status', 0)->paginate(10);
+                })->where('status', 0)->sortable()->paginate(10);
             }elseif($request->query('disp_limit')==='3'){
                 $applications = Application::whereIn('user_id', function ($query) use ($request){
                     $query->from('users')
                     ->select('id')
                     ->where('department_id', $request->department);
-                })->where('status', 0)->paginate(20);
+                })->where('status', 0)->sortable()->paginate(20);
             }
         }
 

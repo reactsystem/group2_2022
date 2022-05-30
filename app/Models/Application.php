@@ -6,10 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ApplicationType;
 use App\Models\User;
+use Kyslik\ColumnSortable\Sortable;
 
 class Application extends Model
 {
-    use HasFactory;
+    use HasFactory, Sortable;
+
+    public $sortable = ['date'];
 
     public function applicationType(){
         return $this->belongsTo(ApplicationType::class);

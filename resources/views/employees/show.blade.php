@@ -63,11 +63,11 @@
         <tr>
             <th scope="col">#</th>
             <th scope="col">社員名</th>
-            <th scope="col">社員番号</th>
+            <th scope="col">@sortablelink('id', '社員番号')</th>
             <th scope="col">部署名</th>
             <th scope="col">メールアドレス</th>
-            <th scope="col">入社日</th>
-            <th scope="col">管理権限</th>
+            <th scope="col">@sortablelink('joining', '入社日')</th>
+            <th scope="col">@sortablelink('manager', '管理者権限')</th>
         </tr>
     </thead>
     <tbody>
