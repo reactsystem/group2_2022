@@ -297,6 +297,12 @@ svg {
   vertical-align: middle;
 }
 
+img {
+	width: 32px;
+	height: 32px;
+	object-fit: cover;
+}
+
 table {
   caption-side: bottom;
   border-collapse: collapse;
