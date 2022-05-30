@@ -24,6 +24,12 @@ class PaidLeavesTableSeeder extends Seeder
 				'expire_date' => '2023-10-01',
 				'created_at' => '2021-10-01',
 			],
+			[
+				'user_id' => '202004010000',
+				'left_days' => 3,
+				'expire_date' => '2023-10-01',
+				'created_at' => '2021-10-01',
+			],
         ];
 		
         foreach ($params as $param) {

@@ -12,7 +12,7 @@
     font-size: 1.5em;
 }
 
-.tablesorter-headerRow th{
+.table-bordered thead th{
 	background-color: #cff4fc!important;
 	border-color: #badce3!important;
 }

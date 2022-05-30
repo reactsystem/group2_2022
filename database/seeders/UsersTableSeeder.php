@@ -21,13 +21,22 @@ class UsersTableSeeder extends Seeder
         [
 			// 2020年入社（主に管理者）
 			[
+				'id' => '202004010000',
+				'department_id' => 1,
+				'name' => 'バッチ処理テスト君',
+				'manager' => true,
+				'email' => 'batchtest@test.com',
+				'password' => Hash::make('hogehoge'),
+				'joining' => '2021-11-30',
+			],
+			[
 				'id' => '202004010001',
 				'department_id' => 1,
 				'name' => '営業管理',
 				'manager' => true,
 				'email' => 'eigyoukannri@test.com',
 				'password' => Hash::make('hogehoge'),
-				'joining' => '2021-11-30',
+				'joining' => '2020-04-01',
 			],
 			[
 				'id' => '202004010002',
