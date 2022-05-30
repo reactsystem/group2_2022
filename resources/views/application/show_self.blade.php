@@ -49,7 +49,7 @@
         @foreach($applications as $application)
             <tr>
                 <td>{{$loop->iteration}}</td>
-                <td>{{$application->date}}</td>
+                <td>{{str_replace('-', '/', $application->date)}}</td>
                 <td>{{$application->applicationType->name}}</td>
                 <td>{{Str::limit($application->reason, 40)}}</td>
                 <td>
