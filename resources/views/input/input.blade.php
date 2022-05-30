@@ -201,10 +201,8 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                @isset ($work_time->over_time)
+                                                @isset ($work_time->left_time)
                                                 {{date('H:i', $over_time)}}
-                                                @else
-                                                00:00
                                                 @endisset
                                             </td>
                                             <td>{{$work_time->description}}</td>
