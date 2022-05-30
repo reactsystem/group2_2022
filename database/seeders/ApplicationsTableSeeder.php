@@ -30,7 +30,7 @@ class ApplicationsTableSeeder extends Seeder
 			],
 			// バッチ処理(リハ用)
 			[	// 有給休暇
-				'user_id' => '202004010001',
+				'user_id' => '202004010000',
 				'application_type_id' => 1,
 				'date' => '2022-05-30',
 				'status' => 1,
@@ -40,7 +40,7 @@ class ApplicationsTableSeeder extends Seeder
 			],
 			// バッチ処理(本番用)
 			[	// 有給休暇
-				'user_id' => '202004010001',
+				'user_id' => '202004010000',
 				'application_type_id' => 1,
 				'date' => '2022-05-31',
 				'status' => 1,

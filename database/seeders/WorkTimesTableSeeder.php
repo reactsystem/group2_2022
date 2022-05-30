@@ -19,6 +19,18 @@ class WorkTimesTableSeeder extends Seeder
         $params =
         [
 			// 2022/04 01~02week
+			[	// 有給休暇(バッチ処理用)
+				'user_id' => '202004010000',
+				'work_type_id' => 6,
+				'date' => '2022-05-30',
+				'description' => '通常出勤',
+			],
+			[	// 有給休暇(バッチ処理用)
+				'user_id' => '202004010000',
+				'work_type_id' => 6,
+				'date' => '2022-05-31',
+				'description' => '通常出勤',
+			],
 			[	// 通常出勤
 				'user_id' => '202004010001',
 				'work_type_id' => 1,
@@ -89,12 +101,6 @@ class WorkTimesTableSeeder extends Seeder
 				'user_id' => '202004010001',
 				'work_type_id' => 6,
 				'date' => '2022-05-10',
-				'description' => '有給休暇',
-			],
-			[	// 有給休暇(バッチ用)
-				'user_id' => '202004010001',
-				'work_type_id' => 6,
-				'date' => '2022-05-30',
 				'description' => '有給休暇',
 			],
 			[	// 特別休暇
