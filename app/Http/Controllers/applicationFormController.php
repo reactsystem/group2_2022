@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Mail;
 
 class ApplicationFormController extends Controller
 {
-	/* 申請一覧フォーム ------------------------------------------*/
+	/* 申請一覧フォーム(管理用) ------------------------------------------*/
     public function index(Request $request){
         $loginUser = Auth::user()->department_id;
         $loginUserDepartment = Department::where('id', $loginUser)->first()->name;
@@ -99,6 +99,53 @@ class ApplicationFormController extends Controller
     }
 	/*============================================ end function ==*/
 
+    /* 申請一覧フォーム(申請者用) ------------------------------------------*/
+    public function indexSelf(Request $request){
+        $user = Auth::user();
+        $types = ApplicationType::whereNull('deleted_at')->get();
+
+        // 表示する申請ステータス
+        $status = [0];
+        if (isset($request->status)) {
+            $status = [0,1,2,3];
+        }
+    
+        // 表示件数
+        $limit_disp = ['全て', '5件', '10件', '20件'];
+
+        // 表示件数で絞る
+        if(!$request->query('disp_limit')){
+            $paginate = 100;
+        }elseif($request->query('disp_limit')==='1'){
+            $paginate = 5;
+        }elseif($request->query('disp_limit')==='2'){
+            $paginate = 10;
+        }elseif($request->query('disp_limit')==='3'){
+            $paginate = 20;
+        }
+        $applications = Application::where('user_id', $user->id)->whereIn('status', $status)->paginate($paginate);
+
+        return view('application.show_self', compact('applications', 'limit_disp', 'types',));
+    }
+    /*============================================ end function ==*/
+
+    /* 申請取り下げ ----------------------------------------------*/
+    public function stop(Request $request) {
+        $application = Application::find($request->id);
+
+        // 申請ステータスが処理済みの場合、エラーメッセージを表示する
+        if ($application->status !== 0) {
+            return redirect('/application/index')->with('application', '既に申請の処理が実行されているため取り下げられません');
+        // 申請ステータスが申請中の場合、ステータスを取り下げに更新する
+        } else {
+            $application->status = 3;
+            $application->save();
+        }
+
+        return redirect('/application/index')->with('application', '申請を取り消しました');
+    }
+    /*============================================ end function ==*/
+
 	/* 申請フォーム ----------------------------------------------*/
     public function show(Request $request){
         $user = Auth::user();
@@ -160,7 +207,7 @@ class ApplicationFormController extends Controller
             'status' => 0
         ]);
 
-        return redirect('/')->with('sent_form', '申請書が送信されました');
+        return redirect('/application/index')->with('application', '申請書が送信されました');
     }
 	/*============================================ end function ==*/
 
@@ -173,6 +220,7 @@ class ApplicationFormController extends Controller
         $application = Application::find($request->id);
         if ($request->result === '承認') {
             $application->status = 1;
+            $application->comment = $request->comment;
 
             // 申請種別が有給休暇、特別休暇の場合、work_timeテーブルの申請対象日の勤務区分を更新
             if ($application->application_type_id == 1 or $application->application_type_id == 2) {
@@ -281,8 +329,7 @@ class ApplicationFormController extends Controller
 
         } elseif ($request->result === '却下') {
             $application->status = 2;
-        } elseif ($request->result === '取り下げ') {
-            $application->status = 3;
+            $application->comment = $request->comment;
 		}
         $application->save();
 

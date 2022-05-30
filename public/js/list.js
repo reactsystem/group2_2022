@@ -96,10 +96,6 @@ $('#btn-reject').click(function() {
 	$('#value-reject').prop('disabled', false);
 	checkComment();
 });
-$('#btn-stop').click(function() {
-	$('#value-stop').prop('disabled', false);
-	checkComment();
-});
 
 $(document).ready(function() {
 	$('#comment').change(function() {

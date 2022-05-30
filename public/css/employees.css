@@ -43,6 +43,10 @@
     color: #00f;
 }
 
+td, th {
+    vertical-align: middle !important;
+}
+
 input[type="search"]::-webkit-search-cancel-button{
     cursor: pointer;
 }

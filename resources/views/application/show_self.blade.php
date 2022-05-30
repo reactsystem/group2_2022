@@ -6,32 +6,14 @@
 
 @section('content')
 <div class="container">
-    @if (session()->has('message'))
+    @if (session()->has('application'))
     <div class="alert alert-primary" role="alert">
-        {{session('message')}}
+        {{session('application')}}
     </div>
     @endif
 
     <!-- 検索フォーム -->
     <form id="search" action="" method="get">
-        <div class="d-flex flex-nowrap align-items-center">
-            <div>
-                <label for="department" class="col-form-label text-md-end">部署名：</label>
-            </div>
-            <div>
-                <select name="department" id="department" class="form-select">
-					@foreach($departments as $department)
-						@if($loop->first)
-							<option value="0" @if(\Request::get('department') === '0') selected @endif>全て</option>
-						@endif
-							<option value="{{$department->id}}" @if(\Request::get('department') == $department->id) selected @endif>
-								{{$department->name}}
-							</option>
-					@endforeach
-                </select>
-            </div>
-        </div>
-
         <div class="d-flex mt-3 mb-2">
             表示件数：
             <select id="limit" name="disp_limit">
@@ -46,24 +28,44 @@
             </span>
             <span class="ml-2 mt-2">{{ $applications->total() }}件中{{ $applications->firstItem() }}〜{{ $applications->lastItem() }} 件を表示</span>
             @endif
+            <!-- 全ての申請を表示するボタン -->
+            <a class="btn btn-outline-secondary mb-3 ml-3" href="{{ route('application.indexSelf', ['status'=>'all']) }}">全ての申請を表示</a>
+            <!-- 新規申請ボタン -->
+            <a class="btn btn-success mb-3 employees-add ml-auto" href="{{ route('application.show', array_merge(Request::query(), ['date' => ''])) }}">新規申請</a>
         </div>
     
     <table id="application" class="table table-bordered text-center align-middle">
     <thead>
         <tr>
             <th scope="col">#</th>
-            <th scope="col">申請者</th>
-            <th scope="col">部署名</th>
-            <th scope="col">@sortablelink('date', '対象日')</th>
+            <th scope="col">対象日</th>
             <th scope="col">申請内容</th>
+            <th scope="col">申請理由</th>
+            <th scope="col">ステータス</th>
+            <th scope="col"></th>
         </tr>
     </thead>
     <tbody>
         @foreach($applications as $application)
             <tr>
                 <td>{{$loop->iteration}}</td>
-                <td><a	href=""
-						data-toggle="modal" data-target="#modal-approval"
+                <td>{{$application->date}}</td>
+                <td>{{$application->applicationType->name}}</td>
+                <td>{{Str::limit($application->reason, 40)}}</td>
+                <td>
+                    @if ($application->status == 0)
+                    申請中
+                    @elseif ($application->status == 1)
+                    承認済み
+                    @elseif ($application->status == 2)
+                    却下済み
+                    @elseif ($application->status == 3)
+                    取り下げ済み
+                    @endif
+                </td>
+                <td>
+                    <button	type="button" class="btn btn-primary btn-sm" id="btn-check"
+						data-toggle="modal" data-target="#modal-check"
 						data-id="{{$application->id}}"
 						data-name="{{$application->user->name}}"
 						data-dept="{{$application->user->department->name}}"
@@ -72,28 +74,25 @@
 						data-reason="{{$application->reason}}"
 						data-date="{{date('Y/m/d', strtotime($application->date))}}" 
 						data-start="{{isset($application->start_time) ? date('H:i', strtotime($application->start_time)):''}}"
-						data-end="{{isset($application->end_time) ? date('H:i', strtotime($application->end_time)):''}}">
-						{{$application->user->name}}
-				</a>
-				</td>
-                <td>{{$application->user->department->name}}</td>
-                <td>{{$application->date}}</td>
-                <td>{{$application->applicationType->name}}</td>
+						data-end="{{isset($application->end_time) ? date('H:i', strtotime($application->end_time)):''}}"
+						data-status="{{$application->status}}"
+						data-comment="{{$application->comment}}">
+                    確認</button>
+                </td>
             </tr>
         @endforeach
     </tbody>
     </table>
 </div>
-
 <!-- Modal ---------------------------------------------------->
-<!-- 申請承認フォーム -->
-<div class="modal fade" id="modal-approval" tabindex="-1" aria-labelledby="label-fixed" aria-hidden="true">
+<!-- 申請確認(取り下げ)フォーム -->
+<div class="modal fade" id="modal-check" tabindex="-1" aria-labelledby="label-fixed" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-dialog-centered">
 		<div class="modal-content">
-			<form action="{{route('application.approve')}}" method="POST" id="approval">
+			<form action="index/stop" method="POST">
 				@csrf
 				<div class="modal-header">
-					<h5 class="modal-title">申請承認フォーム</h5>
+					<h5 class="modal-title">申請確認フォーム</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -160,28 +159,20 @@
 					</div>
 
 					<!-- 承認/差し戻しコメント -->
-					<div class="row mb-3">
-						<label for="comment" class="col-md-4 col-form-label text-md-end">コメント</label>
+					<div class="row mb-3 comment">
+						<label for="comment" class="col-md-4 col-form-label text-md-end">処理時のコメント</label>
 						<div class="col-md-6">
-							<textarea class="form-control" name="comment" id="comment" autocomplete="comment" autofocus>{{ old('comment') }}</textarea>
-							<p class="help-block">※60文字以内で書いてください</p>
-							<div class="commentError d-none" role="alert">
-								<strong class="commentErrorMsg text-danger"></strong>
-							</div>
+							<textarea class="form-control" name="comment" id="comment" readonly></textarea>
 						</div>
 					</div>
+
 				</div>
 
-				<div class="modal-footer">
-					<!-- 承認/却下/取り下げボタン -->
+				<div class="modal-footer d-none">
+					<!-- 取り下げボタン -->
 					<div class="col-md-8 offset-md-4">
-						<input type="hidden" name="result" value="承認" id="value-approve" disabled>
-						<input type="hidden" name="result" value="却下" id="value-reject" disabled>
-						<button type="button" class="btn btn-primary ml-2 mr-4" id="btn-approve">
-							承認
-						</button>
-						<button type="button" class="btn btn-danger ml-4 mr-3" id="btn-reject">
-							却下
+						<button type="submit" name="stop" value="3" class="btn btn-secondary" id="btn-stop">
+							取り下げ
 						</button>
 					</div>
 				</div>
@@ -190,8 +181,9 @@
 	</div>
 </div>
 <!-------------------------------------------------end Modal -->
+
 @endsection
 
 @section('js')
-<script src="{{asset('js/list.js')}}"></script>
+<script src="{{asset('js/show_self_application.js')}}"></script>
 @endsection
