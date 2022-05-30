@@ -60,7 +60,7 @@
 
     <table id="employees" class="table table-bordered text-center align-middle">
     <thead>
-        <tr>
+        <tr class="table-info">
             <th scope="col">#</th>
             <th scope="col">社員名</th>
             <th scope="col">@sortablelink('id', '社員番号')</th>
