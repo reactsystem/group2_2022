@@ -51,11 +51,19 @@ class DepartmentMgmtController extends Controller
 		if($dept->id === 0)
 		{
 			$users = User::whereNull('leaving')->paginate($disp_limit);
+			if($disp_limit === null)
+			{
+				$users = User::whereNull('leaving')->get();
+			}
 			$work_times = WorkTime::where('date', $date->copy()->toDateString())->get();
 		}
 		else
 		{
 			$users = User::where('department_id', $dept->id)->whereNull('leaving')->paginate($disp_limit);
+			if($disp_limit === null)
+			{
+				$users = User::where('department_id', $dept->id)->whereNull('leaving')->get();
+			}
 			$work_times = WorkTime::where('date', $date->copy()->toDateString())
 				->whereHas('user', function($query) use($dept)
 					{
