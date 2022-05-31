@@ -20,7 +20,10 @@
                 @foreach($limit_disp as $limit)
                     <option id="limit_disp" value="{{$loop->index}}" @if(\Request::get('disp_limit') == $loop->index) selected @endif>{{$limit}}</option>
                 @endforeach
-            </select>   
+            </select>
+			@if ($status_flag == 'all')
+			<input type="hidden" name="status" value="{{$status_flag}}">
+			@endif
     </form>
             @if(!empty($applications->appends(request()->input())->links()))
             <span class="links ml-5">
