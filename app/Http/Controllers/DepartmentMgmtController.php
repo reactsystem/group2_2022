@@ -50,19 +50,19 @@ class DepartmentMgmtController extends Controller
 		// 部署選択で全てを選択されている場合
 		if($dept->id === 0)
 		{
-			$users = User::whereNull('leaving')->paginate($disp_limit);
+			$users = User::whereNull('leaving')->orWhere('leaving', '>=', $date->copy()->toDateString())->paginate($disp_limit);
 			if($disp_limit === null)
 			{
-				$users = User::whereNull('leaving')->get();
+				$users = User::whereNull('leaving')->orWhere('leaving', '>=', $date->copy()->toDateString())->get();
 			}
 			$work_times = WorkTime::where('date', $date->copy()->toDateString())->get();
 		}
 		else
 		{
-			$users = User::where('department_id', $dept->id)->whereNull('leaving')->paginate($disp_limit);
+			$users = User::where('department_id', $dept->id)->whereNull('leaving')->orWhere('leaving', '>=', $date->copy()->toDateString())->paginate($disp_limit);
 			if($disp_limit === null)
 			{
-				$users = User::where('department_id', $dept->id)->whereNull('leaving')->get();
+				$users = User::where('department_id', $dept->id)->whereNull('leaving')->orWhere('leaving', '>=', $date->copy()->toDateString())->get();
 			}
 			$work_times = WorkTime::where('date', $date->copy()->toDateString())
 				->whereHas('user', function($query) use($dept)

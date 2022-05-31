@@ -20,7 +20,8 @@
                             <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
 
                             <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name') ?? $editUser->name}}" required autocomplete="name" autofocus>
+                                <input type="text" name="name" id="name" value="{{old('name') ?? $editUser->name}}"
+									class="form-control @error('name') is-invalid @enderror" required autocomplete="name" autofocus>
 
                                 @error('name')
                                     <span class="invalid-feedback" role="alert">
@@ -59,7 +60,8 @@
                             <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{old('email') ?? $editUser->email}}" required autocomplete="email">
+                                <input type="email" name="email" id="email" value="{{old('email') ?? $editUser->email}}"
+									class="form-control @error('email') is-invalid @enderror" required autocomplete="email">
 
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
@@ -73,7 +75,10 @@
                         <div class="row mb-3">         
                             <label for="datePicker" class="col-md-4 col-form-label text-md-end">退社日</label>
                             <div id="datePicker" class="col-md-6 input-group date leaving-width"  data-target-input="nearest">
-                                <input type="text" name="leaving" id="datePicker" value="{{old('leaving')}}" data-name="{{old('leaving')}}" class="form-control datetimepicker-input @error('leaving') is-invalid @enderror" data-target="#datePicker" data-toggle="datetimepicker"/>    
+                                <input type="text" name="leaving" id="datePicker" value="{{old('leaving') ?? $editUser->leaving}}"
+									class="form-control datetimepicker-input @error('leaving') is-invalid @enderror"
+									data-target="#datePicker" data-toggle="datetimepicker" data-name="{{old('leaving') ?? $editUser->leaving}}"/>
+
                                 <div class="input-group-append" data-target="#datePicker" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                 </div>
@@ -89,7 +94,10 @@
                         <div class="row mb-3">
                             <div class="col-md-6 offset-md-4">
                                 <div class="form-check">
-                                    <input class="form-check-input @error('authority') is-invalid @enderror" id="authority" type="checkbox" name="authority" value="1" data-checked="{{ old('authority', $editUser->manager) }}">
+                                    <input type="checkbox" name="authority" id="authority" value="1"
+										class="form-check-input @error('authority') is-invalid @enderror"
+										data-checked="{{ old('authority', $editUser->manager) }}">
+
                                     <label class="form-check-label" for="authority">
                                         管理者権限を持たせる
                                     </label>
