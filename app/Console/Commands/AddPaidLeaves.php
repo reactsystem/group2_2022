@@ -32,50 +32,63 @@ class AddPaidLeaves extends Command
     public function handle()
     {
         //現在
-        $now = Carbon::now();
+        $now = Carbon::yesterday();
         $nowDate = $now->format('Y-m-d');
 
         //2年後
         $twoYearsLater = $now->copy()->addYear(2);
 
-        $users = User::all();
+        $users = User::whereNull('leaving')->orWhere('leaving', '>=' , $now->toDateString())->get();
 
         foreach($users as $user){
-
             // 入社日
-            $joining = $user->joining;
-            $joining_day = new Carbon($joining);
-            // 入社日から現在までの時差
-            $diff_months = $joining_day->diffInMonths($now);
-            
-            // 初期に付与される有給休暇、付与される期間
-            $initial_span = 6;
-            $added_span = 12;
-            $diff_years = 0.5;
+            $joining = new Carbon($user->joining);
+            // 入社日から現在までの時差(勤続月数)
+            $diff_months = $joining->diffInMonths($now);
 
-            // 勤続年数が40年までと想定、月→年に変換
-            $i = 0;
-            while($initial_span<=480){
-                if($initial_span <= $diff_months && $diff_months <= $initial_span+$added_span){
-                    $diff_years += $i;
-                }
-                $i++;
-                $initial_span += $added_span;
-            }
+            // 今日が入社日と違う日付、もしくは月末以外の場合
+            if ($joining->day === $now->day ||
+                ($joining->day >= $now->lastOfMonth()->day && $now->day === $now->lastOfMonth()->day))
+            {
+                // AddPaidLeavesテーブルのレコードを取得
+                $add_paid_leaves = AddPaidLeave::all();
             
-            // 勤続年数によって今期付与される有給休暇(1年ごと)
-            if($diff_months % 12 === 6){
-                $provided_leave = AddPaidLeave::select('add_days')->where('years', '=', $diff_years)->first()->add_days;
-                for($m=0; $m<=0; $m++){
-                    PaidLeave::insert([
-                        'user_id' => $user->id,
-                        'left_days' => $provided_leave,
-                        'created_at' => $now,
-                        'expire_date' => $twoYearsLater
-                    ]);
+                // AddPaidLeavesテーブルに登録されている最高年数のレコードを取得
+                $max_apl = AddPaidLeave::max('years');
+                $max_apl = AddPaidLeave::where('years', $max_apl)->first();
+            
+                // 付与月かを探索
+                foreach ($add_paid_leaves as $apl)
+                {
+                    // 付与月の場合
+                    if ((int)($apl->years * 12) === $diff_months)
+                    {
+                        // 有給付与
+                        PaidLeave::insert([
+                            'user_id' => $user->id,
+                            'left_days' => $apl->add_days,
+                            'created_at' => $now,
+                            'expire_date' => $twoYearsLater
+                        ]);
+                        break;
+                    }
+                    // AddPaidLeavesテーブルに登録されている年数を超えた場合
+                    elseif ((int)($max_apl->years * 12) <= $diff_months)
+                    {
+                        $calc_month = ($diff_months - $max_apl->years * 12) % 12;
+                        if ($calc_month === 0)
+                        {
+                            // 有給付与
+                            PaidLeave::insert([
+                                'user_id' => $user->id,
+                                'left_days' => $max_apl->add_days,
+                                'created_at' => $now,
+                                'expire_date' => $twoYearsLater
+                            ]);
+                            break;
+                        }
+                    }
                 }
-            }else{
-                $provided_leave = 0;
             }
 
             // 社員1人分の有給休暇
