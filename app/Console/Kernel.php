@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
         
         // 本番用
         $now = Carbon::now();
-        $users = User::whereNull('leaving')->get();
+        $users = User::whereNull('leaving')->orWhere('leaving', '>=' , $now->toDateString())->get();
         foreach($users as $user){
             $joining = $user->joining;
             $joining_date = new Carbon($joining);

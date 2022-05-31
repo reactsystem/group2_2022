@@ -38,7 +38,7 @@ class AddPaidLeaves extends Command
         //2年後
         $twoYearsLater = $now->copy()->addYear(2);
 
-        $users = User::all();
+        $users = User::whereNull('leaving')->orWhere('leaving', '>=' , $now->toDateString())->get();
 
         foreach($users as $user){
             // 入社日
