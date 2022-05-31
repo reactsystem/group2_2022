@@ -25,7 +25,7 @@
 				</div>
 
 				<div class="card-body">
-					<table class="table text-center">
+					<table class="table">
 						<tr class="table-info">
 							<th class="col-sm-3">開始</th>
 							<th class="col-sm-3">終了</th>
