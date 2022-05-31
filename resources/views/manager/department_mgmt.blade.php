@@ -103,12 +103,14 @@
 
 				<!-- ページネーション -->
 				<span class="col-sm-2">
-					{{$users->appends([
-						'date' => $date->copy()->toDateString(),
-						'department' => $dept->id,
-						'disp_limit' => $disp_limit,
-						])
-						->links()}}
+					@if (null !== $disp_limit)
+						{{$users->appends([
+							'date' => $date->copy()->toDateString(),
+							'department' => $dept->id,
+							'disp_limit' => $disp_limit,
+							])
+							->links()}}
+					@endif
 				</span>
 			</div>
 			<!----------------------------------------end 表示ページ条件 -->
@@ -245,12 +247,14 @@
 			<!------------------------------------------end 部署別勤務表 -->
 
 			<!-- ページネーション -->
-			{{$users->appends([
-					'date' => $date->copy()->toDateString(),
-					'department' => $dept->id,
-					'disp_limit' => $disp_limit,
-				])
-				->links()}}
+			@if (null !== $disp_limit)
+				{{$users->appends([
+						'date' => $date->copy()->toDateString(),
+						'department' => $dept->id,
+						'disp_limit' => $disp_limit,
+					])
+					->links()}}
+			@endif
 		</div>
 	</div>
 
@@ -285,7 +289,7 @@
 										@else
 											value="{{$date->format('Ym')}}_{{$dept->name}}_月次集計"
 										@endif
-										 class="form-control text-right">
+										class="form-control text-right">
 									<div class="input-group-append">
 										<span class="input-group-text">.csv</span>
 									</div>
@@ -295,8 +299,10 @@
 						</div>
 
 						<!-- csv プレビュー -->
-						<table class="table table-striped table-bordered">
-							<tr><th>社員番号</th><th>社員名</th><th>出勤日数</th><th>労働時間</th><th>時間外労働時間</th><th>有給休暇取得日数</th></tr>
+						<table class="table table-bordered table-sm">
+							<tr class="table-info text-center">
+								<th>社員番号</th><th>社員名</th><th>出勤日数</th><th>労働時間</th><th>時間外労働時間</th><th>有給休暇取得日数</th>
+							</tr>
 							@foreach ($csv as $data)
 								<tr>
 									@foreach ($data as $item)
@@ -308,7 +314,6 @@
 					</div>
 
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
 						<button type="button" id="btn-export" class="btn btn-primary">出力</button>
 					</div>
 				</form>
