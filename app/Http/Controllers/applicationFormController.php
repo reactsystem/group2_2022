@@ -104,8 +104,10 @@ class ApplicationFormController extends Controller
 
         // 表示する申請ステータス
         $status = [0];
+        $status_flag = "";
         if (isset($request->status)) {
             $status = [0,1,2,3];
+            $status_flag = $request->status;
         }
     
         // 表示件数
@@ -121,9 +123,9 @@ class ApplicationFormController extends Controller
         }elseif($request->query('disp_limit')==='3'){
             $paginate = 20;
         }
-        $applications = Application::where('user_id', $user->id)->whereIn('status', $status)->paginate($paginate);
+        $applications = Application::where('user_id', $user->id)->whereIn('status', $status)->orderBy('date', 'ASC')->paginate($paginate);
 
-        return view('application.show_self', compact('applications', 'limit_disp', 'types',));
+        return view('application.show_self', compact('applications', 'limit_disp', 'types', 'status_flag'));
     }
     /*============================================ end function ==*/
 
