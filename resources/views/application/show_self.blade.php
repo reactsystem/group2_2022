@@ -31,8 +31,15 @@
             </span>
             <span class="ml-2 mt-2">{{ $applications->total() }}件中{{ $applications->firstItem() }}〜{{ $applications->lastItem() }} 件を表示</span>
             @endif
+
+			@if ($status_flag == '')
             <!-- 全ての申請を表示するボタン -->
             <a class="btn btn-outline-secondary mb-3 ml-3" href="{{ route('application.indexSelf', ['status'=>'all']) }}">全ての申請を表示</a>
+			@elseif ($status_flag == 'all')
+			<!-- 申請中のみ表示するボタン -->
+			<a class="btn btn-outline-secondary mb-3 ml-3" href="{{ route('application.indexSelf', ['status'=>'']) }}">申請中のみ表示</a>
+			@endif
+			
             <!-- 新規申請ボタン -->
             <a class="btn btn-success mb-3 employees-add ml-auto" href="{{ route('application.show', array_merge(Request::query(), ['date' => ''])) }}">新規申請</a>
         </div>
