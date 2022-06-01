@@ -105,7 +105,7 @@ class ApplicationFormController extends Controller
         // 表示する申請ステータス
         $status = [0];
         $status_flag = "";
-        if (isset($request->status)) {
+        if ($request->status == 'all') {
             $status = [0,1,2,3];
             $status_flag = $request->status;
         }
