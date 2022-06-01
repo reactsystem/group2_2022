@@ -137,7 +137,7 @@ class ApplicationsTableSeeder extends Seeder
 
 			/* 申請中 --------------------*/
 			[	// 有給休暇
-				'user_id' => '202004010001',
+				'user_id' => '202004010000',
 				'application_type_id' => 1,
 				'date' => '2022-05-16',
 				'status' => 0,
@@ -149,7 +149,7 @@ class ApplicationsTableSeeder extends Seeder
 				'user_id' => '202004010001',
 				'application_type_id' => 1,
 				'date' => '2022-06-01',
-				'status' => 0,
+				'status' => 1,
 				'reason' => '私用のため',
 				'created_at' => '2022-05-30 10:05:00',
 				'updated_at' => '2022-05-30 10:05:00',

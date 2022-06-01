@@ -18,13 +18,6 @@ class WorkTimesTableSeeder extends Seeder
     {
         $params =
         [
-			// 2022/04 01~02week
-			[	// 有給休暇(バッチ処理用)
-				'user_id' => '202004010000',
-				'work_type_id' => 6,
-				'date' => '2022-05-30',
-				'description' => '通常出勤',
-			],
 			[	// 有給休暇(バッチ処理用)
 				'user_id' => '202004010000',
 				'work_type_id' => 6,
@@ -306,6 +299,12 @@ class WorkTimesTableSeeder extends Seeder
 			// 	'rest_time' => '00:00',
 			// 	'over_time' => '00:00',
 			// ],
+			[	// 有給休暇
+				'user_id' => '202004010001',
+				'work_type_id' => 6,
+				'date' => '2022-06-01',
+				'description' => '有給休暇',
+			],
         ];
 		
         $now = Carbon::now();
